@@ -1,0 +1,35 @@
+{
+    "name": "kevintweber/groundskeeper",
+    "type": "library",
+    "description": "Groundskeeper will clean your weedy HTML.",
+    "keywords": [
+        "kevintweber",
+        "groundskeeper",
+        "html",
+        "sanitize",
+        "filter"
+    ],
+    "homepage": "https://github.com/kevintweber/Groundskeeper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Weber",
+            "email": "kevintweber@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=5.5.9",
+        "kevintweber/html-tokenizer" : "~0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Groundskeeper\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Groundskeeper\\Tests\\": "tests"
+        }
+    }
+}
