@@ -20,7 +20,8 @@
     ],
     "require": {
         "php" : ">=5.5.9",
-        "kevintweber/html-tokenizer" : "~0.1"
+        "kevintweber/html-tokenizer" : "~0.1",
+        "symfony/options-resolver" : "~3.0"
     },
     "autoload": {
         "psr-4": {
