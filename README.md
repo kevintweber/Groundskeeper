@@ -19,13 +19,25 @@ $ composer require kevintweber/groundskeeper
 
 ## Usage
 
+Here is a simple example:
+
 ``` php
-<?php
+use Groundskeeper\Groundskeeper;
 
-namespace Groundskeeper;
-
-/// @todo
+$groundskeeper = new Groundskeeper(array(
+    'output'   => 'pretty',
+    'strategy' => 'standard'
+));
+$cleanHtml = $groundskeeper->clean($dirtyHtml);
 ```
+### Options
+| Key     | Option  | Description                            |
+|:------- |:------- |:-------------------------------------- |
+| indent-spaces | <int> | The number of spaces for indentation when using pretty output. Default: 4 |
+| output |   |   |
+|        | compact | Will remove all whitespace between elements. |
+|        | pretty  | One element per line with indentation. Handy for debugging. |
+| throw-on-error | <boolean> | If true, will throw an error when malformed HTML is encountered.  Default: false |
 
 ## Change log
 

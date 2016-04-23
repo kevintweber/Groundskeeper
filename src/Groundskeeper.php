@@ -2,7 +2,7 @@
 
 namespace Groundskeeper;
 
-use Kevintweber\HtmlTokenizer\HtmlTokenizer;
+use Groundskeeper\Tokens\Tokenizer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Groundskeeper
@@ -24,12 +24,17 @@ class Groundskeeper
     public function clean($html)
     {
         // Tokenize
-        $tokenizer = new HtmlTokenizer($this->options['throw-on-error']);
-        $tokens = $tokenizer->parse($html);
+        $tokenizer = new Tokenizer($this->options);
+        $tokens = $tokenizer->tokenize($html);
 
         // Clean
 
         // Output
+        $outputClassName = 'Groundskeeper\\Output\\' .
+            ucfirst($this->options['output']);
+        $output = new $outputClassName();
+
+        return $output->printTokens($tokens);
     }
 
     public function getOptions()

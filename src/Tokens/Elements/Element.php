@@ -1,6 +1,9 @@
 <?php
 
-namespace Groundskeeper\Tokens;
+namespace Groundskeeper\Tokens\Elements;
+
+use Groundskeeper\Tokens\AbstractToken;
+use Groundskeeper\Tokens\Token;
 
 class Element extends AbstractToken
 {
@@ -16,7 +19,7 @@ class Element extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct(Token $parent = null, $name = null, array $attributes = array())
+    public function __construct($name, array $attributes = array(), Token $parent = null)
     {
         parent::__construct(Token::ELEMENT, $parent);
 
@@ -95,7 +98,7 @@ class Element extends AbstractToken
             throw new \InvalidArgumentException('Element name must be string type.');
         }
 
-        $this->name = $name;
+        $this->name = trim(strtolower($name));
 
         return $this;
     }

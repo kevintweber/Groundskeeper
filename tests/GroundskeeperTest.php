@@ -36,4 +36,62 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
             array('throw-on-error', 5)
         );
     }
+
+    /**
+     * @dataProvider cleanDataProvider
+     */
+    public function testClean($html, $expectedOutput)
+    {
+        $groundskeeper = new Groundskeeper();
+        $this->assertEquals(
+            $expectedOutput,
+            $groundskeeper->clean($html)
+        );
+    }
+
+    public function cleanDataProvider()
+    {
+        return array(
+            'cdata only' => array(
+                '<![CDATA[asdf]]>',
+                '<![CDATA[asdf]]>'
+            ),
+            'cdata with whitespace' => array(
+                '     <![CDATA[asdf]]>      ',
+                '<![CDATA[asdf]]>'
+            ),
+            'comment only' => array(
+                '<!-- asdf -->',
+                '<!-- asdf -->'
+            ),
+            'comment with whitespace' => array(
+                '     <!-- asdf -->      ',
+                '<!-- asdf -->'
+            ),
+            'doctype only' => array(
+                '<!DOCTYPE asdf >',
+                '<!DOCTYPE asdf >'
+            ),
+            'doctype with whitespace' => array(
+                '     <!DOCTYPE asdf >      ',
+                '<!DOCTYPE asdf >'
+            ),
+            'element only' => array(
+                '<asdf/>',
+                '<asdf/>'
+            ),
+            'element with whitespace' => array(
+                '     <asdf/>      ',
+                '<asdf/>'
+            ),
+            'text only' => array(
+                'asdf',
+                'asdf'
+            ),
+            'text with whitespace' => array(
+                '     asdf      ',
+                'asdf'
+            )
+        );
+    }
 }
