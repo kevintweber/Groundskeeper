@@ -2,6 +2,8 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Configuration;
+
 class ClosedElement extends Element
 {
     public function getChildren()
@@ -19,16 +21,12 @@ class ClosedElement extends Element
         return true;
     }
 
-    public function toString($prefix = '', $suffix = '')
+    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
-        $output = $prefix . '<' . $this->name;
-        foreach ($this->attributes as $key => $value) {
-            $output .= ' ' . $key;
-            if (is_string($value)) {
-                $output .= '="' . $value . '"';
-            }
+        if (!$this->isValid) {
+            return '';
         }
 
-        return $output . '/>' . $suffix;
+        return $this->toStringTag($configuration, $prefix, $suffix);
     }
 }

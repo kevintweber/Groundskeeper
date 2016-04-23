@@ -2,21 +2,22 @@
 
 namespace Groundskeeper\Tokens;
 
+use Groundskeeper\Configuration;
 use Kevintweber\HtmlTokenizer\HtmlTokenizer;
 use Kevintweber\HtmlTokenizer\Tokens\Element as BasicElement;
 use Kevintweber\HtmlTokenizer\Tokens\Token as BasicToken;
 
 class Tokenizer
 {
-    /** @var array */
-    private $options;
+    /** @var Configuration */
+    private $configuration;
 
     /**
      * Constructor
      */
-    public function __construct(array $options = array())
+    public function __construct(Configuration $configuration)
     {
-        $this->options = $options;
+        $this->configuration = $configuration;
     }
 
     public function tokenize($html)
@@ -25,7 +26,7 @@ class Tokenizer
             throw new \InvalidArgumentException('Html must be a string.');
         }
 
-        $tokenizer = new HtmlTokenizer($this->options['throw-on-error']);
+        $tokenizer = new HtmlTokenizer($this->configuration->get('throw-on-error'));
         $basicTokenCollection = $tokenizer->parse($html);
 
         $cleanableTokens = array();

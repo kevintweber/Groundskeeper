@@ -2,18 +2,22 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Configuration;
+
 class OpenElement extends Element
 {
-    public function toString($prefix = '', $suffix = '')
+    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
-        $output = $prefix . '<' . $this->name;
-        foreach ($this->attributes as $key => $value) {
-            $output .= ' ' . $key;
-            if (is_string($value)) {
-                $output .= '="' . $value . '"';
-            }
+        if (!$this->isValid) {
+            return '';
         }
 
-        return $output . '>' . $suffix;
+        $output = $this->toStringTag($configuration, $prefix, $suffix, true);
+        foreach ($this->children as $child) {
+            $newPrefix = $prefix . str_repeat(' ', $configuration->get('indent-spaces'));
+            $output .= $child->toString($options, $newPrefix, $suffix);
+        }
+
+        return $output . $prefix . '</' . $this->name . '>' . $suffix;
     }
 }

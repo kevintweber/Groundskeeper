@@ -2,6 +2,8 @@
 
 namespace Groundskeeper\Tokens;
 
+use Groundskeeper\Configuration;
+
 class Comment extends AbstractValuedToken
 {
     /**
@@ -12,8 +14,12 @@ class Comment extends AbstractValuedToken
         parent::__construct(Token::COMMENT, $parent, $value);
     }
 
-    public function toString($prefix = '', $suffix = '')
+    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
+        if (!$this->isValid) {
+            return '';
+        }
+
         return $prefix . '<!-- ' . $this->getValue() . ' -->' . $suffix;
     }
 }

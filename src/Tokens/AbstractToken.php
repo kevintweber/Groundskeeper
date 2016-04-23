@@ -2,10 +2,15 @@
 
 namespace Groundskeeper\Tokens;
 
+use Groundskeeper\Configuration;
+
 abstract class AbstractToken implements Token
 {
     /** @var int */
     private $depth;
+
+    /** @var int */
+    protected $isValid;
 
     /** @var null|Token */
     private $parent;
@@ -22,6 +27,7 @@ abstract class AbstractToken implements Token
             throw new \InvalidArgumentException('Invalid type: ' . $type);
         }
 
+        $this->isValid = false;
         $this->setParent($parent);
         $this->type = $type;
     }
@@ -29,6 +35,14 @@ abstract class AbstractToken implements Token
     public function getDepth()
     {
         return $this->depth;
+    }
+
+    /**
+     * Getter for 'isValid'.
+     */
+    public function getIsValid()
+    {
+        return $this->isValid;
     }
 
     /**
@@ -57,6 +71,11 @@ abstract class AbstractToken implements Token
     public function getType()
     {
         return $this->type;
+    }
+
+    public function validate(Configuration $configuration)
+    {
+        $this->isValid = $configuration->isAllowedType($this->type);
     }
 
     protected function isValidType($type)

@@ -2,6 +2,8 @@
 
 namespace Groundskeeper\Tokens;
 
+use Groundskeeper\Configuration;
+
 class CData extends AbstractValuedToken
 {
     /**
@@ -12,8 +14,12 @@ class CData extends AbstractValuedToken
         parent::__construct(Token::CDATA, $parent, $value);
     }
 
-    public function toString($prefix = '', $suffix = '')
+    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
+        if (!$this->isValid) {
+            return '';
+        }
+
         return $prefix . '<![CDATA[' . $this->getValue() . ']]>' . $suffix;
     }
 }

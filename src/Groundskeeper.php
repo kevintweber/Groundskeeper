@@ -3,63 +3,53 @@
 namespace Groundskeeper;
 
 use Groundskeeper\Tokens\Tokenizer;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Groundskeeper
 {
-    /** @var array */
-    private $options;
+    /** @var Configuration */
+    private $configuration;
 
     /**
      * Constructor
+     *
+     * @param array|Configuration $options
      */
-    public function __construct(array $options = array())
+    public function __construct($options = array())
     {
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
+        if ($options instanceof Configuration) {
+            $this->configuration = $options;
 
-        $this->options = $resolver->resolve($options);
+            return;
+        }
+
+        if (!is_array($options)) {
+            throw new \InvalidArgumentException('Invalid option type.');
+        }
+
+        $this->configuration = new Configuration($options);
     }
 
     public function clean($html)
     {
         // Tokenize
-        $tokenizer = new Tokenizer($this->options);
+        $tokenizer = new Tokenizer($this->configuration);
         $tokens = $tokenizer->tokenize($html);
 
         // Clean
+        foreach ($tokens as $token) {
+            $token->validate($this->configuration);
+        }
 
         // Output
         $outputClassName = 'Groundskeeper\\Output\\' .
-            ucfirst($this->options['output']);
-        $output = new $outputClassName();
+            ucfirst($this->configuration->get('output'));
+        $output = new $outputClassName($this->configuration);
 
         return $output->printTokens($tokens);
     }
 
-    public function getOptions()
+    public function getConfiguration()
     {
-        return $this->options;
-    }
-
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        // Set default options.
-        $resolver->setDefaults(array(
-            'indent-spaces' => 4,
-            'output' => 'compact',
-            'throw-on-error' => false
-        ));
-
-        // Validation
-        $resolver->setAllowedValues('indent-spaces', function ($value) {
-            if (!is_int($value)) {
-                return false;
-            }
-
-            return $value >= 0;
-        });
-        $resolver->setAllowedValues('output', array('compact', 'pretty'));
-        $resolver->setAllowedTypes('throw-on-error', 'bool');
+        return $this->configuration;
     }
 }

@@ -9,10 +9,10 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
     public function testConstructorAndDefaults()
     {
         $groundskeeper = new Groundskeeper();
-        $options = $groundskeeper->getOptions();
-        $this->assertEquals(4, $options['indent-spaces']);
-        $this->assertEquals('compact', $options['output']);
-        $this->assertFalse($options['throw-on-error']);
+        $configuration = $groundskeeper->getConfiguration();
+        $this->assertEquals(0, $configuration->get('indent-spaces'));
+        $this->assertEquals('compact', $configuration->get('output'));
+        $this->assertFalse($configuration->get('throw-on-error'));
     }
 
     /**
@@ -69,12 +69,12 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<!-- asdf -->'
             ),
             'doctype only' => array(
-                '<!DOCTYPE asdf >',
-                '<!DOCTYPE asdf >'
+                '<!DOCTYPE asdf>',
+                '<!DOCTYPE asdf>'
             ),
             'doctype with whitespace' => array(
-                '     <!DOCTYPE asdf >      ',
-                '<!DOCTYPE asdf >'
+                '     <!DOCTYPE asdf>      ',
+                '<!DOCTYPE asdf>'
             ),
             'element only' => array(
                 '<asdf/>',

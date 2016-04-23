@@ -2,6 +2,8 @@
 
 namespace Groundskeeper\Tokens;
 
+use Groundskeeper\Configuration;
+
 class DocType extends AbstractValuedToken
 {
     /**
@@ -12,8 +14,21 @@ class DocType extends AbstractValuedToken
         parent::__construct(Token::DOCTYPE, $parent, $value);
     }
 
-    public function toString($prefix = '', $suffix = '')
+    public function validate(Configuration $configuration)
     {
-        return $prefix . '<!DOCTYPE ' . $this->getValue() . ' >' . $suffix;
+        parent::validate($configuration);
+
+        if ($this->isValid === true) {
+            $this->isValid = $this->getParent() === null;
+        }
+    }
+
+    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
+    {
+        if (!$this->isValid) {
+            return '';
+        }
+
+        return $prefix . '<!DOCTYPE ' . $this->getValue() . '>' . $suffix;
     }
 }
