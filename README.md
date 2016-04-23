@@ -31,13 +31,13 @@ $groundskeeper = new Groundskeeper(array(
 $cleanHtml = $groundskeeper->clean($dirtyHtml);
 ```
 ### Options
-| Key     | Option  | Description                            |
+| Key     | Options  | Description                            |
 |:------- |:------- |:-------------------------------------- |
-| indent-spaces | <int> | The number of spaces for indentation when using pretty output. Default: 4 |
-| output |   |   |
-|        | compact | Will remove all whitespace between elements. |
-|        | pretty  | One element per line with indentation. Handy for debugging. |
-| throw-on-error | <boolean> | If true, will throw an error when malformed HTML is encountered.  Default: false |
+| indent-spaces | &lt;int&gt; | The number of spaces for indentation when using pretty output. Default: 4 |
+| output | "compact","pretty" | Compact: Will remove all whitespace between elements.<br/>Pretty: One element per line with indentation. Handy for debugging. |
+| remove-types | none or comma seperated list of any one of the following: cdata,comment,doctype,element,text | This token type will be removed during cleaning. |
+| strategy | "none","standard" | The cleaning strategy to use. Default: standard |
+| throw-on-error | &lt;boolean&gt; | If true, will throw an error when malformed HTML is encountered.  Default: false |
 
 ## Change log
 
