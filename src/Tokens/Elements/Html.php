@@ -6,7 +6,7 @@ use Groundskeeper\Configuration;
 
 class Html extends OpenElement
 {
-    protected function getAllowedAttrbutes()
+    protected function getAllowedAttributes()
     {
         $htmlAllowedAttributes = array(
             '/^manifest$/i' => Element::ATTR_CS_STRING
@@ -14,7 +14,7 @@ class Html extends OpenElement
 
         return array_merge(
             $htmlAllowedAttributes,
-            parent::getAllowedAttrbutes()
+            parent::getAllowedAttributes()
         );
     }
 

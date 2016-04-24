@@ -6,7 +6,7 @@ use Groundskeeper\Configuration;
 
 class Base extends ClosedElement
 {
-    protected function getAllowedAttrbutes()
+    protected function getAllowedAttributes()
     {
         $baseAllowedAttributes = array(
             '/^href$/i' => Element::ATTR_URI,
@@ -15,7 +15,7 @@ class Base extends ClosedElement
 
         return array_merge(
             $baseAllowedAttributes,
-            parent::getAllowedAttrbutes()
+            parent::getAllowedAttributes()
         );
     }
 

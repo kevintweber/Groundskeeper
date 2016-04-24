@@ -4,7 +4,7 @@ namespace Groundskeeper\Tokens\Elements;
 
 class Meta extends ClosedElement
 {
-    protected function getAllowedAttrbutes()
+    protected function getAllowedAttributes()
     {
         $metaAllowedAttributes = array(
             '/^name$/i' => Element::ATTR_CS_STRING,
@@ -16,7 +16,7 @@ class Meta extends ClosedElement
 
         return array_merge(
             $metaAllowedAttributes,
-            parent::getAllowedAttrbutes()
+            parent::getAllowedAttributes()
         );
     }
 }

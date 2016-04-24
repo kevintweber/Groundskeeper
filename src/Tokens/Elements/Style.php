@@ -4,7 +4,7 @@ namespace Groundskeeper\Tokens\Elements;
 
 class Style extends OpenElement
 {
-    protected function getAllowedAttrbutes()
+    protected function getAllowedAttributes()
     {
         $styleAllowedAttributes = array(
             '/^media$/i' => Element::ATTR_CI_STRING,
@@ -15,7 +15,7 @@ class Style extends OpenElement
 
         return array_merge(
             $styleAllowedAttributes,
-            parent::getAllowedAttrbutes()
+            parent::getAllowedAttributes()
         );
     }
 }

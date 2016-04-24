@@ -4,7 +4,7 @@ namespace Groundskeeper\Tokens\Elements;
 
 class Link extends ClosedElement
 {
-    protected function getAllowedAttrbutes()
+    protected function getAllowedAttributes()
     {
         $linkAllowedAttributes = array(
             '/^href$/i' => Element::ATTR_URI,
@@ -18,7 +18,7 @@ class Link extends ClosedElement
 
         return array_merge(
             $linkAllowedAttributes,
-            parent::getAllowedAttrbutes()
+            parent::getAllowedAttributes()
         );
     }
 
