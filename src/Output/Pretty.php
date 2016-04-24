@@ -2,13 +2,12 @@
 
 namespace Groundskeeper\Output;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Token;
 
 class Pretty extends AbstractOutput
 {
-    protected function printToken(Configuration $configuration, Token $token)
+    protected function getHtmlFromToken(Token $token)
     {
-        return $token->toString($configuration, '', "\n");
+        return $token->toHtml('', "\n");
     }
 }

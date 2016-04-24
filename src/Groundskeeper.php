@@ -3,11 +3,16 @@
 namespace Groundskeeper;
 
 use Groundskeeper\Tokens\Tokenizer;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 
-class Groundskeeper
+class Groundskeeper implements LoggerAwareInterface
 {
     /** @var Configuration */
     private $configuration;
+
+    /** @var null|LoggerInterface */
+    private $logger;
 
     /**
      * Constructor
@@ -16,6 +21,7 @@ class Groundskeeper
      */
     public function __construct($options = array())
     {
+        $this->logger = null;
         if ($options instanceof Configuration) {
             $this->configuration = $options;
 
@@ -33,23 +39,26 @@ class Groundskeeper
     {
         // Tokenize
         $tokenizer = new Tokenizer($this->configuration);
-        $tokens = $tokenizer->tokenize($html);
+        $tokenContainer = $tokenizer->tokenize($html);
 
         // Clean
-        foreach ($tokens as $token) {
-            $token->validate($this->configuration);
-        }
+        $tokenContainer->clean($this->logger);
 
         // Output
         $outputClassName = 'Groundskeeper\\Output\\' .
             ucfirst($this->configuration->get('output'));
-        $output = new $outputClassName($this->configuration);
+        $output = new $outputClassName();
 
-        return $output->printTokens($tokens);
+        return $output($tokenContainer);
     }
 
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

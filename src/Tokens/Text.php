@@ -9,17 +9,13 @@ class Text extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct($parent = null, $value = null)
+    public function __construct(Configuration $configuration, Token $parent = null, $value = null)
     {
-        parent::__construct(Token::TEXT, $parent, $value);
+        parent::__construct(Token::TEXT, $configuration, $parent, $value);
     }
 
-    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
+    protected function buildHtml($prefix, $suffix)
     {
-        if (!$this->isValid) {
-            return '';
-        }
-
         return $prefix . $this->getValue() . $suffix;
     }
 }

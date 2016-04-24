@@ -8,11 +8,7 @@ class AbstractTokenTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorAndDefaults()
     {
-        $abstractTokenMock = $this->getMockForAbstractClass(
-            'Groundskeeper\\Tokens\\AbstractToken',
-            array('comment', null)
-        );
-        $this->assertNull($abstractTokenMock->getIsValid());
+        $abstractTokenMock = $this->createAbstractTokenMock('comment');
         $this->assertNull($abstractTokenMock->getParent());
         $this->assertEquals('comment', $abstractTokenMock->getType());
         $this->assertEquals(0, $abstractTokenMock->getDepth());
@@ -23,44 +19,16 @@ class AbstractTokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionInConstructor()
     {
-        $abstractTokenMock = $this->getMockForAbstractClass(
-            'Groundskeeper\\Tokens\\AbstractToken',
-            array('asdf', null)
-        );
+        $abstractTokenMock = $this->createAbstractTokenMock('asdf');
     }
 
-    public function testIsValid()
-    {
-        $abstractTokenMock = $this->getMockForAbstractClass(
-            'Groundskeeper\\Tokens\\AbstractToken',
-            array('comment', null)
-        );
-        $this->assertNull($abstractTokenMock->getIsValid());
-        $abstractTokenMock->setIsValid(true);
-        $this->assertTrue($abstractTokenMock->getIsValid());
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionInSetParent()
-    {
-        $abstractTokenMock = $this->getMockForAbstractClass(
-            'Groundskeeper\\Tokens\\AbstractToken',
-            array('comment', null)
-        );
-        $abstractTokenMock->setParent('asdf');
-    }
-
-    public function testValidate()
+    protected function createAbstractTokenMock($type = 'comment')
     {
         $configuration = new Configuration();
-        $abstractTokenMock = $this->getMockForAbstractClass(
+
+        return $this->getMockForAbstractClass(
             'Groundskeeper\\Tokens\\AbstractToken',
-            array('comment', null)
+            array($type, $configuration, null)
         );
-        $abstractTokenMock->validate($configuration);
-        $this->assertFalse($abstractTokenMock->getIsValid());
-        $abstractTokenMock->validate($configuration);
     }
 }

@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Token as CleanableToken;
 use Kevintweber\HtmlTokenizer\HtmlTokenizer;
 use Kevintweber\HtmlTokenizer\Tokens\Element as BasicElement;
 use Kevintweber\HtmlTokenizer\Tokens\Token as BasicToken;
@@ -22,50 +23,50 @@ class Tokenizer
 
     public function tokenize($html)
     {
-        if (!is_string($html)) {
-            throw new \InvalidArgumentException('Html must be a string.');
-        }
-
         $tokenizer = new HtmlTokenizer(
-            $this->configuration->get('error-strategy') == 'throw'
+            $this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW
         );
-        $basicTokenCollection = $tokenizer->parse($html);
+        $basicTokenCollection = $tokenizer->parse((string) $html);
 
-        $cleanableTokens = array();
+        $tokenContainer = new TokenContainer($this->configuration);
         foreach ($basicTokenCollection as $basicToken) {
-            $cleanableTokens[] = $this->createToken($basicToken);
+            $tokenContainer->addChild($this->createToken($basicToken));
         }
 
-        return $cleanableTokens;
+        return $tokenContainer;
     }
 
-    private function createToken(BasicToken $basicToken)
+    private function createToken(BasicToken $basicToken, CleanableToken $parent = null)
     {
         switch ($basicToken->getType()) {
         case 'cdata':
             return new CData(
-                $basicToken->getParent(),
+                $this->configuration,
+                $parent,
                 $basicToken->getValue()
             );
 
         case 'comment':
             return new Comment(
-                $basicToken->getParent(),
+                $this->configuration,
+                $parent,
                 $basicToken->getValue()
             );
 
         case 'doctype':
             return new DocType(
-                $basicToken->getParent(),
+                $this->configuration,
+                $parent,
                 $basicToken->getValue()
             );
 
         case 'element':
-            return static::createElement($basicToken);
+            return $this->createElement($basicToken, $parent);
 
         case 'text':
             return new Text(
-                $basicToken->getParent(),
+                $this->configuration,
+                $parent,
                 $basicToken->getValue()
             );
         }
@@ -75,7 +76,7 @@ class Tokenizer
         );
     }
 
-    private function createElement(BasicElement $basicElement)
+    private function createElement(BasicElement $basicElement, CleanableToken $parent = null)
     {
         $elementClassName = 'Groundskeeper\\Tokens\\Elements\\' .
             ucfirst(strtolower($basicElement->getName()));
@@ -84,14 +85,15 @@ class Tokenizer
         }
 
         $cleanableElement = new $elementClassName(
+            $this->configuration,
             $basicElement->getName(),
             $basicElement->getAttributes(),
-            $basicElement->getParent()
+            $parent
         );
 
         foreach ($basicElement->getChildren() as $basicChild) {
             $cleanableElement->addChild(
-                $this->createToken($basicChild)
+                $this->createToken($basicChild, $cleanableElement)
             );
         }
 

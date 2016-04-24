@@ -9,19 +9,26 @@ class CDataTest extends \PHPUnit_Framework_TestCase
 {
     public function testCData()
     {
-        $cdata = new CData(null, 'asdf');
+        $configuration = new Configuration(array(
+            'remove-types' => 'none'
+        ));
+        $cdata = new CData($configuration, null, 'asdf');
         $this->assertEquals('asdf', $cdata->getValue());
-        $cdata->setIsValid(true);
-        $configuration = new Configuration();
         $this->assertEquals(
             '<![CDATA[asdf]]>',
-            $cdata->toString($configuration)
+            $cdata->toHtml('', '')
         );
+    }
 
-        $cdata->setIsValid(false);
+    public function testCDataIsRemovedType()
+    {
+        $configuration = new Configuration(array(
+            'remove-types' => 'cdata'
+        ));
+        $cdata = new CData($configuration, null, 'asdf');
         $this->assertEquals(
             '',
-            $cdata->toString($configuration)
+            $cdata->toHtml('', '')
         );
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Groundskeeper\Tokens;
 
+use Groundskeeper\Configuration;
+
 abstract class AbstractValuedToken extends AbstractToken
 {
     /** @var string */
@@ -10,11 +12,11 @@ abstract class AbstractValuedToken extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct($type, $parent = null, $value = null)
+    public function __construct($type, Configuration $configuration, Token $parent = null, $value = null)
     {
-        parent::__construct($type, $parent);
+        parent::__construct($type, $configuration, $parent);
 
-        $this->setValue($value);
+        $this->value = $value;
     }
 
     /**

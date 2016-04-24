@@ -19,17 +19,13 @@ class CompactTest extends \PHPUnit_Framework_TestCase
 
         // Tokenize
         $tokenizer = new Tokenizer($configuration);
-        $tokens = $tokenizer->tokenize($html);
+        $tokenContainer = $tokenizer->tokenize($html);
 
-        // Clean
-        foreach ($tokens as $token) {
-            $token->validate($configuration);
-        }
-
-        $compact = new Compact($configuration);
+        // Output
+        $compact = new Compact();
         $this->assertEquals(
             $expectedOutput,
-            $compact->printTokens($tokens)
+            $compact($tokenContainer)
         );
     }
 

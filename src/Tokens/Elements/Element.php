@@ -5,15 +5,18 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Configuration;
 use Groundskeeper\Exceptions\ValidationException;
 use Groundskeeper\Tokens\AbstractToken;
+use Groundskeeper\Tokens\Cleanable;
+use Groundskeeper\Tokens\ContainsChildren;
 use Groundskeeper\Tokens\Token;
+use Psr\Log\LoggerInterface;
 
-class Element extends AbstractToken
+class Element extends AbstractToken implements Cleanable, ContainsChildren
 {
-    const ATTR_CI_ENUM   = 'attr_ci_enum';// case-insensitive enumeration
-    const ATTR_JS        = 'attr_js';
-    const ATTR_CI_STRING = 'attr_ci_str'; // case-insensitive string
-    const ATTR_CS_STRING = 'attr_cs_str'; // case-sensitive string
-    const ATTR_URI       = 'attr_uri';
+    const ATTR_CI_ENUM   = 'ci_enu';// case-insensitive enumeration
+    const ATTR_JS        = 'cs_jsc';
+    const ATTR_CI_STRING = 'ci_str'; // case-insensitive string
+    const ATTR_CS_STRING = 'cs_str'; // case-sensitive string
+    const ATTR_URI       = 'cs_uri';
 
     /** @var array */
     private $attributes;
@@ -27,9 +30,9 @@ class Element extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct($name, array $attributes = array(), $parent = null)
+    public function __construct(Configuration $configuration, $name, array $attributes = array(), $parent = null)
     {
-        parent::__construct(Token::ELEMENT, $parent);
+        parent::__construct(Token::ELEMENT, $configuration, $parent);
 
         $this->attributes = array();
         foreach ($attributes as $key => $value) {
@@ -85,13 +88,24 @@ class Element extends AbstractToken
     }
 
     /**
-     * Getter for 'children'.
+     * Required by ContainsChildren interface.
      */
     public function getChildren()
     {
         return $this->children;
     }
 
+    /**
+     * Required by ContainsChildren interface.
+     */
+    public function hasChild(Token $token)
+    {
+        return array_search($token, $this->children) !== false;
+    }
+
+    /**
+     * Required by ContainsChildren interface.
+     */
     public function addChild(Token $token)
     {
         $token->setParent($this);
@@ -100,6 +114,9 @@ class Element extends AbstractToken
         return $this;
     }
 
+    /**
+     * Required by ContainsChildren interface.
+     */
     public function removeChild(Token $token)
     {
         $key = array_search($token, $this->children);
@@ -134,7 +151,66 @@ class Element extends AbstractToken
         return $this;
     }
 
-    protected function getAllowedAttrbutes()
+    public function clean(LoggerInterface $logger = null)
+    {
+        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+            return;
+        }
+
+        // Remove non-standard attributes.
+        foreach ($this->attributes as $name => $value) {
+            $attributeParameters = $this->getAttributeParameters($name);
+            if (empty($attributeParameters)) {
+                if ($logger !== null) {
+                    $logger->debug('Groundskeeper: Removed non-standard attribute "' . $name . '" from element "' . $this->name . '".');
+                }
+
+                unset($this->attributes[$name]);
+
+                continue;
+            }
+
+            // Validate attribute value.
+            list($caseSensitivity, $attributeType) =
+                explode('_', $attributeParameters['valueType']);
+
+            // Handle case-insensitivity.
+            // Standard is case-insensitive attribute values should be lower case.
+            // Not required, so don't throw if out of spec.
+            if ($caseSensitivity == 'ci') {
+                $newValue = strtolower($value);
+                if ($newValue !== $value) {
+                    if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                        $this->attributes[$name] = $newValue;
+                        if ($logger !== null) {
+                            $logger->debug('Groundskeeper: The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.');
+                        }
+                    } elseif ($logger !== null) {
+                        $logger->debug('Groundskeeper: The value for the attribute "' . $name . '" is case-insensitive.  Consider converting it to lower case.');
+                    }
+                }
+            }
+
+            switch (substr($attributeType, 0, 3)) {
+            case 'enu': // enumeration
+                /// @todo
+                break;
+
+            case 'uri': // URI
+                /// @todo
+                break;
+            }
+        }
+
+        // Clean children.
+        foreach ($this->children as $child) {
+            if ($child instanceof Cleanable) {
+                $child->clean($logger);
+            }
+        }
+    }
+
+    protected function getAllowedAttributes()
     {
         return array(
             // Global Attributes
@@ -143,7 +219,7 @@ class Element extends AbstractToken
             '/^contenteditable$/i' => self::ATTR_CS_STRING,
             '/^contextmenu$/i' => self::ATTR_CS_STRING,
             '/^data-\S/i' => self::ATTR_CS_STRING,
-            '/^dir$/i' => self::ATTR_CI_ENUM . '("ltr","rtl")',
+            '/^dir$/i' => self::ATTR_CI_ENUM . '("ltr","rtl"|"ltr")',
             '/^draggable$/i' => self::ATTR_CS_STRING,
             '/^dropzone$/i' => self::ATTR_CS_STRING,
             '/^hidden$/i' => self::ATTR_CS_STRING,
@@ -160,7 +236,7 @@ class Element extends AbstractToken
             '/^style$/i' => self::ATTR_CS_STRING,
             '/^tabindex$/i' => self::ATTR_CS_STRING,
             '/^title$/i' => self::ATTR_CS_STRING,
-            '/^translate$/i' => self::ATTR_CI_ENUM . '("yes","no","")',
+            '/^translate$/i' => self::ATTR_CI_ENUM . '("yes","no",""|"yes")',
 
             // Event Handler Content Attributes
             // https://html.spec.whatwg.org/multipage/webappapis.html#event-handler-content-attributes
@@ -286,88 +362,41 @@ class Element extends AbstractToken
         );
     }
 
-    protected function isAttributeNameValid($name)
+    protected function getAttributeParameters($name)
     {
-        $allowedAttributes = $this->getAllowedAttrbutes();
+        $allowedAttributes = $this->getAllowedAttributes();
         foreach ($allowedAttributes as $attrRegex => $valueType) {
             if (preg_match($attrRegex, $name) === 1) {
-                return true;
+                return array(
+                    'name' => $name,
+                    'regex' => $attrRegex,
+                    'valueType' => $valueType
+                );
             }
         }
 
-        return false;
+        return array();
     }
 
-    public function validate(Configuration $configuration)
+    protected function buildHtml($prefix, $suffix)
     {
-        if ($configuration->get('clean-strategy') == 'none') {
-            $this->isValid = true;
-            foreach ($this->children as $child) {
-                $child->validate($configuration);
-            }
-
-            return;
-        }
-
-        parent::validate($configuration);
-
-        // If not valid, then we are done.
-        if (!$this->isValid) {
-            return;
-        }
-
-        if ($configuration->get('clean-strategy') != 'none') {
-            // Remove non-standard attributes.
-            foreach ($this->attributes as $name => $value) {
-                // Validate attribute name
-                if (!$this->isAttributeNameValid($name)) {
-                    unset($this->attributes[$name]);
-                    continue;
-                }
-
-                // Validate attributes value
-                /// @todo
-            }
-        }
-
-        foreach ($this->children as $child) {
-            $child->validate($configuration);
-        }
-    }
-
-    protected function handleValidationError(Configuration $configuration, $message)
-    {
-        $this->isValid = false;
-        if ($configuration->get('error-strategy') == 'throw') {
-            throw new ValidationException($message);
-        }
-    }
-
-    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
-    {
-        if (!$this->isValid && $configuration->get('clean-strategy') != 'none') {
-            return '';
-        }
-
-        $output = $this->toStringTag($configuration, $prefix, $suffix);
+        $output = $this->buildStartTag($prefix, $suffix);
         if (empty($this->children)) {
             return $output;
         }
 
-        foreach ($this->children as $child) {
-            $newPrefix = $prefix . str_repeat(' ', $configuration->get('indent-spaces'));
-            $output .= $child->toString($configuration, $newPrefix, $suffix);
-        }
+        $output .= $this->buildChildrenHtml($prefix, $suffix);
 
         return $output . $prefix . '</' . $this->name . '>' . $suffix;
     }
 
-    protected function toStringTag(Configuration $configuration, $prefix = '', $suffix = '', $forceOpen = false)
+    protected function buildStartTag($prefix, $suffix, $forceOpen = false)
     {
         $output = $prefix . '<' . $this->name;
         foreach ($this->attributes as $key => $value) {
             $output .= ' ' . strtolower($key);
             if (is_string($value)) {
+                /// @todo Escape double quotes in value.
                 $output .= '="' . $value . '"';
             }
         }
@@ -377,5 +406,20 @@ class Element extends AbstractToken
         }
 
         return $output . '>' . $suffix;
+    }
+
+    protected function buildChildrenHtml($prefix, $suffix)
+    {
+        $output = '';
+        foreach ($this->children as $child) {
+            $newPrefix = $prefix .
+                str_repeat(
+                    ' ',
+                    $this->configuration->get('indent-spaces')
+                );
+            $output .= $child->buildHtml($newPrefix, $suffix);
+        }
+
+        return $output;
     }
 }

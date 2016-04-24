@@ -9,19 +9,26 @@ class DocTypeTest extends \PHPUnit_Framework_TestCase
 {
     public function testDocType()
     {
-        $docType = new DocType(null, 'asdf');
+        $configuration = new Configuration(array(
+            'remove-types' => 'none'
+        ));
+        $docType = new DocType($configuration, null, 'asdf');
         $this->assertEquals('asdf', $docType->getValue());
-        $docType->setIsValid(true);
-        $configuration = new Configuration();
         $this->assertEquals(
             '<!DOCTYPE asdf>',
-            $docType->toString($configuration)
+            $docType->toHtml('', '')
         );
+    }
 
-        $docType->setIsValid(false);
+    public function testDocTypeIsRemovedType()
+    {
+        $configuration = new Configuration(array(
+            'remove-types' => 'doctype'
+        ));
+        $docType = new DocType($configuration, null, 'asdf');
         $this->assertEquals(
             '',
-            $docType->toString($configuration)
+            $docType->toHtml('', '')
         );
     }
 }

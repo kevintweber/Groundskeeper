@@ -2,10 +2,24 @@
 
 namespace Groundskeeper;
 
+use Groundskeeper\Tokens\Token;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Configuration
 {
+    const CLEAN_STRATEGY_NONE       = 'none';
+    const CLEAN_STRATEGY_STANDARD   = 'standard';
+    const CLEAN_STRATEGY_AGGRESSIVE = 'aggressive';
+
+    const ERROR_STRATEGY_NONE  = 'none';
+    const ERROR_STRATEGY_THROW = 'throw';
+    const ERROR_STRATEGY_FIX   = 'fix';
+
+    const OUTPUT_COMPACT = 'compact';
+    const OUTPUT_PRETTY  = 'pretty';
+
+    const REMOVE_TYPES_NONE = 'none';
+
     /** @var array */
     private $options;
 
@@ -51,22 +65,36 @@ class Configuration
     {
         // Set default options.
         $resolver->setDefaults(array(
-            'clean-strategy' => 'standard',
-            'error-strategy' => 'fix',
+            'clean-strategy' => self::CLEAN_STRATEGY_STANDARD,
+            'error-strategy' => self::ERROR_STRATEGY_FIX,
             'indent-spaces' => 4,
-            'output' => 'compact',
-            'remove-types' => 'cdata,comment'
+            'output' => self::OUTPUT_COMPACT,
+            'remove-types' => Token::CDATA . ',' . Token::COMMENT
         ));
 
         // Validation
 
         // clean-strategy
         $resolver->setAllowedTypes('clean-strategy', 'string');
-        $resolver->setAllowedValues('clean-strategy', array('none', 'standard'));
+        $resolver->setAllowedValues(
+            'clean-strategy',
+            array(
+                self::CLEAN_STRATEGY_NONE,
+                self::CLEAN_STRATEGY_STANDARD,
+                self::CLEAN_STRATEGY_AGGRESSIVE
+            )
+        );
 
         // error-strategy
         $resolver->setAllowedTypes('error-strategy', 'string');
-        $resolver->setAllowedValues('error-strategy', array('none', 'throw', 'fix'));
+        $resolver->setAllowedValues(
+            'error-strategy',
+            array(
+                self::ERROR_STRATEGY_NONE,
+                self::ERROR_STRATEGY_THROW,
+                self::ERROR_STRATEGY_FIX
+            )
+        );
 
         // indent-spaces
         $resolver->setAllowedTypes('indent-spaces', 'int');
@@ -77,21 +105,26 @@ class Configuration
 
         // output
         $resolver->setAllowedTypes('output', 'string');
-        $resolver->setAllowedValues('output', array('compact', 'pretty'));
+        $resolver->setAllowedValues(
+            'output',
+            array(self::OUTPUT_COMPACT, self::OUTPUT_PRETTY)
+        );
 
         // remove-types
         $resolver->setAllowedTypes('remove-types', 'string');
-        $resolver->setAllowedValues('remove-types', function ($value) {
-                if ($value == 'none') {
+        $resolver->setAllowedValues(
+            'remove-types',
+            function ($value) {
+                if ($value == self::REMOVE_TYPES_NONE) {
                     return true;
                 }
 
                 $acceptedValues = array(
-                    'cdata',
-                    'comment',
-                    'doctype',
-                    'element',
-                    'text'
+                    Token::CDATA,
+                    Token::COMMENT,
+                    Token::DOCTYPE,
+                    Token::ELEMENT,
+                    Token::TEXT
                 );
                 $valueArray = explode(',', $value);
                 foreach ($valueArray as $val) {
@@ -107,7 +140,7 @@ class Configuration
 
     protected function setDependentOptions()
     {
-        if ($this->options['output'] == 'compact') {
+        if ($this->options['output'] == self::OUTPUT_COMPACT) {
             $this->options['indent-spaces'] = 0;
         }
     }

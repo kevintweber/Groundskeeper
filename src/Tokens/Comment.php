@@ -9,17 +9,13 @@ class Comment extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct($parent = null, $value = null)
+    public function __construct(Configuration $configuration, Token $parent = null, $value = null)
     {
-        parent::__construct(Token::COMMENT, $parent, $value);
+        parent::__construct(Token::COMMENT, $configuration, $parent, $value);
     }
 
-    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
+    protected function buildHtml($prefix, $suffix)
     {
-        if (!$this->isValid) {
-            return '';
-        }
-
         return $prefix . '<!-- ' . $this->getValue() . ' -->' . $suffix;
     }
 }

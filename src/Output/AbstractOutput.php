@@ -2,38 +2,34 @@
 
 namespace Groundskeeper\Output;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Token;
+use Groundskeeper\Tokens\TokenContainer;
 
 abstract class AbstractOutput
 {
-    /** @var Configuration */
-    private $configuration;
-
     /**
-     * Constructor
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * Will print out HTML from tokens.
+     * Will output HTML from tokens.
      *
-     * @param array $tokens
+     * @param TokenContainer $tokenContainer
      *
      * @return string
      */
-    public function printTokens(array $tokens)
+    public function __invoke(TokenContainer $tokenContainer)
     {
         $output = '';
-        foreach ($tokens as $token) {
-            $output .= $this->printToken($this->configuration, $token);
+        foreach ($tokenContainer->getChildren() as $token) {
+            $output .= $this->getHtmlFromToken($token);
         }
 
         return trim($output);
     }
 
-    abstract protected function printToken(Configuration $configuration, Token $token);
+    /**
+     * Will output an individual token to HTML.
+     *
+     * @param Token $token
+     *
+     * @return string
+     */
+    abstract protected function getHtmlFromToken(Token $token);
 }

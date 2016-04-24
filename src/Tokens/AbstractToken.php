@@ -6,11 +6,11 @@ use Groundskeeper\Configuration;
 
 abstract class AbstractToken implements Token
 {
+    /** @var Configuration */
+    protected $configuration;
+
     /** @var int */
     private $depth;
-
-    /** @var null|boolean */
-    protected $isValid;
 
     /** @var null|Token */
     private $parent;
@@ -21,42 +21,27 @@ abstract class AbstractToken implements Token
     /**
      * Constructor
      */
-    public function __construct($type, $parent = null)
+    public function __construct($type, Configuration $configuration, Token $parent = null)
     {
         if (!$this->isValidType($type)) {
             throw new \InvalidArgumentException('Invalid type: ' . $type);
         }
 
-        $this->isValid = null;
+        $this->configuration = $configuration;
         $this->setParent($parent);
         $this->type = $type;
     }
 
+    /**
+     * Required by the Token interface.
+     */
     public function getDepth()
     {
         return $this->depth;
     }
 
     /**
-     * Getter for 'isValid'.
-     */
-    public function getIsValid()
-    {
-        return $this->isValid;
-    }
-
-    /**
-     * Chainable setter for 'isValid'.
-     */
-    public function setIsValid($isValid)
-    {
-        $this->isValid = (boolean) $isValid;
-
-        return $this;
-    }
-
-    /**
-     * Getter for 'parent'.
+     * Required by the Token interface.
      */
     public function getParent()
     {
@@ -66,16 +51,10 @@ abstract class AbstractToken implements Token
     /**
      * Chainable setter for 'parent'.
      */
-    public function setParent($parent = null)
+    public function setParent(Token $parent = null)
     {
-        if ($parent !== null &&
-            !$parent instanceof \Groundskeeper\Tokens\Token &&
-            !$parent instanceof \Kevintweber\HtmlTokenizer\Tokens\Token) {
-            throw new \InvalidArgumentException('Invalid parent type.');
-        }
-
         $this->depth = 0;
-        if ($parent !== null) {
+        if ($parent instanceof Token) {
             $this->depth = $parent->getDepth() + 1;
         }
 
@@ -84,20 +63,27 @@ abstract class AbstractToken implements Token
         return $this;
     }
 
+    /**
+     * Required by the Token interface.
+     */
     public function getType()
     {
         return $this->type;
     }
 
-    public function validate(Configuration $configuration)
+    /**
+     * Required by the Token interface.
+     */
+    public function toHtml($prefix, $suffix)
     {
-        // If invalidated externally, then we don't allow it to be changed.
-        if ($this->isValid === false) {
-            return;
+        if (!$this->configuration->isAllowedType($this->type)) {
+            return '';
         }
 
-        $this->isValid = $configuration->isAllowedType($this->type);
+        return $this->buildHtml($prefix, $suffix);
     }
+
+    abstract protected function buildHtml($prefix, $suffix);
 
     protected function isValidType($type)
     {

@@ -19,17 +19,13 @@ class PrettyTest extends \PHPUnit_Framework_TestCase
 
         // Tokenize
         $tokenizer = new Tokenizer($configuration);
-        $tokens = $tokenizer->tokenize($html);
+        $tokenContainer = $tokenizer->tokenize($html);
 
-        // Clean
-        foreach ($tokens as $token) {
-            $token->validate($configuration);
-        }
-
+        // Output
         $pretty = new Pretty($configuration);
         $this->assertEquals(
             $expectedOutput,
-            $pretty->printTokens($tokens)
+            $pretty($tokenContainer)
         );
     }
 

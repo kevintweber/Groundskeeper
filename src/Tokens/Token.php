@@ -2,8 +2,6 @@
 
 namespace Groundskeeper\Tokens;
 
-use Groundskeeper\Configuration;
-
 interface Token
 {
     const CDATA     = 'cdata';
@@ -34,18 +32,12 @@ interface Token
     public function getType();
 
     /**
-     * Will internally create a valid token.
-     */
-    public function validate(Configuration $configuration);
-
-    /**
-     * Will output the token to text.
+     * Will output the token to HTML.
      *
-     * @param Configuration $configuration
-     * @param string        $prefix
-     * @param string        $suffix
+     * @param string $prefix
+     * @param string $suffix
      *
      * @return string
      */
-    public function toString(Configuration $configuration, $prefix = '', $suffix = '');
+    public function toHtml($prefix, $suffix);
 }

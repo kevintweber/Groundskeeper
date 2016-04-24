@@ -9,19 +9,26 @@ class TextTest extends \PHPUnit_Framework_TestCase
 {
     public function testText()
     {
-        $text = new Text(null, 'asdf');
+        $configuration = new Configuration(array(
+            'remove-types' => 'none'
+        ));
+        $text = new Text($configuration, null, 'asdf');
         $this->assertEquals('asdf', $text->getValue());
-        $text->setIsValid(true);
-        $configuration = new Configuration();
         $this->assertEquals(
             'asdf',
-            $text->toString($configuration)
+            $text->toHtml('', '')
         );
+    }
 
-        $text->setIsValid(false);
+    public function testTextIsRemovedType()
+    {
+        $configuration = new Configuration(array(
+            'remove-types' => 'text'
+        ));
+        $text = new Text($configuration, null, 'asdf');
         $this->assertEquals(
             '',
-            $text->toString($configuration)
+            $text->toHtml('', '')
         );
     }
 }

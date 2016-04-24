@@ -9,26 +9,22 @@ class DocType extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct($parent = null, $value = null)
+    public function __construct(Configuration $configuration, $parent = null, $value = null)
     {
-        parent::__construct(Token::DOCTYPE, $parent, $value);
+        parent::__construct(Token::DOCTYPE, $configuration, $parent, $value);
     }
 
-    public function validate(Configuration $configuration)
+    /**
+     * @todo DocType must be preceeded by either nothing or a comment
+     */
+    protected function isValid()
     {
-        parent::validate($configuration);
-
-        if ($this->isValid === true) {
-            $this->isValid = $this->getParent() === null;
-        }
+        // DocType must not have any parent elements.
+        return $this->getParent() === null;
     }
 
-    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
+    protected function buildHtml($prefix, $suffix)
     {
-        if (!$this->isValid) {
-            return '';
-        }
-
         return $prefix . '<!DOCTYPE ' . $this->getValue() . '>' . $suffix;
     }
 }

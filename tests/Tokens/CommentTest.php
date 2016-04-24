@@ -9,19 +9,26 @@ class CommentTest extends \PHPUnit_Framework_TestCase
 {
     public function testComment()
     {
-        $comment = new Comment(null, 'asdf');
+        $configuration = new Configuration(array(
+            'remove-types' => 'none'
+        ));
+        $comment = new Comment($configuration, null, 'asdf');
         $this->assertEquals('asdf', $comment->getValue());
-        $comment->setIsValid(true);
-        $configuration = new Configuration();
         $this->assertEquals(
             '<!-- asdf -->',
-            $comment->toString($configuration)
+            $comment->toHtml('', '')
         );
+    }
 
-        $comment->setIsValid(false);
+    public function testCommentIsRemovedType()
+    {
+        $configuration = new Configuration(array(
+            'remove-types' => 'comment'
+        ));
+        $comment = new Comment($configuration, null, 'asdf');
         $this->assertEquals(
             '',
-            $comment->toString($configuration)
+            $comment->toHtml('', '')
         );
     }
 }

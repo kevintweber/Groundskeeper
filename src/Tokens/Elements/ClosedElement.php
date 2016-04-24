@@ -3,30 +3,20 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Token;
 
 class ClosedElement extends Element
 {
-    public function getChildren()
-    {
-        return array();
-    }
-
+    /**
+     * Reimplement addChild so that no children can be added.
+     */
     public function addChild(Token $token)
     {
         return $this;
     }
 
-    public function removeChild(Token $token)
+    protected function buildHtml($prefix, $suffix)
     {
-        return true;
-    }
-
-    public function toString(Configuration $configuration, $prefix = '', $suffix = '')
-    {
-        if (!$this->isValid && $configuration->get('clean-strategy') != 'none') {
-            return '';
-        }
-
-        return $this->toStringTag($configuration, $prefix, $suffix);
+        return $this->buildStartTag($prefix, $suffix);
     }
 }
