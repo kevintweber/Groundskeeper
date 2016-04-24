@@ -51,14 +51,23 @@ class Configuration
     {
         // Set default options.
         $resolver->setDefaults(array(
+            'clean-strategy' => 'standard',
+            'error-strategy' => 'fix',
             'indent-spaces' => 4,
             'output' => 'compact',
-            'remove-types' => 'none',
-            'strategy' => 'standard',
-            'throw-on-error' => false
+            'remove-types' => 'cdata,comment'
         ));
 
         // Validation
+
+        // clean-strategy
+        $resolver->setAllowedTypes('clean-strategy', 'string');
+        $resolver->setAllowedValues('clean-strategy', array('none', 'standard'));
+
+        // error-strategy
+        $resolver->setAllowedTypes('error-strategy', 'string');
+        $resolver->setAllowedValues('error-strategy', array('none', 'throw', 'fix'));
+
         // indent-spaces
         $resolver->setAllowedTypes('indent-spaces', 'int');
         $resolver->setAllowedValues('indent-spaces', function ($value) {
@@ -94,13 +103,6 @@ class Configuration
                 return true;
             }
         );
-
-        // strategy
-        $resolver->setAllowedTypes('strategy', 'string');
-        $resolver->setAllowedValues('strategy', array('none', 'standard'));
-
-        // throw-on-error
-        $resolver->setAllowedTypes('throw-on-error', 'bool');
     }
 
     protected function setDependentOptions()

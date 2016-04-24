@@ -8,16 +8,16 @@ class OpenElement extends Element
 {
     public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
-        if (!$this->isValid) {
+        if (!$this->isValid && $configuration->get('clean-strategy') != 'none') {
             return '';
         }
 
         $output = $this->toStringTag($configuration, $prefix, $suffix, true);
-        foreach ($this->children as $child) {
+        foreach ($this->getChildren() as $child) {
             $newPrefix = $prefix . str_repeat(' ', $configuration->get('indent-spaces'));
-            $output .= $child->toString($options, $newPrefix, $suffix);
+            $output .= $child->toString($configuration, $newPrefix, $suffix);
         }
 
-        return $output . $prefix . '</' . $this->name . '>' . $suffix;
+        return $output . $prefix . '</' . $this->getName() . '>' . $suffix;
     }
 }

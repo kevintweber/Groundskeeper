@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Exceptions\ValidationException;
 use Groundskeeper\Tokens\AbstractToken;
 use Groundskeeper\Tokens\Token;
 
@@ -26,11 +27,15 @@ class Element extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct($name, array $attributes = array(), Token $parent = null)
+    public function __construct($name, array $attributes = array(), $parent = null)
     {
         parent::__construct(Token::ELEMENT, $parent);
 
-        $this->attributes = $attributes;
+        $this->attributes = array();
+        foreach ($attributes as $key => $value) {
+            $this->addAttribute($key, $value);
+        }
+
         $this->children = array();
         $this->setName($name);
     }
@@ -43,9 +48,25 @@ class Element extends AbstractToken
         return $this->attributes;
     }
 
+    /**
+     * Hasser for 'attributes'.
+     *
+     * @param string $key
+     *
+     * @return boolean True if the attribute is present.
+     */
+    public function hasAttribute($key)
+    {
+        return array_key_exists($key, $this->attributes);
+    }
+
     public function addAttribute($key, $value)
     {
-        $key = strtolower($key);
+        $key = trim(strtolower($key));
+        if ($key == '') {
+            throw new \InvalidArgumentException('Invalid emtpy attribute key.');
+        }
+
         $this->attributes[$key] = $value;
 
         return $this;
@@ -73,6 +94,7 @@ class Element extends AbstractToken
 
     public function addChild(Token $token)
     {
+        $token->setParent($this);
         $this->children[] = $token;
 
         return $this;
@@ -117,12 +139,15 @@ class Element extends AbstractToken
         return array(
             // Global Attributes
             '/^accesskey$/i' => self::ATTR_CS_STRING,
+            '/^class$/i' => self::ATTR_CS_STRING,
             '/^contenteditable$/i' => self::ATTR_CS_STRING,
             '/^contextmenu$/i' => self::ATTR_CS_STRING,
-            '/^dir$/i' => self::ATTR_CS_STRING,
+            '/^data-\S/i' => self::ATTR_CS_STRING,
+            '/^dir$/i' => self::ATTR_CI_ENUM . '("ltr","rtl")',
             '/^draggable$/i' => self::ATTR_CS_STRING,
             '/^dropzone$/i' => self::ATTR_CS_STRING,
             '/^hidden$/i' => self::ATTR_CS_STRING,
+            '/^id$/i' => self::ATTR_CS_STRING,
             '/^is$/i' => self::ATTR_CS_STRING,
             '/^itemid$/i' => self::ATTR_CS_STRING,
             '/^itemprop$/i' => self::ATTR_CS_STRING,
@@ -130,11 +155,12 @@ class Element extends AbstractToken
             '/^itemscope$/i' => self::ATTR_CS_STRING,
             '/^itemtype$/i' => self::ATTR_CS_STRING,
             '/^lang$/i' => self::ATTR_CI_STRING,
+            '/^slot$/i' => self::ATTR_CS_STRING,
             '/^spellcheck$/i' => self::ATTR_CS_STRING,
             '/^style$/i' => self::ATTR_CS_STRING,
             '/^tabindex$/i' => self::ATTR_CS_STRING,
             '/^title$/i' => self::ATTR_CS_STRING,
-            '/^translate$/i' => self::ATTR_CI_ENUM . '("","yes","no")',
+            '/^translate$/i' => self::ATTR_CI_ENUM . '("yes","no","")',
 
             // Event Handler Content Attributes
             // https://html.spec.whatwg.org/multipage/webappapis.html#event-handler-content-attributes
@@ -274,13 +300,23 @@ class Element extends AbstractToken
 
     public function validate(Configuration $configuration)
     {
+        if ($configuration->get('clean-strategy') == 'none') {
+            $this->isValid = true;
+            foreach ($this->children as $child) {
+                $child->validate($configuration);
+            }
+
+            return;
+        }
+
         parent::validate($configuration);
 
+        // If not valid, then we are done.
         if (!$this->isValid) {
             return;
         }
 
-        if ($configuration->get('strategy') == 'standard') {
+        if ($configuration->get('clean-strategy') != 'none') {
             // Remove non-standard attributes.
             foreach ($this->attributes as $name => $value) {
                 // Validate attribute name
@@ -299,9 +335,17 @@ class Element extends AbstractToken
         }
     }
 
+    protected function handleValidationError(Configuration $configuration, $message)
+    {
+        $this->isValid = false;
+        if ($configuration->get('error-strategy') == 'throw') {
+            throw new ValidationException($message);
+        }
+    }
+
     public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
-        if (!$this->isValid) {
+        if (!$this->isValid && $configuration->get('clean-strategy') != 'none') {
             return '';
         }
 
@@ -312,7 +356,7 @@ class Element extends AbstractToken
 
         foreach ($this->children as $child) {
             $newPrefix = $prefix . str_repeat(' ', $configuration->get('indent-spaces'));
-            $output .= $child->toString($options, $newPrefix, $suffix);
+            $output .= $child->toString($configuration, $newPrefix, $suffix);
         }
 
         return $output . $prefix . '</' . $this->name . '>' . $suffix;

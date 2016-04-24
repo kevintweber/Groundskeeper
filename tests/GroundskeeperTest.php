@@ -12,29 +12,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
         $configuration = $groundskeeper->getConfiguration();
         $this->assertEquals(0, $configuration->get('indent-spaces'));
         $this->assertEquals('compact', $configuration->get('output'));
-        $this->assertFalse($configuration->get('throw-on-error'));
+
+        $secondGroundskeeper = new Groundskeeper($configuration);
+        $this->assertEquals($configuration, $secondGroundskeeper->getConfiguration());
     }
 
     /**
-     * @dataProvider exceptionInConfigurationDataProvider
-     * @expectedException Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @expectedException \InvalidArgumentException
      */
-    public function testExceptionInConfiguration($key, $value)
+    public function testExceptionInConstructor()
     {
-        $groundskeeper = new Groundskeeper(
-            array($key => $value)
-        );
-    }
-
-    public function exceptionInConfigurationDataProvider()
-    {
-        return array(
-            array('indent-spaces', -2),
-            array('indent-spaces', 'asdf'),
-            array('output', 'asdf'),
-            array('output', 5),
-            array('throw-on-error', 5)
-        );
+        $groundskeeper = new Groundskeeper(5);
     }
 
     /**
@@ -42,7 +30,7 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
      */
     public function testClean($html, $expectedOutput)
     {
-        $groundskeeper = new Groundskeeper();
+        $groundskeeper = new Groundskeeper(array('remove-types' => 'none'));
         $this->assertEquals(
             $expectedOutput,
             $groundskeeper->clean($html)

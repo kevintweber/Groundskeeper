@@ -9,7 +9,7 @@ class CData extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct(Token $parent = null, $value = null)
+    public function __construct($parent = null, $value = null)
     {
         parent::__construct(Token::CDATA, $parent, $value);
     }

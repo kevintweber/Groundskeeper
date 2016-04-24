@@ -9,7 +9,7 @@ class DocType extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct(Token $parent = null, $value = null)
+    public function __construct($parent = null, $value = null)
     {
         parent::__construct(Token::DOCTYPE, $parent, $value);
     }

@@ -32,7 +32,7 @@ abstract class AbstractOutput
             $output .= $this->printToken($this->configuration, $token);
         }
 
-        return $output;
+        return trim($output);
     }
 
     abstract protected function printToken(Configuration $configuration, Token $token);

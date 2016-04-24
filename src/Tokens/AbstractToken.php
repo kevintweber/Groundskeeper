@@ -9,7 +9,7 @@ abstract class AbstractToken implements Token
     /** @var int */
     private $depth;
 
-    /** @var int */
+    /** @var null|boolean */
     protected $isValid;
 
     /** @var null|Token */
@@ -21,13 +21,13 @@ abstract class AbstractToken implements Token
     /**
      * Constructor
      */
-    public function __construct($type, Token $parent = null)
+    public function __construct($type, $parent = null)
     {
         if (!$this->isValidType($type)) {
             throw new \InvalidArgumentException('Invalid type: ' . $type);
         }
 
-        $this->isValid = false;
+        $this->isValid = null;
         $this->setParent($parent);
         $this->type = $type;
     }
@@ -46,6 +46,16 @@ abstract class AbstractToken implements Token
     }
 
     /**
+     * Chainable setter for 'isValid'.
+     */
+    public function setIsValid($isValid)
+    {
+        $this->isValid = (boolean) $isValid;
+
+        return $this;
+    }
+
+    /**
      * Getter for 'parent'.
      */
     public function getParent()
@@ -56,10 +66,16 @@ abstract class AbstractToken implements Token
     /**
      * Chainable setter for 'parent'.
      */
-    public function setParent(Token $parent = null)
+    public function setParent($parent = null)
     {
+        if ($parent !== null &&
+            !$parent instanceof \Groundskeeper\Tokens\Token &&
+            !$parent instanceof \Kevintweber\HtmlTokenizer\Tokens\Token) {
+            throw new \InvalidArgumentException('Invalid parent type.');
+        }
+
         $this->depth = 0;
-        if ($parent instanceof Token) {
+        if ($parent !== null) {
             $this->depth = $parent->getDepth() + 1;
         }
 
@@ -75,6 +91,11 @@ abstract class AbstractToken implements Token
 
     public function validate(Configuration $configuration)
     {
+        // If invalidated externally, then we don't allow it to be changed.
+        if ($this->isValid === false) {
+            return;
+        }
+
         $this->isValid = $configuration->isAllowedType($this->type);
     }
 

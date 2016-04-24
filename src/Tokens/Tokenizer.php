@@ -26,7 +26,9 @@ class Tokenizer
             throw new \InvalidArgumentException('Html must be a string.');
         }
 
-        $tokenizer = new HtmlTokenizer($this->configuration->get('throw-on-error'));
+        $tokenizer = new HtmlTokenizer(
+            $this->configuration->get('error-strategy') == 'throw'
+        );
         $basicTokenCollection = $tokenizer->parse($html);
 
         $cleanableTokens = array();
@@ -89,7 +91,7 @@ class Tokenizer
 
         foreach ($basicElement->getChildren() as $basicChild) {
             $cleanableElement->addChild(
-                static::importToken($basicChild)
+                $this->createToken($basicChild)
             );
         }
 

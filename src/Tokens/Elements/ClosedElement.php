@@ -23,7 +23,7 @@ class ClosedElement extends Element
 
     public function toString(Configuration $configuration, $prefix = '', $suffix = '')
     {
-        if (!$this->isValid) {
+        if (!$this->isValid && $configuration->get('clean-strategy') != 'none') {
             return '';
         }
 

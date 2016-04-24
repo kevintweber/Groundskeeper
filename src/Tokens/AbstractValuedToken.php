@@ -10,7 +10,7 @@ abstract class AbstractValuedToken extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct($type, Token $parent = null, $value = null)
+    public function __construct($type, $parent = null, $value = null)
     {
         parent::__construct($type, $parent);
 
