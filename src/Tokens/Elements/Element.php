@@ -7,10 +7,11 @@ use Groundskeeper\Exceptions\ValidationException;
 use Groundskeeper\Tokens\AbstractToken;
 use Groundskeeper\Tokens\Cleanable;
 use Groundskeeper\Tokens\ContainsChildren;
+use Groundskeeper\Tokens\Removable;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
-class Element extends AbstractToken implements Cleanable, ContainsChildren
+class Element extends AbstractToken implements Cleanable, ContainsChildren, Removable
 {
     const ATTR_CI_ENUM   = 'ci_enu';// case-insensitive enumeration
     const ATTR_JS        = 'cs_jsc';
@@ -115,7 +116,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren
     }
 
     /**
-     * Required by ContainsChildren interface.
+     * Required by the ContainsChildren interface.
      */
     public function removeChild(Token $token)
     {
@@ -151,10 +152,13 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren
         return $this;
     }
 
+    /**
+     * Required by the Cleanable interface.
+     */
     public function clean(LoggerInterface $logger = null)
     {
         if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
-            return;
+            return true;
         }
 
         // Remove non-standard attributes.
@@ -205,9 +209,14 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren
         // Clean children.
         foreach ($this->children as $child) {
             if ($child instanceof Cleanable) {
-                $child->clean($logger);
+                $isClean = $child->clean($logger);
+                if (!$isClean) {
+                    /// @todo
+                }
             }
         }
+
+        return true;
     }
 
     protected function getAllowedAttributes()
@@ -378,7 +387,50 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren
         return array();
     }
 
-    protected function buildHtml($prefix, $suffix)
+    /**
+     * Required by the Removable interface.
+     */
+    public function remove(LoggerInterface $logger = null)
+    {
+        $hasRemovableTypes = $this->configuration->get('type-blacklist') !==
+            Configuration::TYPE_BLACKLIST_NONE;
+        $hasRemovableElements = $this->configuration->get('element-blacklist') !==
+            Configuration::ELEMENT_BLACKLIST_NONE;
+        foreach ($this->children as $key => $child) {
+            // Check types.
+            if ($hasRemovableTypes &&
+                !$this->configuration->isAllowedType($child->getType())) {
+                unset($this->children[$key]);
+                if ($logger !== null) {
+                    $logger->debug('Removing token of type: ' . $child->getType());
+                }
+
+                continue;
+            }
+
+            // Check elements.
+            if ($hasRemovableElements &&
+                $child instanceof Element &&
+                !$this->configuration->isAllowedElement($child->getName())) {
+                unset($this->children[$key]);
+                if ($logger !== null) {
+                    $logger->debug('Removing element of type: ' . $child->getName());
+                }
+
+                continue;
+            }
+
+            // Check children.
+            if ($child instanceof Removable) {
+                $child->remove($logger);
+            }
+        }
+    }
+
+    /**
+     * Required by the Token interface.
+     */
+    public function toHtml($prefix, $suffix)
     {
         $output = $this->buildStartTag($prefix, $suffix);
         if (empty($this->children)) {
@@ -417,7 +469,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren
                     ' ',
                     $this->configuration->get('indent-spaces')
                 );
-            $output .= $child->buildHtml($newPrefix, $suffix);
+            $output .= $child->toHtml($newPrefix, $suffix);
         }
 
         return $output;

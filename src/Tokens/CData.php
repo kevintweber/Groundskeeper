@@ -14,7 +14,10 @@ class CData extends AbstractValuedToken
         parent::__construct(Token::CDATA, $configuration, $parent, $value);
     }
 
-    protected function buildHtml($prefix, $suffix)
+    /**
+     * Required by the Token interface.
+     */
+    public function toHtml($prefix, $suffix)
     {
         return $prefix . '<![CDATA[' . $this->getValue() . ']]>' . $suffix;
     }

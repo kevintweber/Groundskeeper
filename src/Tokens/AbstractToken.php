@@ -71,20 +71,6 @@ abstract class AbstractToken implements Token
         return $this->type;
     }
 
-    /**
-     * Required by the Token interface.
-     */
-    public function toHtml($prefix, $suffix)
-    {
-        if (!$this->configuration->isAllowedType($this->type)) {
-            return '';
-        }
-
-        return $this->buildHtml($prefix, $suffix);
-    }
-
-    abstract protected function buildHtml($prefix, $suffix);
-
     protected function isValidType($type)
     {
         return $type === Token::CDATA

@@ -32,7 +32,7 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
      */
     public function testClean($html, $expectedOutput)
     {
-        $groundskeeper = new Groundskeeper(array('remove-types' => 'none'));
+        $groundskeeper = new Groundskeeper(array('type-blacklist' => 'none'));
         $groundskeeper->setLogger(new NullLogger());
         $this->assertEquals(
             $expectedOutput,
@@ -103,6 +103,119 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<asdf role=ASDF1>Text goes here</asdf>',
                 '<asdf role="asdf1">Text goes here</asdf>'
             ),
+        );
+    }
+
+    /**
+     * @dataProvider cleanWithTypeRemovalDataProvider
+     */
+    public function testCleanWithTypeRemoval($removedTypes, $html, $expectedOutput)
+    {
+        $groundskeeper = new Groundskeeper(array(
+            'type-blacklist' => $removedTypes
+        ));
+        $groundskeeper->setLogger(new NullLogger());
+        $this->assertEquals(
+            $expectedOutput,
+            $groundskeeper->clean($html)
+        );
+    }
+
+    public function cleanWithTypeRemovalDataProvider()
+    {
+        return array(
+            'cdata removed' => array(
+                'cdata',
+                '     <![CDATA[asdf]]>      ',
+                ''
+            ),
+            'comment removed' => array(
+                'comment',
+                '     <!-- asdf -->      ',
+                ''
+            ),
+            'doctype removed' => array(
+                'doctype',
+                '     <!DOCTYPE asdf>      ',
+                ''
+            ),
+            'element removed' => array(
+                'element',
+                '     <asdf/>      ',
+                ''
+            ),
+            'text removed' => array(
+                'text',
+                '     asdf      ',
+                ''
+            ),
+            'element with comment' => array(
+                'comment',
+                '<asdf1><asdf2/><!-- comment --></asdf1>',
+                '<asdf1><asdf2/></asdf1>'
+            ),
+            'element with child and two comments' => array(
+                'comment',
+                '    <asdf1>     <!-- comment 1 -->      <asdf2/><!-- comment 2 --></asdf1>           ',
+                '<asdf1><asdf2/></asdf1>'
+            ),
+            'multiple removals' => array(
+                'comment,cdata',
+                'text <asdf data-asdf ><!-- comment --><qwerty><![CDATA[ asdf ]]></qwerty></asdf>',
+                'text<asdf data-asdf><qwerty/></asdf>'
+
+            ),
+            'dont remove elements inside a script tag' => array(
+                'comment,cdata',
+                'text <asdf data-asdf ><!-- comment --><script><![CDATA[ asdf ]]></script></asdf>',
+                'text<asdf data-asdf><script><![CDATA[ asdf ]]></script></asdf>'
+            )
+        );
+    }
+
+    /**
+     * @dataProvider cleanWithElementRemovalDataProvider
+     */
+    public function testCleanWithElementRemoval($removedElements, $html, $expectedOutput)
+    {
+        $groundskeeper = new Groundskeeper(array(
+            'element-blacklist' => $removedElements
+        ));
+        $groundskeeper->setLogger(new NullLogger());
+        $this->assertEquals(
+            $expectedOutput,
+            $groundskeeper->clean($html)
+        );
+    }
+
+    public function cleanWithElementRemovalDataProvider()
+    {
+        return array(
+            'none' => array(
+                'none',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/><em>asdf4</em>asdf5</div>',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/><em>asdf4</em>asdf5</div>'
+            ),
+            'single closed element' => array(
+                'br',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/><em>asdf4</em>asdf5</div>',
+                '<div class="asdf1">asdf2<i>asdf3</i><em>asdf4</em>asdf5</div>'
+            ),
+            'single open element' => array(
+                'em',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/><em>asdf4</em>asdf5</div>',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/>asdf5</div>'
+            ),
+            'multiple elements' => array(
+                'em,br',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/><em>asdf4</em>asdf5</div>',
+                '<div class="asdf1">asdf2<i>asdf3</i>asdf5</div>'
+            ),
+            'parent element' => array(
+                'em,br,div',
+                '<div class="asdf1">asdf2<i>asdf3</i><br/><em>asdf4</em>asdf5</div>',
+                ''
+            )
         );
     }
 }

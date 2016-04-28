@@ -33,29 +33,27 @@ $cleanHtml = $groundskeeper->clean($dirtyHtml);
 ```
 
 ### Options
-* clean-strategy
-  * Options: "none", "standard", "aggressive"; Default: "standard"
-  * Describes how the HTML document will be cleaned.
-    * none - No cleaning will be done.
-    * standard - Standard compliant HTML will be output.
-    * aggressive - Like "standard" plus non-standard elements will be removed.
-* error-strategy
-  * Options: "none", "throw", "fix"; Default: "fix"
-  * Describes how Groundskeepers will handle malformed HTML.
-    * none - Nothing will happen when malformed HTML is encountered.
-    * throw - Will throw an exception when malformed HTML is encountered.
-    * fix - Will attempt to fix the malformed HTML.
-* indent-spaces
+* `clean-strategy`: Describes how the HTML document will be cleaned.
+  * Options: `none`, `standard`, `aggressive`; Default: `standard`
+    * `none` - No cleaning will be done.
+    * `standard` - Standard compliant HTML will be output.
+    * `aggressive` - Like "standard" plus non-standard elements will be removed.
+* `element-blacklist`: Describes which elements will be removed from the output.
+  * Options: `none` or comma seperated list of elements; Default: `none`
+* `error-strategy`: Describes how Groundskeepers will handle malformed HTML.
+  * Options: `none`, `throw`, `fix`; Default: `fix`
+    * `none` - Nothing will happen when malformed HTML is encountered.
+    * `throw` - Will throw an exception when malformed HTML is encountered.
+    * `remove` - Will remove the malformed HTML.
+    * `fix` - Will attempt to fix the malformed HTML.  When a fix cannot be accomplished, the token will be removed if the `clean-strategy` is `standard` or `aggressive`.
+* `indent-spaces`: The number of spaces for indentation when using pretty output.
   * Options: integer greater than or equals to 0; Default: 4
-  * The number of spaces for indentation when using pretty output.
-* output
-  * Options: "compact", "pretty"; Default: "compact"
-  * Describes how the HTML will be output.
-    * compact - Will remove all whitespace between elements, and will set "indent-spaces" to 0.
-    * pretty - One element per line with indentation. Handy for debugging.
-* remove-types
-  * Options: "none" or comma seperated list of any of the following: "cdata", "comment", "doctype", "element", "text"; Default: "cdata,comment"
-  * Describes which token types will be removed from the output.
+* `output`: Describes how the HTML will be output.
+  * Options: `compact`, `pretty`; Default: `compact`
+    * `compact` - Will remove all whitespace between elements, and will set `indent-spaces` to 0.
+    * `pretty` - One element per line with indentation.  Inline elements are left inline.  Handy for debugging.
+* `type-blacklist`: Describes which token types will be removed from the output.
+  * Options: `none` or comma seperated list of any of the following: `cdata`, `comment`, `doctype`, `element`, `text`; Default: `cdata,comment`
 
 ## Change log
 

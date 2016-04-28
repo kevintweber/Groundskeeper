@@ -11,14 +11,17 @@ class Configuration
     const CLEAN_STRATEGY_STANDARD   = 'standard';
     const CLEAN_STRATEGY_AGGRESSIVE = 'aggressive';
 
-    const ERROR_STRATEGY_NONE  = 'none';
-    const ERROR_STRATEGY_THROW = 'throw';
-    const ERROR_STRATEGY_FIX   = 'fix';
+    const ELEMENT_BLACKLIST_NONE = 'none';
+
+    const ERROR_STRATEGY_NONE   = 'none';
+    const ERROR_STRATEGY_THROW  = 'throw';
+    const ERROR_STRATEGY_FIX    = 'fix';
+    const ERROR_STRATEGY_REMOVE = 'remove';
 
     const OUTPUT_COMPACT = 'compact';
     const OUTPUT_PRETTY  = 'pretty';
 
-    const REMOVE_TYPES_NONE = 'none';
+    const TYPE_BLACKLIST_NONE = 'none';
 
     /** @var array */
     private $options;
@@ -49,9 +52,21 @@ class Configuration
         return $this->options[$key];
     }
 
+    public function isAllowedElement($element)
+    {
+        $disallowedElementArray = explode(',', $this->options['element-blacklist']);
+        foreach ($disallowedElementArray as $disallowedElement) {
+            if (strtolower(trim($disallowedElement)) == $element) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function isAllowedType($type)
     {
-        $disallowedTypeArray = explode(',', $this->options['remove-types']);
+        $disallowedTypeArray = explode(',', $this->options['type-blacklist']);
         foreach ($disallowedTypeArray as $disallowedType) {
             if (strtolower(trim($disallowedType)) == $type) {
                 return false;
@@ -66,10 +81,11 @@ class Configuration
         // Set default options.
         $resolver->setDefaults(array(
             'clean-strategy' => self::CLEAN_STRATEGY_STANDARD,
+            'element-blacklist' => self::ELEMENT_BLACKLIST_NONE,
             'error-strategy' => self::ERROR_STRATEGY_FIX,
             'indent-spaces' => 4,
             'output' => self::OUTPUT_COMPACT,
-            'remove-types' => Token::CDATA . ',' . Token::COMMENT
+            'type-blacklist' => Token::CDATA . ',' . Token::COMMENT
         ));
 
         // Validation
@@ -85,6 +101,13 @@ class Configuration
             )
         );
 
+        // element-blacklist
+        $resolver->setAllowedTypes('element-blacklist', 'string');
+        $resolver->setAllowedValues('element-blacklist', function ($value) {
+                return strlen($value) > 0;
+            }
+        );
+
         // error-strategy
         $resolver->setAllowedTypes('error-strategy', 'string');
         $resolver->setAllowedValues(
@@ -92,7 +115,8 @@ class Configuration
             array(
                 self::ERROR_STRATEGY_NONE,
                 self::ERROR_STRATEGY_THROW,
-                self::ERROR_STRATEGY_FIX
+                self::ERROR_STRATEGY_FIX,
+                self::ERROR_STRATEGY_REMOVE
             )
         );
 
@@ -110,12 +134,12 @@ class Configuration
             array(self::OUTPUT_COMPACT, self::OUTPUT_PRETTY)
         );
 
-        // remove-types
-        $resolver->setAllowedTypes('remove-types', 'string');
+        // type-blacklist
+        $resolver->setAllowedTypes('type-blacklist', 'string');
         $resolver->setAllowedValues(
-            'remove-types',
+            'type-blacklist',
             function ($value) {
-                if ($value == self::REMOVE_TYPES_NONE) {
+                if ($value == self::TYPE_BLACKLIST_NONE) {
                     return true;
                 }
 

@@ -10,10 +10,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = new Configuration();
         $this->assertEquals('standard', $configuration->get('clean-strategy'));
+        $this->assertEquals('none', $configuration->get('element-blacklist'));
         $this->assertEquals('fix', $configuration->get('error-strategy'));
         $this->assertEquals(0, $configuration->get('indent-spaces'));
         $this->assertEquals('compact', $configuration->get('output'));
-        $this->assertEquals('cdata,comment', $configuration->get('remove-types'));
+        $this->assertEquals('cdata,comment', $configuration->get('type-blacklist'));
     }
 
     /**
@@ -32,14 +33,16 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         return array(
             array('clean-strategy', 5),
             array('clean-strategy', 'asdf'),
+            array('element-blacklist', 5),
+            array('element-blacklist', ''),
             array('error-strategy', 5),
             array('error-strategy', 'asdf'),
             array('indent-spaces', -2),
             array('indent-spaces', 'asdf'),
             array('output', 'asdf'),
             array('output', 5),
-            array('remove-types', 5),
-            array('remove-types', 'asdf')
+            array('type-blacklist', 5),
+            array('type-blacklist', 'asdf')
         );
     }
 
@@ -53,6 +56,15 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('standard', $configuration->get('clean-strategy'));
         $this->assertFalse($configuration->has('asdf'));
         $configuration->get('asdf');
+    }
+
+    public function testIsAllowedElement()
+    {
+        $configuration = new Configuration(array(
+            'element-blacklist' => 'em,asdf'
+        ));
+        $this->assertTrue($configuration->isAllowedElement('div'));
+        $this->assertFalse($configuration->isAllowedElement('em'));
     }
 
     public function testIsAllowedType()

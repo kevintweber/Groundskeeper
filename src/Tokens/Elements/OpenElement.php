@@ -6,7 +6,10 @@ use Groundskeeper\Configuration;
 
 class OpenElement extends Element
 {
-    protected function buildHtml($prefix, $suffix)
+    /**
+     * Required by the Token interface.
+     */
+    public function toHtml($prefix, $suffix)
     {
         $output = $this->buildStartTag($prefix, $suffix, true);
         $output .= $this->buildChildrenHtml($prefix, $suffix);

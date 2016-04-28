@@ -15,7 +15,10 @@ class ClosedElement extends Element
         return $this;
     }
 
-    protected function buildHtml($prefix, $suffix)
+    /**
+     * Required by the Token interface.
+     */
+    public function toHtml($prefix, $suffix)
     {
         return $this->buildStartTag($prefix, $suffix);
     }

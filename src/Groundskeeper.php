@@ -41,6 +41,9 @@ class Groundskeeper implements LoggerAwareInterface
         $tokenizer = new Tokenizer($this->configuration);
         $tokenContainer = $tokenizer->tokenize($html);
 
+        // Remove unwanted tokens
+        $tokenContainer->remove($this->logger);
+
         // Clean
         $tokenContainer->clean($this->logger);
 

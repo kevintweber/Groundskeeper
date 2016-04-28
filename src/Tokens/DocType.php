@@ -3,8 +3,9 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
+use Psr\Log\LoggerInterface;
 
-class DocType extends AbstractValuedToken
+class DocType extends AbstractValuedToken implements Cleanable
 {
     /**
      * Constructor
@@ -15,15 +16,22 @@ class DocType extends AbstractValuedToken
     }
 
     /**
-     * @todo DocType must be preceeded by either nothing or a comment
+     * Required by the Cleanable interface.
      */
-    protected function isValid()
+    public function clean(LoggerInterface $logger = null)
     {
+        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+            return true;
+        }
+
         // DocType must not have any parent elements.
         return $this->getParent() === null;
     }
 
-    protected function buildHtml($prefix, $suffix)
+    /**
+     * Required by the Token interface.
+     */
+    public function toHtml($prefix, $suffix)
     {
         return $prefix . '<!DOCTYPE ' . $this->getValue() . '>' . $suffix;
     }
