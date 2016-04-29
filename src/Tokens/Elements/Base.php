@@ -19,34 +19,27 @@ class Base extends ClosedElement
         );
     }
 
-    public function validate(Configuration $configuration)
+    /**
+     * Required by the Cleanable interface.
+     */
+    public function clean(LoggerInterface $logger = null)
     {
-        parent::validate($configuration);
-
-        // If not valid, then we are done.
-        if (!$this->isValid) {
-            return;
+        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+            return true;
         }
 
-        // If no cleaning, then we are done.
-        if ($configuration->get('clean-strategy') == 'none') {
-            return;
-        }
+        parent::clean($logger);
 
         // "base" must be child of "head".
         if ($this->getParent() === null || $this->getParent()->getName() !== 'head') {
-            $this->handleValidationError(
-                $configuration,
-                'Base element must be a child of a "head" element.'
-            );
+            return false;
         }
 
         // Must have either "href" or "target" attribute or both.
         if (!$this->hasAttribute('href') && !$this->hasAttribute('target')) {
-            $this->handleValidationError(
-                $configuration,
-                'Base element must have either "href" or "target" attribute or both.'
-            );
+            return false;
         }
+
+        return true;
     }
 }

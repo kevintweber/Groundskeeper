@@ -18,5 +18,10 @@ class CommentTest extends \PHPUnit_Framework_TestCase
             '<!-- asdf -->',
             $comment->toHtml('', '')
         );
+        $comment->setValue('qwerty');
+        $this->assertEquals(
+            '<!-- qwerty -->',
+            $comment->toHtml('', '')
+        );
     }
 }

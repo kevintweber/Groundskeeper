@@ -3,6 +3,9 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Exceptions\ValidationException;
+use Groundskeeper\Tokens\Elements\Elements;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractToken implements Token
 {
@@ -78,5 +81,37 @@ abstract class AbstractToken implements Token
             || $type === Token::DOCTYPE
             || $type === Token::ELEMENT
             || $type === Token::TEXT;
+    }
+
+    public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger = null)
+    {
+        if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+            return true;
+        }
+
+        foreach ($children as $key => $child) {
+            if ($child instanceof Cleanable) {
+                $isClean = $child->clean($logger);
+                if (!$isClean) {
+                    $message = 'invalid token. Unable to fix: ' . $child->getType();
+                    if ($child instanceof Element) {
+                        $message = 'invalid element. Unable to fix: ' . $child->getName();
+                    }
+
+                    if ($configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                        throw new ValidationException(ucfirst($message));
+                    }
+
+                    if ($configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX || $configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                        unset($children[$key]);
+                        if ($logger !== null) {
+                            $logger->debug('Removing ' . $message);
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }

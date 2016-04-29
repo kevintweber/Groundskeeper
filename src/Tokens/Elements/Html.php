@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
+use Psr\Log\LoggerInterface;
 
 class Html extends OpenElement
 {
@@ -18,22 +19,179 @@ class Html extends OpenElement
         );
     }
 
-    public function validate(Configuration $configuration)
+    /**
+     * Required by the Cleanable interface.
+     */
+    public function clean(LoggerInterface $logger = null)
     {
-        parent::validate($configuration);
-
-        // If not valid, then we are done.
-        if (!$this->isValid) {
-            return;
+        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+            return true;
         }
 
-        // If no cleaning, then we are done.
-        if ($configuration->get('clean-strategy') == 'none') {
-            return;
-        }
+        parent::clean($logger);
 
         if ($this->getParent() !== null) {
-            return $this->handleValidationError('Html element must not be nested.');
+            return false;
         }
+
+        // Contents: HEAD element followed by BODY element.
+        $bodyCount = 0;
+        $headCount = 0;
+        $headIsFirst = false;
+        foreach ($this->children as $key => $child) {
+            // Ignore comments.
+            if ($child->getType() == 'comment') {
+                continue;
+            }
+
+            // Check for HEAD and BODY
+            if ($child->getType() == 'element') {
+                if ($child->getName() == 'head') {
+                    $headCount++;
+                    if ($bodyCount == 0) {
+                        $headIsFirst = true;
+                    }
+                } elseif ($child->getName() == 'body') {
+                    $bodyCount++;
+                }
+            } else {
+                // Invalid token.
+                if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                    throw new ValidationException('Token (' . $child->getType() . ') should not be child of HTML element.');
+                }
+
+                if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                    return false;
+                }
+
+                if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                    unset($this->children[$key]);
+                    if ($logger !== null) {
+                        $logger->debug('Removing invalid token (' . $child->getType() . '). It should not be child of HTML element.');
+                    }
+                }
+            }
+        }
+
+        // Handle missing HEAD element child.
+        if ($headCount == 0) {
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                throw new ValidationException('HTML element is missing HEAD element as first child.');
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                return false;
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                $head = new Head($this->configuration, 'head');
+                $this->prependChild($head);
+                if ($logger !== null) {
+                    $logger->debug('Missing HEAD element added.');
+                }
+            }
+        }
+
+        // Handle missing BODY element child.
+        if ($bodyCount == 0) {
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                throw new ValidationException('HTML element is missing BODY element.');
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                return false;
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                $body = new Body($this->configuration, 'body');
+                $this->appendChild($body);
+                if ($logger !== null) {
+                    $logger->debug('Missing BODY element added.');
+                }
+            }
+        }
+
+        // Handle multiple HEAD elements.
+        if ($headCount > 1) {
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                throw new ValidationException('HTML element can only have 1 HEAD element child.');
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                return false;
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                // Remove extraneous HEAD elements.
+                $keepHead = true;
+                foreach ($this->children as $key => $child) {
+                    if ($child->getType() == 'element' && $child->getName() == 'head') {
+                        if ($keepHead) {
+                            $keepHead = false;
+                        } else {
+                            unset($this->children[$key]);
+                            if ($logger !== null) {
+                                $logger->debug('Removed extraneous HEAD element.');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Handle multiple BODY elements.
+        if ($bodyCount > 1) {
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                throw new ValidationException('HTML element can only have 1 BODY element child.');
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                return false;
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                // Remove extraneous BODY elements.
+                $keepBody = true;
+                foreach ($this->children as $key => $child) {
+                    if ($child->getType() == 'element' && $child->getName() == 'body') {
+                        if ($keepBody) {
+                            $keepBody = false;
+                        } else {
+                            unset($this->children[$key]);
+                            if ($logger !== null) {
+                                $logger->debug('Removed extraneous BODY element.');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Handle BODY before HEAD.
+        if (!$headIsFirst && $bodyCount > 0) {
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+                throw new ValidationException('HTML element requires the HEAD element to preceed the BODY element.');
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
+                return false;
+            }
+
+            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
+                foreach ($this->children as $key => $child) {
+                    if ($child->getType() == 'element' && $child->getName() == 'body') {
+                        unset($this->children[$key]);
+                        $this->appendChild($child);
+                        if ($logger !== null) {
+                            $logger->debug('Moved BODY element to end of HTML children.');
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }

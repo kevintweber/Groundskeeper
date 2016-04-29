@@ -30,7 +30,7 @@ class Tokenizer
 
         $tokenContainer = new TokenContainer($this->configuration);
         foreach ($basicTokenCollection as $basicToken) {
-            $tokenContainer->addChild($this->createToken($basicToken));
+            $tokenContainer->appendChild($this->createToken($basicToken));
         }
 
         return $tokenContainer;
@@ -92,7 +92,7 @@ class Tokenizer
         );
 
         foreach ($basicElement->getChildren() as $basicChild) {
-            $cleanableElement->addChild(
+            $cleanableElement->appendChild(
                 $this->createToken($basicChild, $cleanableElement)
             );
         }

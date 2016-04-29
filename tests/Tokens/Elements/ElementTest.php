@@ -54,13 +54,19 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $element = new Element($configuration, 'asdf');
         $this->assertEmpty($element->getChildren());
         $newElement = new Element($configuration, 'asdfasdf');
+        $anotherElement = new Element($configuration, 'qwerty');
         $this->assertFalse($element->hasChild($newElement));
-        $element->addChild($newElement);
+        $element->appendChild($newElement);
         $this->assertEquals(
             array($newElement),
             $element->getChildren()
         );
         $this->assertTrue($element->hasChild($newElement));
+        $element->prependChild($anotherElement);
+        $this->assertEquals(
+            array($anotherElement, $newElement),
+            $element->getChildren()
+        );
         $this->assertTrue($element->removeChild($newElement));
         $this->assertFalse($element->hasChild($newElement));
         $this->assertFalse($element->removeChild($newElement));

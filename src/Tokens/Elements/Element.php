@@ -20,10 +20,10 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     const ATTR_URI       = 'cs_uri';
 
     /** @var array */
-    private $attributes;
+    protected $attributes;
 
     /** @var array[Token] */
-    private $children;
+    protected $children;
 
     /** @var string */
     private $name;
@@ -107,10 +107,21 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Required by ContainsChildren interface.
      */
-    public function addChild(Token $token)
+    public function appendChild(Token $token)
     {
         $token->setParent($this);
         $this->children[] = $token;
+
+        return $this;
+    }
+
+    /**
+     * Required by ContainsChildren interface.
+     */
+    public function prependChild(Token $token)
+    {
+        $token->setParent($this);
+        array_unshift($this->children, $token);
 
         return $this;
     }
@@ -207,16 +218,11 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         }
 
         // Clean children.
-        foreach ($this->children as $child) {
-            if ($child instanceof Cleanable) {
-                $isClean = $child->clean($logger);
-                if (!$isClean) {
-                    /// @todo
-                }
-            }
-        }
-
-        return true;
+        return AbstractToken::cleanChildTokens(
+            $this->configuration,
+            $this->children,
+            $logger
+        );
     }
 
     protected function getAllowedAttributes()

@@ -8,9 +8,17 @@ use Groundskeeper\Tokens\Token;
 class ClosedElement extends Element
 {
     /**
-     * Reimplement addChild so that no children can be added.
+     * Reimplement appendChild so that no children can be added.
      */
-    public function addChild(Token $token)
+    public function appendChild(Token $token)
+    {
+        return $this;
+    }
+
+    /**
+     * Reimplement prependChild so that no children can be added.
+     */
+    public function prependChild(Token $token)
     {
         return $this;
     }

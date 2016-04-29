@@ -218,4 +218,104 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
             )
         );
     }
+
+    /**
+     * @dataProvider cleanWithErrorFixDataProvider
+     */
+    public function testCleanWithErrorFix($html, $expectedOutput)
+    {
+        $groundskeeper = new Groundskeeper(array(
+            'error-strategy' => 'fix',
+            'type-blacklist' => 'none'
+        ));
+        $groundskeeper->setLogger(new NullLogger());
+        $this->assertEquals(
+            $expectedOutput,
+            $groundskeeper->clean($html)
+        );
+    }
+
+    public function cleanWithErrorFixDataProvider()
+    {
+        return array(
+            'no fixes' => array(
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'html - bad child token' => array(
+                '<html><!-- asdf --><![CDATA[asdf]]><head><title>Asdf1</title></head>asdf<body>Yo!</body></html>',
+                '<html><!-- asdf --><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'html - missing head' => array(
+                '<html><body>Yo!</body></html>',
+                '<html><head></head><body>Yo!</body></html>'
+            ),
+            'html - missing body' => array(
+                '<html><head><title>Asdf1</title></head></html>',
+                '<html><head><title>Asdf1</title></head><body></body></html>'
+            ),
+            'html - multiple heads' => array(
+                '<html><head><title>Asdf1</title></head><head><title>Asdf2</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'html - multiple bodies' => array(
+                '<html><head><title>Asdf1</title></head><body>Yo!</body><body>Yo!Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'html - body before head' => array(
+                '<html><body>Yo!</body><head><title>Asdf1</title></head></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider cleanWithErrorRemoveDataProvider
+     */
+    public function testCleanWithErrorRemove($html, $expectedOutput)
+    {
+        $groundskeeper = new Groundskeeper(array(
+            'error-strategy' => 'remove',
+            'type-blacklist' => 'none'
+        ));
+        $groundskeeper->setLogger(new NullLogger());
+        $this->assertEquals(
+            $expectedOutput,
+            $groundskeeper->clean($html)
+        );
+    }
+
+    public function cleanWithErrorRemoveDataProvider()
+    {
+        return array(
+            'no fixes' => array(
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'html - bad child token' => array(
+                '<html><!-- asdf --><![CDATA[asdf]]><head><title>Asdf1</title></head>asdf<body>Yo!</body></html>',
+                ''
+            ),
+            'html - missing head' => array(
+                '<html><body>Yo!</body></html>',
+                ''
+            ),
+            'html - missing body' => array(
+                '<html><head><title>Asdf1</title></head></html>',
+                ''
+            ),
+            'html - multiple heads' => array(
+                '<html><head><title>Asdf1</title></head><head><title>Asdf2</title></head><body>Yo!</body></html>',
+                ''
+            ),
+            'html - multiple bodies' => array(
+                '<html><head><title>Asdf1</title></head><body>Yo!</body><body>Yo!Yo!</body></html>',
+                ''
+            ),
+            'html - body before head' => array(
+                '<html><body>Yo!</body><head><title>Asdf1</title></head></html>',
+                ''
+            ),
+        );
+    }
 }

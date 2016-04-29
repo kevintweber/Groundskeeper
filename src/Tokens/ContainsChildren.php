@@ -20,7 +20,9 @@ interface ContainsChildren
      */
     public function hasChild(Token $token);
 
-    public function addChild(Token $token);
+    public function appendChild(Token $token);
+
+    public function prependChild(Token $token);
 
     public function removeChild(Token $token);
 }

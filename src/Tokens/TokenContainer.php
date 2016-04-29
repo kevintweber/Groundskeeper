@@ -7,7 +7,7 @@ use Groundskeeper\Exceptions\ValidationException;
 use Groundskeeper\Tokens\Elements\Element;
 use Psr\Log\LoggerInterface;
 
-class TokenContainer implements Cleanable, ContainsChildren, Removable
+final class TokenContainer implements Cleanable, ContainsChildren, Removable
 {
     /** @var array[Token] */
     private $children;
@@ -43,9 +43,19 @@ class TokenContainer implements Cleanable, ContainsChildren, Removable
     /**
      * Required by ContainsChildren interface.
      */
-    public function addChild(Token $token)
+    public function appendChild(Token $token)
     {
         $this->children[] = $token;
+
+        return $this;
+    }
+
+    /**
+     * Required by ContainsChildren interface.
+     */
+    public function prependChild(Token $token)
+    {
+        array_unshift($this->children, $token);
 
         return $this;
     }
@@ -70,20 +80,11 @@ class TokenContainer implements Cleanable, ContainsChildren, Removable
      */
     public function clean(LoggerInterface $logger = null)
     {
-        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
-            return true;
-        }
-
-        foreach ($this->children as $child) {
-            if ($child instanceof Cleanable) {
-                $isClean = $child->clean($logger);
-                if (!$isClean) {
-                    /// @todo
-                }
-            }
-        }
-
-        return true;
+        return AbstractToken::cleanChildTokens(
+            $this->configuration,
+            $this->children,
+            $logger
+        );
     }
 
     /**
