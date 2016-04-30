@@ -13,7 +13,6 @@ class Configuration
 
     const ELEMENT_BLACKLIST_NONE = 'none';
 
-    const ERROR_STRATEGY_NONE   = 'none';
     const ERROR_STRATEGY_THROW  = 'throw';
     const ERROR_STRATEGY_FIX    = 'fix';
     const ERROR_STRATEGY_REMOVE = 'remove';
@@ -113,7 +112,6 @@ class Configuration
         $resolver->setAllowedValues(
             'error-strategy',
             array(
-                self::ERROR_STRATEGY_NONE,
                 self::ERROR_STRATEGY_THROW,
                 self::ERROR_STRATEGY_FIX,
                 self::ERROR_STRATEGY_REMOVE

@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-class Meta extends ClosedElement
+class Meta extends ClosedElement implements MetadataContent
 {
     protected function getAllowedAttributes()
     {

@@ -30,11 +30,12 @@ class Html extends OpenElement
 
         parent::clean($logger);
 
+        // HTML element must not have parent elements.
         if ($this->getParent() !== null) {
             return false;
         }
 
-        // Contents: HEAD element followed by BODY element.
+        // HEAD element followed by BODY element.
         $bodyCount = 0;
         $headCount = 0;
         $headIsFirst = false;
@@ -56,20 +57,15 @@ class Html extends OpenElement
                 }
             } else {
                 // Invalid token.
-                if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
-                    throw new ValidationException('Token (' . $child->getType() . ') should not be child of HTML element.');
-                }
-
                 if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
                     return false;
                 }
 
-                if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                    unset($this->children[$key]);
-                    if ($logger !== null) {
-                        $logger->debug('Removing invalid token (' . $child->getType() . '). It should not be child of HTML element.');
-                    }
-                }
+                $this->removeChildTokenHelper(
+                    $key,
+                    'Invalid token (' . $child->getType() . ') should not be child of HTML element.',
+                    $logger
+                );
             }
         }
 
@@ -83,12 +79,10 @@ class Html extends OpenElement
                 return false;
             }
 
-            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                $head = new Head($this->configuration, 'head');
-                $this->prependChild($head);
-                if ($logger !== null) {
-                    $logger->debug('Missing HEAD element added.');
-                }
+            $head = new Head($this->configuration, 'head');
+            $this->prependChild($head);
+            if ($logger !== null) {
+                $logger->debug('Missing HEAD element added.');
             }
         }
 
@@ -102,12 +96,10 @@ class Html extends OpenElement
                 return false;
             }
 
-            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                $body = new Body($this->configuration, 'body');
-                $this->appendChild($body);
-                if ($logger !== null) {
-                    $logger->debug('Missing BODY element added.');
-                }
+            $body = new Body($this->configuration, 'body');
+            $this->appendChild($body);
+            if ($logger !== null) {
+                $logger->debug('Missing BODY element added.');
             }
         }
 
@@ -121,18 +113,16 @@ class Html extends OpenElement
                 return false;
             }
 
-            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                // Remove extraneous HEAD elements.
-                $keepHead = true;
-                foreach ($this->children as $key => $child) {
-                    if ($child->getType() == 'element' && $child->getName() == 'head') {
-                        if ($keepHead) {
-                            $keepHead = false;
-                        } else {
-                            unset($this->children[$key]);
-                            if ($logger !== null) {
-                                $logger->debug('Removed extraneous HEAD element.');
-                            }
+            // Remove extraneous HEAD elements.
+            $keepHead = true;
+            foreach ($this->children as $key => $child) {
+                if ($child->getType() == 'element' && $child->getName() == 'head') {
+                    if ($keepHead) {
+                        $keepHead = false;
+                    } else {
+                        unset($this->children[$key]);
+                        if ($logger !== null) {
+                            $logger->debug('Removed extraneous HEAD element.');
                         }
                     }
                 }
@@ -149,18 +139,16 @@ class Html extends OpenElement
                 return false;
             }
 
-            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                // Remove extraneous BODY elements.
-                $keepBody = true;
-                foreach ($this->children as $key => $child) {
-                    if ($child->getType() == 'element' && $child->getName() == 'body') {
-                        if ($keepBody) {
-                            $keepBody = false;
-                        } else {
-                            unset($this->children[$key]);
-                            if ($logger !== null) {
-                                $logger->debug('Removed extraneous BODY element.');
-                            }
+            // Remove extraneous BODY elements.
+            $keepBody = true;
+            foreach ($this->children as $key => $child) {
+                if ($child->getType() == 'element' && $child->getName() == 'body') {
+                    if ($keepBody) {
+                        $keepBody = false;
+                    } else {
+                        unset($this->children[$key]);
+                        if ($logger !== null) {
+                            $logger->debug('Removed extraneous BODY element.');
                         }
                     }
                 }
@@ -177,17 +165,15 @@ class Html extends OpenElement
                 return false;
             }
 
-            if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                foreach ($this->children as $key => $child) {
-                    if ($child->getType() == 'element' && $child->getName() == 'body') {
-                        unset($this->children[$key]);
-                        $this->appendChild($child);
-                        if ($logger !== null) {
-                            $logger->debug('Moved BODY element to end of HTML children.');
-                        }
-
-                        break;
+            foreach ($this->children as $key => $child) {
+                if ($child->getType() == 'element' && $child->getName() == 'body') {
+                    unset($this->children[$key]);
+                    $this->appendChild($child);
+                    if ($logger !== null) {
+                        $logger->debug('Moved BODY element to end of HTML children.');
                     }
+
+                    break;
                 }
             }
         }

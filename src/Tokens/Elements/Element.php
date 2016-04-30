@@ -433,6 +433,18 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         }
     }
 
+    protected function removeChildTokenHelper($key, $message, LoggerInterface $logger = null)
+    {
+        if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
+            throw new ValidationException($message);
+        }
+
+        unset($this->children[$key]);
+        if ($logger !== null) {
+            $logger->debug($message);
+        }
+    }
+
     /**
      * Required by the Token interface.
      */

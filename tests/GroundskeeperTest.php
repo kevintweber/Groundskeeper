@@ -266,6 +266,30 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><body>Yo!</body><head><title>Asdf1</title></head></html>',
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
             ),
+            'head - extra elements' => array(
+                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'head - no title' => array(
+                '<html><head></head><body>Yo!</body></html>',
+                '<html><head><title></title></head><body>Yo!</body></html>'
+            ),
+            'head - multiple titles' => array(
+                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'head - multiple base' => array(
+                '<html><head><base href="asdf" /><title>Asdf1</title><base href="asdf" /></head><body>Yo!</body></html>',
+                '<html><head><base href="asdf"/><title>Asdf1</title></head><body>Yo!</body></html>'
+            ),
+            'title contains comment' => array(
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>'
+            ),
+            'title contains markup' => array(
+                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+                '<html><head><title>Asd</title></head><body>Yo!</body></html>'
+            )
         );
     }
 
@@ -316,6 +340,30 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><body>Yo!</body><head><title>Asdf1</title></head></html>',
                 ''
             ),
+            'head - extra elements' => array(
+                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                '<html><body>Yo!</body></html>'
+            ),
+            'head - no title' => array(
+                '<html><head></head><body>Yo!</body></html>',
+                '<html><body>Yo!</body></html>'
+            ),
+            'head - multiple titles' => array(
+                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
+                '<html><body>Yo!</body></html>'
+            ),
+            'head - multiple base' => array(
+                '<html><head><base href="asdf" /><title>Asdf1</title><base href="asdf" /></head><body>Yo!</body></html>',
+                '<html><body>Yo!</body></html>'
+            ),
+            'title contains comment' => array(
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>'
+            ),
+            'title contains markup' => array(
+                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+                '<html><head></head><body>Yo!</body></html>'
+            )
         );
     }
 }

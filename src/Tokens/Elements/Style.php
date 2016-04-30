@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-class Style extends OpenElement
+class Style extends OpenElement implements MetadataContent
 {
     protected function getAllowedAttributes()
     {

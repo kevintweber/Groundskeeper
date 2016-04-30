@@ -4,6 +4,9 @@ namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
 
+/**
+ * Commend token type.
+ */
 class Comment extends AbstractValuedToken
 {
     /**

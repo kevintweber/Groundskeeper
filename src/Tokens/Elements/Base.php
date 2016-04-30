@@ -3,8 +3,9 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
+use Psr\Log\LoggerInterface;
 
-class Base extends ClosedElement
+class Base extends ClosedElement implements MetadataContent
 {
     protected function getAllowedAttributes()
     {
