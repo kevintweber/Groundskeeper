@@ -2,7 +2,9 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\ElementTypes\ClosedElement;
+use Groundskeeper\Tokens\ElementTypes\MetadataContent;
 use Psr\Log\LoggerInterface;
 
 class Base extends ClosedElement implements MetadataContent
@@ -20,19 +22,10 @@ class Base extends ClosedElement implements MetadataContent
         );
     }
 
-    /**
-     * Required by the Cleanable interface.
-     */
-    public function clean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger = null)
     {
-        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
-            return true;
-        }
-
-        parent::clean($logger);
-
-        // "base" must be child of "head".
-        if ($this->getParent() === null || $this->getParent()->getName() !== 'head') {
+        // BASE must be child of HEAD.
+        if ($this->getParent() !== null && $this->getParent()->getName() !== 'head') {
             return false;
         }
 

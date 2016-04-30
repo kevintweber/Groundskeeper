@@ -1,9 +1,9 @@
 <?php
 
-namespace Groundskeeper\Tests\Tokens\Elements;
+namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Elements\Element;
+use Groundskeeper\Tokens\Element;
 use Psr\Log\NullLogger;
 
 class ElementTest extends \PHPUnit_Framework_TestCase

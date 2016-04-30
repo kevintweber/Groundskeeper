@@ -22,8 +22,8 @@ class TokenContainerTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = new Configuration();
         $tokenContainer = new TokenContainer($configuration);
-        $token = new Comment($configuration, null, 'asdf');
-        $anotherToken = new Comment($configuration, null, 'qwerty');
+        $token = new Comment($configuration, 'asdf');
+        $anotherToken = new Comment($configuration, 'qwerty');
         $this->assertEmpty($tokenContainer->getChildren());
         $this->assertFalse($tokenContainer->hasChild($token));
         $tokenContainer->appendChild($token);
@@ -51,46 +51,12 @@ class TokenContainerTest extends \PHPUnit_Framework_TestCase
             'clean-strategy' => 'none'
         ));
         $tokenContainer = new TokenContainer($configuration);
-        $token = new Comment($configuration, null, 'asdf');
+        $token = new Comment($configuration, 'asdf');
         $tokenContainer->appendChild($token);
         $tokenContainer->clean(new NullLogger());
         $this->assertEquals(
             array($token),
             $tokenContainer->getChildren()
         );
-    }
-
-    /**
-     * @expectedException Groundskeeper\Exceptions\ValidationException
-     */
-    public function testCleanWithThrowErrorStrategy()
-    {
-        $configuration = new Configuration(array(
-            'error-strategy' => 'throw'
-        ));
-        $tokenContainer = new TokenContainer($configuration);
-        $doctype = new Doctype($configuration, null, 'asdf');
-        $div = new Element($configuration, 'div');
-        $div->appendChild($doctype);
-        $tokenContainer->appendChild($doctype);
-        $tokenContainer->clean(new NullLogger());
-    }
-
-    public function testCleanWithFixErrorStrategy()
-    {
-        $configuration = new Configuration(array(
-            'error-strategy' => 'fix'
-        ));
-        $tokenContainer = new TokenContainer($configuration);
-        $doctype = new Doctype($configuration, null, 'asdf');
-        $div = new Element($configuration, 'div');
-        $div->appendChild($doctype);
-        $tokenContainer->appendChild($doctype);
-        $this->assertEquals(
-            array($doctype),
-            $tokenContainer->getChildren()
-        );
-        $tokenContainer->clean(new NullLogger());
-        $this->assertEmpty($tokenContainer->getChildren());
     }
 }

@@ -2,6 +2,10 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\ElementTypes\ClosedElement;
+use Groundskeeper\Tokens\ElementTypes\MetadataContent;
+
 class Link extends ClosedElement implements MetadataContent
 {
     protected function getAllowedAttributes()
@@ -22,29 +26,16 @@ class Link extends ClosedElement implements MetadataContent
         );
     }
 
-    public function validate(Configuration $configuration)
+    protected function doClean(LoggerInterface $logger = null)
     {
-        parent::validate($configuration);
-
-        // If not valid, then we are done.
-        if (!$this->isValid) {
-            return;
-        }
-
-        // If no cleaning, then we are done.
-        if ($configuration->get('clean-strategy') == 'none') {
-            return;
-        }
-
         // Must have "href" attribute.
         if (!$this->hasAttribute('href')) {
-            $this->handleValidationError(
-                $configuration,
-                'Link element must have "href" attribute.'
-            );
+            return false;
         }
 
         // Must have either "rel" or "itemprop" attribute, but not both.
         /// @todo
+
+        return true;
     }
 }

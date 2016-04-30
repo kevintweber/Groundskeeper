@@ -10,8 +10,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = new Configuration();
         $this->assertEquals('standard', $configuration->get('clean-strategy'));
-        $this->assertEquals('none', $configuration->get('element-blacklist'));
-        $this->assertEquals('fix', $configuration->get('error-strategy'));
+        $this->assertEquals('', $configuration->get('element-blacklist'));
         $this->assertEquals(0, $configuration->get('indent-spaces'));
         $this->assertEquals('compact', $configuration->get('output'));
         $this->assertEquals('cdata,comment', $configuration->get('type-blacklist'));
@@ -34,9 +33,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             array('clean-strategy', 5),
             array('clean-strategy', 'asdf'),
             array('element-blacklist', 5),
-            array('element-blacklist', ''),
-            array('error-strategy', 5),
-            array('error-strategy', 'asdf'),
             array('indent-spaces', -2),
             array('indent-spaces', 'asdf'),
             array('output', 'asdf'),

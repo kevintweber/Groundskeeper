@@ -4,9 +4,11 @@ namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Exceptions\ValidationException;
-use Groundskeeper\Tokens\Elements\Elements;
 use Psr\Log\LoggerInterface;
 
+/**
+ * A base class for all tokens.
+ */
 abstract class AbstractToken implements Token
 {
     /** @var Configuration */
@@ -24,14 +26,19 @@ abstract class AbstractToken implements Token
     /**
      * Constructor
      */
-    public function __construct($type, Configuration $configuration, Token $parent = null)
+    public function __construct($type, Configuration $configuration)
     {
-        if (!$this->isValidType($type)) {
+        if ($type !== Token::CDATA
+            && $type !== Token::COMMENT
+            && $type !== Token::DOCTYPE
+            && $type !== Token::ELEMENT
+            && $type !== Token::TEXT) {
             throw new \InvalidArgumentException('Invalid type: ' . $type);
         }
 
         $this->configuration = $configuration;
-        $this->setParent($parent);
+        $this->depth = 0;
+        $this->parent = null;
         $this->type = $type;
     }
 
@@ -74,15 +81,6 @@ abstract class AbstractToken implements Token
         return $this->type;
     }
 
-    protected function isValidType($type)
-    {
-        return $type === Token::CDATA
-            || $type === Token::COMMENT
-            || $type === Token::DOCTYPE
-            || $type === Token::ELEMENT
-            || $type === Token::TEXT;
-    }
-
     public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger = null)
     {
         if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
@@ -93,25 +91,19 @@ abstract class AbstractToken implements Token
             if ($child instanceof Cleanable) {
                 $isClean = $child->clean($logger);
                 if (!$isClean) {
-                    $message = 'invalid token. Unable to fix: ' . $child->getType();
-                    if ($child instanceof Element) {
-                        $message = 'invalid element. Unable to fix: ' . $child->getName();
-                    }
-
-                    if ($configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
-                        throw new ValidationException(ucfirst($message));
-                    }
-
-                    if ($configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX || $configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_REMOVE) {
-                        unset($children[$key]);
-                        if ($logger !== null) {
-                            $logger->debug('Removing ' . $message);
-                        }
+                    unset($children[$key]);
+                    if ($logger !== null) {
+                        $logger->debug('Unable to fix.  Removing ' . $token);
                     }
                 }
             }
         }
 
         return true;
+    }
+
+    public function __toString()
+    {
+        return ucfirst($this->getType());
     }
 }

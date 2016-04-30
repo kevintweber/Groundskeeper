@@ -9,9 +9,9 @@ class Text extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, Token $parent = null, $value = null)
+    public function __construct(Configuration $configuration, $value = null)
     {
-        parent::__construct(Token::TEXT, $configuration, $parent, $value);
+        parent::__construct(Token::TEXT, $configuration, $value);
     }
 
     /**

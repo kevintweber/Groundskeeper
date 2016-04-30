@@ -23,9 +23,7 @@ class Tokenizer
 
     public function tokenize($html)
     {
-        $tokenizer = new HtmlTokenizer(
-            $this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW
-        );
+        $tokenizer = new HtmlTokenizer(false);
         $basicTokenCollection = $tokenizer->parse((string) $html);
 
         $tokenContainer = new TokenContainer($this->configuration);
@@ -36,37 +34,33 @@ class Tokenizer
         return $tokenContainer;
     }
 
-    private function createToken(BasicToken $basicToken, CleanableToken $parent = null)
+    private function createToken(BasicToken $basicToken)
     {
         switch ($basicToken->getType()) {
         case 'cdata':
             return new CData(
                 $this->configuration,
-                $parent,
                 $basicToken->getValue()
             );
 
         case 'comment':
             return new Comment(
                 $this->configuration,
-                $parent,
                 $basicToken->getValue()
             );
 
         case 'doctype':
             return new DocType(
                 $this->configuration,
-                $parent,
                 $basicToken->getValue()
             );
 
         case 'element':
-            return $this->createElement($basicToken, $parent);
+            return $this->createElement($basicToken);
 
         case 'text':
             return new Text(
                 $this->configuration,
-                $parent,
                 $basicToken->getValue()
             );
         }
@@ -76,24 +70,23 @@ class Tokenizer
         );
     }
 
-    private function createElement(BasicElement $basicElement, CleanableToken $parent = null)
+    private function createElement(BasicElement $basicElement)
     {
         $elementClassName = 'Groundskeeper\\Tokens\\Elements\\' .
             ucfirst(strtolower($basicElement->getName()));
         if (!class_exists($elementClassName)) {
-            $elementClassName = 'Groundskeeper\\Tokens\\Elements\\Element';
+            $elementClassName = 'Groundskeeper\\Tokens\\Element';
         }
 
         $cleanableElement = new $elementClassName(
             $this->configuration,
             $basicElement->getName(),
-            $basicElement->getAttributes(),
-            $parent
+            $basicElement->getAttributes()
         );
 
         foreach ($basicElement->getChildren() as $basicChild) {
             $cleanableElement->appendChild(
-                $this->createToken($basicChild, $cleanableElement)
+                $this->createToken($basicChild)
             );
         }
 

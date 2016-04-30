@@ -8,19 +8,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Configuration
 {
     const CLEAN_STRATEGY_NONE       = 'none';
+    const CLEAN_STRATEGY_LENIENT    = 'lenient';
     const CLEAN_STRATEGY_STANDARD   = 'standard';
     const CLEAN_STRATEGY_AGGRESSIVE = 'aggressive';
 
-    const ELEMENT_BLACKLIST_NONE = 'none';
-
-    const ERROR_STRATEGY_THROW  = 'throw';
-    const ERROR_STRATEGY_FIX    = 'fix';
-    const ERROR_STRATEGY_REMOVE = 'remove';
-
     const OUTPUT_COMPACT = 'compact';
     const OUTPUT_PRETTY  = 'pretty';
-
-    const TYPE_BLACKLIST_NONE = 'none';
 
     /** @var array */
     private $options;
@@ -80,8 +73,7 @@ class Configuration
         // Set default options.
         $resolver->setDefaults(array(
             'clean-strategy' => self::CLEAN_STRATEGY_STANDARD,
-            'element-blacklist' => self::ELEMENT_BLACKLIST_NONE,
-            'error-strategy' => self::ERROR_STRATEGY_FIX,
+            'element-blacklist' => '',
             'indent-spaces' => 4,
             'output' => self::OUTPUT_COMPACT,
             'type-blacklist' => Token::CDATA . ',' . Token::COMMENT
@@ -95,6 +87,7 @@ class Configuration
             'clean-strategy',
             array(
                 self::CLEAN_STRATEGY_NONE,
+                self::CLEAN_STRATEGY_LENIENT,
                 self::CLEAN_STRATEGY_STANDARD,
                 self::CLEAN_STRATEGY_AGGRESSIVE
             )
@@ -102,21 +95,6 @@ class Configuration
 
         // element-blacklist
         $resolver->setAllowedTypes('element-blacklist', 'string');
-        $resolver->setAllowedValues('element-blacklist', function ($value) {
-                return strlen($value) > 0;
-            }
-        );
-
-        // error-strategy
-        $resolver->setAllowedTypes('error-strategy', 'string');
-        $resolver->setAllowedValues(
-            'error-strategy',
-            array(
-                self::ERROR_STRATEGY_THROW,
-                self::ERROR_STRATEGY_FIX,
-                self::ERROR_STRATEGY_REMOVE
-            )
-        );
 
         // indent-spaces
         $resolver->setAllowedTypes('indent-spaces', 'int');
@@ -137,7 +115,7 @@ class Configuration
         $resolver->setAllowedValues(
             'type-blacklist',
             function ($value) {
-                if ($value == self::TYPE_BLACKLIST_NONE) {
+                if ($value == '') {
                     return true;
                 }
 

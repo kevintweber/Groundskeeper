@@ -10,9 +10,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
     public function testText()
     {
         $configuration = new Configuration(array(
-            'type-blacklist' => 'none'
+            'type-blacklist' => ''
         ));
-        $text = new Text($configuration, null, 'asdf');
+        $text = new Text($configuration, 'asdf');
         $this->assertEquals('asdf', $text->getValue());
         $this->assertEquals(
             'asdf',

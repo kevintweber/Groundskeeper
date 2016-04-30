@@ -2,6 +2,10 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\ElementTypes\ClosedElement;
+use Groundskeeper\Tokens\ElementTypes\MetadataContent;
+
 class Meta extends ClosedElement implements MetadataContent
 {
     protected function getAllowedAttributes()

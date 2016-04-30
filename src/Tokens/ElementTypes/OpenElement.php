@@ -1,8 +1,9 @@
 <?php
 
-namespace Groundskeeper\Tokens\Elements;
+namespace Groundskeeper\Tokens\ElementTypes;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Element;
 
 class OpenElement extends Element
 {

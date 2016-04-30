@@ -1,19 +1,14 @@
 <?php
 
-namespace Groundskeeper\Tokens\Elements;
+namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Exceptions\ValidationException;
-use Groundskeeper\Tokens\AbstractToken;
-use Groundskeeper\Tokens\Cleanable;
-use Groundskeeper\Tokens\ContainsChildren;
-use Groundskeeper\Tokens\Removable;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 class Element extends AbstractToken implements Cleanable, ContainsChildren, Removable
 {
-    const ATTR_CI_ENUM   = 'ci_enu';// case-insensitive enumeration
+    const ATTR_CI_ENUM   = 'ci_enu'; // case-insensitive enumeration
     const ATTR_JS        = 'cs_jsc';
     const ATTR_CI_STRING = 'ci_str'; // case-insensitive string
     const ATTR_CS_STRING = 'cs_str'; // case-sensitive string
@@ -31,9 +26,9 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, $name, array $attributes = array(), $parent = null)
+    public function __construct(Configuration $configuration, $name, array $attributes = array())
     {
-        parent::__construct(Token::ELEMENT, $configuration, $parent);
+        parent::__construct(Token::ELEMENT, $configuration);
 
         $this->attributes = array();
         foreach ($attributes as $key => $value) {
@@ -68,7 +63,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     {
         $key = trim(strtolower($key));
         if ($key == '') {
-            throw new \InvalidArgumentException('Invalid emtpy attribute key.');
+            throw new \InvalidArgumentException('Invalid empty attribute key.');
         }
 
         $this->attributes[$key] = $value;
@@ -78,7 +73,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
 
     public function removeAttribute($key)
     {
-        $key = strtolower($key);
+        $key = trim(strtolower($key));
         if (isset($this->attributes[$key])) {
             unset($this->attributes[$key]);
 
@@ -177,7 +172,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             $attributeParameters = $this->getAttributeParameters($name);
             if (empty($attributeParameters)) {
                 if ($logger !== null) {
-                    $logger->debug('Groundskeeper: Removed non-standard attribute "' . $name . '" from element "' . $this->name . '".');
+                    $logger->debug('Removing non-standard attribute "' . $name . '" from ' . $this);
                 }
 
                 unset($this->attributes[$name]);
@@ -191,17 +186,12 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
 
             // Handle case-insensitivity.
             // Standard is case-insensitive attribute values should be lower case.
-            // Not required, so don't throw if out of spec.
             if ($caseSensitivity == 'ci') {
                 $newValue = strtolower($value);
                 if ($newValue !== $value) {
-                    if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_FIX) {
-                        $this->attributes[$name] = $newValue;
-                        if ($logger !== null) {
-                            $logger->debug('Groundskeeper: The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.');
-                        }
-                    } elseif ($logger !== null) {
-                        $logger->debug('Groundskeeper: The value for the attribute "' . $name . '" is case-insensitive.  Consider converting it to lower case.');
+                    $this->attributes[$name] = $newValue;
+                    if ($logger !== null) {
+                        $logger->debug('The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.  Element: ' . $this);
                     }
                 }
             }
@@ -217,12 +207,22 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             }
         }
 
+        $doCleanResult = $this->doClean($logger);
+        if (!$doCleanResult && $this->configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
+            return false;
+        }
+
         // Clean children.
         return AbstractToken::cleanChildTokens(
             $this->configuration,
             $this->children,
             $logger
         );
+    }
+
+    protected function doClean(LoggerInterface $logger = null)
+    {
+        return true;
     }
 
     protected function getAllowedAttributes()
@@ -398,17 +398,15 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      */
     public function remove(LoggerInterface $logger = null)
     {
-        $hasRemovableTypes = $this->configuration->get('type-blacklist') !==
-            Configuration::TYPE_BLACKLIST_NONE;
-        $hasRemovableElements = $this->configuration->get('element-blacklist') !==
-            Configuration::ELEMENT_BLACKLIST_NONE;
-        foreach ($this->children as $key => $child) {
+        $hasRemovableElements = $this->configuration->get('element-blacklist') != '';
+        $hasRemovableTypes = $this->configuration->get('type-blacklist') != '';
+        foreach ($this->children as $child) {
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                unset($this->children[$key]);
+                $this->removeChild($child);
                 if ($logger !== null) {
-                    $logger->debug('Removing token of type: ' . $child->getType());
+                    $logger->debug('Removing ' . $child);
                 }
 
                 continue;
@@ -416,11 +414,11 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
 
             // Check elements.
             if ($hasRemovableElements &&
-                $child instanceof Element &&
+                $child instanceof self &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                unset($this->children[$key]);
+                $this->removeChild($child);
                 if ($logger !== null) {
-                    $logger->debug('Removing element of type: ' . $child->getName());
+                    $logger->debug('Removing ' . $child);
                 }
 
                 continue;
@@ -430,18 +428,6 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             if ($child instanceof Removable) {
                 $child->remove($logger);
             }
-        }
-    }
-
-    protected function removeChildTokenHelper($key, $message, LoggerInterface $logger = null)
-    {
-        if ($this->configuration->get('error-strategy') == Configuration::ERROR_STRATEGY_THROW) {
-            throw new ValidationException($message);
-        }
-
-        unset($this->children[$key]);
-        if ($logger !== null) {
-            $logger->debug($message);
         }
     }
 

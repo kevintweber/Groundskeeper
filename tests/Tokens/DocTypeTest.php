@@ -10,9 +10,9 @@ class DocTypeTest extends \PHPUnit_Framework_TestCase
     public function testDocType()
     {
         $configuration = new Configuration(array(
-            'type-blacklist' => 'none'
+            'type-blacklist' => ''
         ));
-        $docType = new DocType($configuration, null, 'asdf');
+        $docType = new DocType($configuration, 'asdf');
         $this->assertEquals('asdf', $docType->getValue());
         $this->assertEquals(
             '<!DOCTYPE asdf>',

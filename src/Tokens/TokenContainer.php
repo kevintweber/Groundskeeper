@@ -92,17 +92,15 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
      */
     public function remove(LoggerInterface $logger = null)
     {
-        $hasRemovableTypes = $this->configuration->get('type-blacklist') !==
-            Configuration::TYPE_BLACKLIST_NONE;
-        $hasRemovableElements = $this->configuration->get('element-blacklist') !==
-            Configuration::ELEMENT_BLACKLIST_NONE;
-        foreach ($this->children as $key => $child) {
+        $hasRemovableElements = $this->configuration->get('element-blacklist') != '';
+        $hasRemovableTypes = $this->configuration->get('type-blacklist') != '';
+        foreach ($this->children as $child) {
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                unset($this->children[$key]);
+                $this->removeChild($child);
                 if ($logger !== null) {
-                    $logger->debug('Removing token of type: ' . $child->getType());
+                    $logger->debug('Removing ' . $child);
                 }
 
                 continue;
@@ -112,9 +110,9 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
             if ($hasRemovableElements &&
                 $child instanceof Element &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                unset($this->children[$key]);
+                $this->removeChild($child);
                 if ($logger !== null) {
-                    $logger->debug('Removing element of type: ' . $child->getName());
+                    $logger->debug('Removing ' . $child);
                 }
 
                 continue;

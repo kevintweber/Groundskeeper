@@ -10,9 +10,9 @@ class DocType extends AbstractValuedToken implements Cleanable
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, $parent = null, $value = null)
+    public function __construct(Configuration $configuration, $value = null)
     {
-        parent::__construct(Token::DOCTYPE, $configuration, $parent, $value);
+        parent::__construct(Token::DOCTYPE, $configuration, $value);
     }
 
     /**

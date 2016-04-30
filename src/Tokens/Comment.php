@@ -12,9 +12,9 @@ class Comment extends AbstractValuedToken
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, Token $parent = null, $value = null)
+    public function __construct(Configuration $configuration, $value = null)
     {
-        parent::__construct(Token::COMMENT, $configuration, $parent, $value);
+        parent::__construct(Token::COMMENT, $configuration, $value);
     }
 
     /**
