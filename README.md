@@ -36,7 +36,7 @@ $cleanHtml = $groundskeeper->clean($dirtyHtml);
 * `clean-strategy`: Describes how the HTML document will be cleaned.
   * Options: `none`, `standard`, `aggressive`; Default: `standard`
     * `none` - No cleaning will be done.
-    * `linient` - Like `standard` except unfixable malformed HTML will be kept.
+    * `lenient` - Like `standard` except no markup will be removed.
     * `standard` - Standard compliant HTML will be output.  Unfixable malformed HTML will be removed.
     * `aggressive` - Like "standard" plus non-standard elements will be removed.
 * `element-blacklist`: Describes which elements will be removed from the output.
