@@ -3,6 +3,7 @@
 namespace Groundskeeper;
 
 use Groundskeeper\Tokens\Token;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Configuration
@@ -47,25 +48,15 @@ class Configuration
     public function isAllowedElement($element)
     {
         $disallowedElementArray = explode(',', $this->options['element-blacklist']);
-        foreach ($disallowedElementArray as $disallowedElement) {
-            if (strtolower(trim($disallowedElement)) == $element) {
-                return false;
-            }
-        }
 
-        return true;
+        return array_search($element, $disallowedElementArray) === false;
     }
 
     public function isAllowedType($type)
     {
         $disallowedTypeArray = explode(',', $this->options['type-blacklist']);
-        foreach ($disallowedTypeArray as $disallowedType) {
-            if (strtolower(trim($disallowedType)) == $type) {
-                return false;
-            }
-        }
 
-        return true;
+        return array_search($type, $disallowedTypeArray) === false;
     }
 
     protected function configureOptions(OptionsResolver $resolver)
@@ -95,6 +86,18 @@ class Configuration
 
         // element-blacklist
         $resolver->setAllowedTypes('element-blacklist', 'string');
+        $resolver->setNormalizer(
+            'element-blacklist',
+            function (Options $options, $value) {
+                $valueArray = explode(',', $value);
+                $formattedValueArray = array();
+                foreach ($valueArray as $data) {
+                    $formattedValueArray[] = trim(strtolower($data));
+                }
+
+                return implode(',', $formattedValueArray);
+            }
+        );
 
         // indent-spaces
         $resolver->setAllowedTypes('indent-spaces', 'int');
@@ -134,6 +137,18 @@ class Configuration
                 }
 
                 return true;
+            }
+        );
+        $resolver->setNormalizer(
+            'type-blacklist',
+            function (Options $options, $value) {
+                $valueArray = explode(',', $value);
+                $formattedValueArray = array();
+                foreach ($valueArray as $data) {
+                    $formattedValueArray[] = trim(strtolower($data));
+                }
+
+                return implode(',', $formattedValueArray);
             }
         );
     }

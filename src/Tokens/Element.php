@@ -96,7 +96,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      */
     public function hasChild(Token $token)
     {
-        return array_search($token, $this->children) !== false;
+        return array_search($token, $this->children, true) !== false;
     }
 
     /**
@@ -126,7 +126,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      */
     public function removeChild(Token $token)
     {
-        $key = array_search($token, $this->children);
+        $key = array_search($token, $this->children, true);
         if ($key !== false) {
             unset($this->children[$key]);
 
@@ -168,19 +168,30 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         }
 
         // Remove non-standard attributes.
+        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            foreach ($this->attributes as $name => $value) {
+                $attributeParameters = $this->getAttributeParameters($name);
+                if (empty($attributeParameters)) {
+                    if ($logger !== null) {
+                        $logger->debug('Removing non-standard attribute "' . $name . '" from ' . $this);
+                    }
+
+                    unset($this->attributes[$name]);
+                }
+            }
+        }
+
         foreach ($this->attributes as $name => $value) {
+            // Validate attribute value.
             $attributeParameters = $this->getAttributeParameters($name);
             if (empty($attributeParameters)) {
-                if ($logger !== null) {
-                    $logger->debug('Removing non-standard attribute "' . $name . '" from ' . $this);
-                }
-
-                unset($this->attributes[$name]);
-
-                continue;
+                $attributeParameters = array(
+                    'name' => $name,
+                    'regex' => '/\S*/i',
+                    'valueType' => self::ATTR_CS_STRING
+                );
             }
 
-            // Validate attribute value.
             list($caseSensitivity, $attributeType) =
                 explode('_', $attributeParameters['valueType']);
 
@@ -189,10 +200,11 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             if ($caseSensitivity == 'ci') {
                 $newValue = strtolower($value);
                 if ($newValue !== $value) {
-                    $this->attributes[$name] = $newValue;
                     if ($logger !== null) {
                         $logger->debug('The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.  Element: ' . $this);
                     }
+
+                    $this->attributes[$name] = $newValue;
                 }
             }
 
@@ -404,23 +416,23 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                $this->removeChild($child);
                 if ($logger !== null) {
                     $logger->debug('Removing ' . $child);
                 }
 
+                $this->removeChild($child);
                 continue;
             }
 
             // Check elements.
             if ($hasRemovableElements &&
-                $child instanceof self &&
+                $child->getType() == Token::ELEMENT &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                $this->removeChild($child);
                 if ($logger !== null) {
                     $logger->debug('Removing ' . $child);
                 }
 
+                $this->removeChild($child);
                 continue;
             }
 
@@ -477,5 +489,10 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         }
 
         return $output;
+    }
+
+    public function __toString()
+    {
+        return '"' . $this->name . '" element';
     }
 }

@@ -4,6 +4,7 @@ namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
+use Groundskeeper\Tokens\ElementTypes\MetadataContent;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -34,25 +35,31 @@ class Head extends OpenElement
                 $titleCount++;
                 if ($titleCount > 1 &&
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $this->removeChild($child);
                     if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. Only one TITLE element allowed.');
+                        $logger->debug('Removing ' . $child . '. Only one "title" element allowed.');
                     }
+
+                    $this->removeChild($child);
                 }
             } elseif ($child->getName() == 'base') {
                 $baseCount++;
                 if ($baseCount > 1 &&
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $this->removeChild($child);
                     if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. Maximum one BASE element allowed.');
+                        $logger->debug('Removing ' . $child . '. Maximum one "base" element allowed.');
                     }
+
+                    $this->removeChild($child);
                 }
             }
         }
 
         // Missing title.
         if ($titleCount == 0) {
+            if ($logger !== null) {
+                $logger->debug('Adding "title" element. One "title" element required.');
+            }
+
             $title = new Title($this->configuration, 'title');
             $this->prependChild($title);
         }

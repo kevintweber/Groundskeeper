@@ -86,30 +86,32 @@ class Html extends OpenElement
 
         // Handle missing HEAD element child.
         if ($headCount == 0) {
+            if ($logger !== null) {
+                $logger->debug('Missing "head" element added.');
+            }
+
             $head = new Head($this->configuration, 'head');
             $this->prependChild($head);
-            if ($logger !== null) {
-                $logger->debug('Missing HEAD element added.');
-            }
         }
 
         // Handle missing BODY element child.
         if ($bodyCount == 0) {
+            if ($logger !== null) {
+                $logger->debug('Missing "body" element added.');
+            }
+
             $body = new Body($this->configuration, 'body');
             $this->appendChild($body);
-            if ($logger !== null) {
-                $logger->debug('Missing BODY element added.');
-            }
         }
 
         // Handle BODY before HEAD.
-        if (!$headIsFirst && $bodyCount > 0) {
+        if (!$headIsFirst && $bodyCount > 0 && $headCount > 0) {
             foreach ($this->children as $key => $child) {
                 if ($child->getType() == Token::ELEMENT && $child->getName() == 'body') {
                     unset($this->children[$key]);
                     $this->appendChild($child);
                     if ($logger !== null) {
-                        $logger->debug('Moved BODY element to end of HTML children.');
+                        $logger->debug('Moved "body" element to end of "html" element children.');
                     }
 
                     break;

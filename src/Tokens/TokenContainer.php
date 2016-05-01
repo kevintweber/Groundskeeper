@@ -37,7 +37,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
      */
     public function hasChild(Token $token)
     {
-        return array_search($token, $this->children) !== false;
+        return array_search($token, $this->children, true) !== false;
     }
 
     /**
@@ -65,7 +65,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
      */
     public function removeChild(Token $token)
     {
-        $key = array_search($token, $this->children);
+        $key = array_search($token, $this->children, true);
         if ($key !== false) {
             unset($this->children[$key]);
 
@@ -98,23 +98,23 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                $this->removeChild($child);
                 if ($logger !== null) {
                     $logger->debug('Removing ' . $child);
                 }
 
+                $this->removeChild($child);
                 continue;
             }
 
             // Check elements.
             if ($hasRemovableElements &&
-                $child instanceof Element &&
+                $child->getType() == Token::ELEMENT &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                $this->removeChild($child);
                 if ($logger !== null) {
                     $logger->debug('Removing ' . $child);
                 }
 
+                $this->removeChild($child);
                 continue;
             }
 

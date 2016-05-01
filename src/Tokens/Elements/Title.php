@@ -14,6 +14,10 @@ class Title extends OpenElement implements MetadataContent
     {
         // TITLE must contain only non-whitespace text.
         foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
+            }
+
             if ($child->getType() != Token::TEXT &&
                 $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
                 $this->removeChild($child);
@@ -22,5 +26,7 @@ class Title extends OpenElement implements MetadataContent
                 }
             }
         }
+
+        return true;
     }
 }

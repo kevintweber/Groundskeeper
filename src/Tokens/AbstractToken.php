@@ -90,11 +90,12 @@ abstract class AbstractToken implements Token
         foreach ($children as $key => $child) {
             if ($child instanceof Cleanable) {
                 $isClean = $child->clean($logger);
-                if (!$isClean) {
-                    unset($children[$key]);
+                if (!$isClean  && $configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
                     if ($logger !== null) {
-                        $logger->debug('Unable to fix.  Removing ' . $token);
+                        $logger->debug('Unable to fix.  Removing ' . $child);
                     }
+
+                    unset($children[$key]);
                 }
             }
         }

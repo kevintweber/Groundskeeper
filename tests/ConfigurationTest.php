@@ -61,6 +61,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         ));
         $this->assertTrue($configuration->isAllowedElement('div'));
         $this->assertFalse($configuration->isAllowedElement('em'));
+        $this->assertFalse($configuration->isAllowedElement('asdf'));
     }
 
     public function testIsAllowedType()
