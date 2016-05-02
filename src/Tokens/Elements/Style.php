@@ -11,7 +11,7 @@ class Style extends OpenElement implements MetadataContent
     protected function getAllowedAttributes()
     {
         $styleAllowedAttributes = array(
-            '/^media$/i' => Element::ATTR_CI_STRING,
+            '/^media$/i' => Element::ATTR_CS_STRING,
             '/^nonce$/i' => Element::ATTR_CS_STRING,
             '/^type$/i' => Element::ATTR_CI_STRING,
             '/^scoped$/i' => Element::ATTR_CI_STRING

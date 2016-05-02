@@ -73,6 +73,20 @@ abstract class AbstractToken implements Token
         return $this;
     }
 
+    public function hasAncestor(Element $element)
+    {
+        if ($this->parent === null) {
+            return false;
+        }
+
+        if ($this->parent->getType() == Token::ELEMENT &&
+            $this->parent->getName() == $element->getName()) {
+            return true;
+        }
+
+        return $this->parent->hasAncestor($element);
+    }
+
     /**
      * Required by the Token interface.
      */

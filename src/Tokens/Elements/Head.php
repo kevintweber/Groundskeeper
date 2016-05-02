@@ -8,13 +8,27 @@ use Groundskeeper\Tokens\ElementTypes\MetadataContent;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
+/**
+ * "head" element
+ */
 class Head extends OpenElement
 {
     protected function doClean(LoggerInterface $logger = null)
     {
-        // HEAD must contain only metadata content elements.
-        // HEAD must contain exactly one TITLE element.
-        // HEAD must contain either 0 or 1 BASE element.
+        // "head" element must be a child of "html" element.
+        if ($this->getParent() !== null &&
+            $this->getParent()->getType() === Token::ELEMENT &&
+            $this->getParent()->getName() != 'html') {
+            if ($logger !== null) {
+                $logger->debug('Element "head" must be a child of "html" element.');
+            }
+
+            return false;
+        }
+
+        // "head" element must contain only metadata content elements.
+        // "head" element must contain exactly one "title" element.
+        // "head" element must contain either 0 or 1 "base" element.
         $titleCount = 0;
         $baseCount = 0;
         foreach ($this->children as $child) {

@@ -8,12 +8,15 @@ use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
+/**
+ * "html" element
+ */
 class Html extends OpenElement
 {
     protected function getAllowedAttributes()
     {
         $htmlAllowedAttributes = array(
-            '/^manifest$/i' => Element::ATTR_CS_STRING
+            '/^manifest$/i' => Element::ATTR_URI
         );
 
         return array_merge(
@@ -44,7 +47,7 @@ class Html extends OpenElement
                 if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
                     $this->removeChild($child);
                     if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. HTML element only allows HEAD and BODY child elements.');
+                        $logger->debug('Removing ' . $child . '. "html" element only allows "head" and "body" elements children.');
                     }
                 }
 
@@ -63,7 +66,7 @@ class Html extends OpenElement
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
                     $this->removeChild($child);
                     if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. Only one HEAD element allowed.');
+                        $logger->debug('Removing ' . $child . '. Only one "head" element allowed.');
                     }
 
                     continue;
