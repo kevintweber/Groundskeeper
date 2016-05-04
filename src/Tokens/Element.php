@@ -227,7 +227,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         );
     }
 
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         return true;
     }
