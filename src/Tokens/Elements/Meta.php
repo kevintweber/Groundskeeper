@@ -25,14 +25,12 @@ class Meta extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         // If "charset" attribute is present, the must be child of "head" element.
         if ($this->hasAttribute('charset') && $this->getParent() !== null) {
             if ($this->getParent()->getType() !== Token::ELEMENT || $this->getParent()->getName() != 'head') {
-                if ($logger !== null) {
-                    $logger->debug('Element "meta" with a "charset" attribute must be a "head" element child.');
-                }
+                $logger->debug('Element "meta" with a "charset" attribute must be a "head" element child.');
 
                 return false;
             }

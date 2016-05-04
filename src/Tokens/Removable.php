@@ -14,5 +14,5 @@ interface Removable
      *
      * @param LoggerInterface $logger Will log any removal actions.
      */
-    public function remove(LoggerInterface $logger = null);
+    public function remove(LoggerInterface $logger);
 }

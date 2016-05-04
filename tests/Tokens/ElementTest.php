@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tests\TestableLogger;
 use Groundskeeper\Tokens\Element;
 use Psr\Log\NullLogger;
 
@@ -85,6 +86,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanWithNoCleanStategy()
     {
+        $testableLogger = new TestableLogger();
         $configuration = new Configuration(array(
             'clean-strategy' => 'none'
         ));
@@ -96,7 +98,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
                 'qwerty' => true
             )
         );
-        $element->clean();
+        $element->clean($testableLogger);
         $this->assertTrue($element->hasAttribute('qwerty'));
     }
 
@@ -105,6 +107,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
      */
     public function testCleanRemoveNonStandardAttributes(array $attributes, $removedName)
     {
+        $testableLogger = new TestableLogger();
         $configuration = new Configuration();
         $element = new Element(
             $configuration,
@@ -113,7 +116,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertTrue($element->hasAttribute($removedName));
         $this->assertTrue($element->hasAttribute('id'));
-        $element->clean(new NullLogger());
+        $element->clean($testableLogger);
         $this->assertFalse($element->hasAttribute($removedName));
         $this->assertTrue($element->hasAttribute('id'));
     }

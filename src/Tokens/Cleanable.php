@@ -13,5 +13,5 @@ interface Cleanable
      *
      * @return boolean True if clean.
      */
-    public function clean(LoggerInterface $logger = null);
+    public function clean(LoggerInterface $logger);
 }

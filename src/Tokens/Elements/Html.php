@@ -25,7 +25,7 @@ class Html extends OpenElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         // HTML element must not have parent elements.
         if ($this->getParent() !== null) {
@@ -45,10 +45,8 @@ class Html extends OpenElement
             // Invalid token.
             if ($child->getType() != Token::ELEMENT) {
                 if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                    $logger->debug('Removing ' . $child . '. "html" element only allows "head" and "body" elements children.');
                     $this->removeChild($child);
-                    if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. "html" element only allows "head" and "body" elements children.');
-                    }
                 }
 
                 continue;
@@ -64,10 +62,8 @@ class Html extends OpenElement
                 // Remove extraneous HEAD elements.
                 if ($headCount > 1 &&
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                    $logger->debug('Removing ' . $child . '. Only one "head" element allowed.');
                     $this->removeChild($child);
-                    if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. Only one "head" element allowed.');
-                    }
 
                     continue;
                 }
@@ -77,32 +73,29 @@ class Html extends OpenElement
                 // Remove extraneous BODY elements.
                 if ($bodyCount > 1 &&
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                    $logger->debug('Removing ' . $child . '. Only one BODY element allowed.');
                     $this->removeChild($child);
-                    if ($logger !== null) {
-                        $logger->debug('Removing ' . $child . '. Only one BODY element allowed.');
-                    }
 
                     continue;
                 }
+            } elseif ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                $logger->debug('Removing ' . $child . '. Only "head" or "body" elements are allowed as "html" element children.');
+                $this->removeChild($child);
+
+                continue;
             }
         }
 
         // Handle missing HEAD element child.
         if ($headCount == 0) {
-            if ($logger !== null) {
-                $logger->debug('Missing "head" element added.');
-            }
-
+            $logger->debug('Missing "head" element added.');
             $head = new Head($this->configuration, 'head');
             $this->prependChild($head);
         }
 
         // Handle missing BODY element child.
         if ($bodyCount == 0) {
-            if ($logger !== null) {
-                $logger->debug('Missing "body" element added.');
-            }
-
+            $logger->debug('Missing "body" element added.');
             $body = new Body($this->configuration, 'body');
             $this->appendChild($body);
         }
@@ -111,11 +104,9 @@ class Html extends OpenElement
         if (!$headIsFirst && $bodyCount > 0 && $headCount > 0) {
             foreach ($this->children as $key => $child) {
                 if ($child->getType() == Token::ELEMENT && $child->getName() == 'body') {
+                    $logger->debug('Moved "body" element to end of "html" element children.');
                     unset($this->children[$key]);
                     $this->appendChild($child);
-                    if ($logger !== null) {
-                        $logger->debug('Moved "body" element to end of "html" element children.');
-                    }
 
                     break;
                 }

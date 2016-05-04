@@ -25,22 +25,18 @@ class Base extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         // "base" element must be child of "head" element.
         if ($this->getParent() !== null && $this->getParent()->getName() !== 'head') {
-            if ($logger !== null) {
-                $logger->debug('Element "base" must be a "head" element child.');
-            }
+            $logger->debug('Element "base" must be a "head" element child.');
 
             return false;
         }
 
         // Must have either "href" or "target" attribute or both.
         if (!$this->hasAttribute('href') && !$this->hasAttribute('target')) {
-            if ($logger !== null) {
-                $logger->debug('Element "base" must have either the "href" or "target" attribute or both.');
-            }
+            $logger->debug('Element "base" must have either the "href" or "target" attribute or both.');
 
             return false;
         }

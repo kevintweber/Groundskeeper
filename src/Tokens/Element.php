@@ -162,7 +162,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Required by the Cleanable interface.
      */
-    public function clean(LoggerInterface $logger = null)
+    public function clean(LoggerInterface $logger)
     {
         if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
             return true;
@@ -173,10 +173,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             foreach ($this->attributes as $name => $value) {
                 $attributeParameters = $this->getAttributeParameters($name);
                 if (empty($attributeParameters)) {
-                    if ($logger !== null) {
-                        $logger->debug('Removing non-standard attribute "' . $name . '" from ' . $this);
-                    }
-
+                    $logger->debug('Removing non-standard attribute "' . $name . '" from ' . $this);
                     unset($this->attributes[$name]);
                 }
             }
@@ -201,10 +198,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             if ($caseSensitivity == 'ci') {
                 $newValue = strtolower($value);
                 if ($newValue !== $value) {
-                    if ($logger !== null) {
-                        $logger->debug('The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.  Element: ' . $this);
-                    }
-
+                    $logger->debug('The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.  Element: ' . $this);
                     $this->attributes[$name] = $newValue;
                 }
             }
@@ -409,7 +403,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Required by the Removable interface.
      */
-    public function remove(LoggerInterface $logger = null)
+    public function remove(LoggerInterface $logger)
     {
         $hasRemovableElements = $this->configuration->get('element-blacklist') != '';
         $hasRemovableTypes = $this->configuration->get('type-blacklist') != '';
@@ -417,11 +411,9 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                if ($logger !== null) {
-                    $logger->debug('Removing ' . $child);
-                }
-
+                $logger->debug('Removing ' . $child);
                 $this->removeChild($child);
+
                 continue;
             }
 
@@ -429,11 +421,9 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             if ($hasRemovableElements &&
                 $child->getType() == Token::ELEMENT &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                if ($logger !== null) {
-                    $logger->debug('Removing ' . $child);
-                }
-
+                $logger->debug('Removing ' . $child);
                 $this->removeChild($child);
+
                 continue;
             }
 

@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Exceptions\ValidationException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -95,7 +94,7 @@ abstract class AbstractToken implements Token
         return $this->type;
     }
 
-    public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger = null)
+    public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger)
     {
         if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
             return true;
@@ -105,10 +104,7 @@ abstract class AbstractToken implements Token
             if ($child instanceof Cleanable) {
                 $isClean = $child->clean($logger);
                 if (!$isClean  && $configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
-                    if ($logger !== null) {
-                        $logger->debug('Unable to fix.  Removing ' . $child);
-                    }
-
+                    $logger->debug('Unable to fix.  Removing ' . $child);
                     unset($children[$key]);
                 }
             }

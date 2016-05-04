@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
  */
 class Hgroup extends OpenElement implements FlowContent, HeadingContent
 {
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         // One or more "h1", "h2", "h3", "h4", "h5", "h6", and
         // "template" elements required.
@@ -24,11 +24,9 @@ class Hgroup extends OpenElement implements FlowContent, HeadingContent
             }
 
             if ($child->getType() !== Token::ELEMENT) {
-                if ($logger !== null) {
-                    $logger->debug('Removing ' . $child . '. Only "h1"-"h6" and "template" elements allowed as child of "hgroup" element.');
-                }
-
+                $logger->debug('Only "h1"-"h6" and "template" elements allowed as child of "hgroup" element.');
                 $this->removeChild($child);
+
                 continue;
             }
 
@@ -39,13 +37,18 @@ class Hgroup extends OpenElement implements FlowContent, HeadingContent
                 $child->getName() !== 'h5' &&
                 $child->getName() !== 'h6' &&
                 $child->getName() !== 'tempate') {
-                if ($logger !== null) {
-                    $logger->debug('Removing ' . $child . '. Only "h1"-"h6" and "template" elements allowed as child of "hgroup" element.');
-                }
-
+                $logger->debug('Only "h1"-"h6" and "template" elements allowed as child of "hgroup" element.');
                 $this->removeChild($child);
+
                 continue;
             }
+        }
+
+        // Handle no child HeadingContent.
+        if ($headingContentElementCount == 0) {
+            $logger->debug('Element "hgroup" must contain at least one of the following elements: "h1", "h2", "h3", "h4", "h5", "h6", or "template".');
+
+            return false;
         }
 
         return true;

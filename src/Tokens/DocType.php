@@ -18,14 +18,19 @@ class DocType extends AbstractValuedToken implements Cleanable
     /**
      * Required by the Cleanable interface.
      */
-    public function clean(LoggerInterface $logger = null)
+    public function clean(LoggerInterface $logger)
     {
         if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
             return true;
         }
 
         // DocType must not have any parent elements.
-        return $this->getParent() === null;
+        $result = $this->getParent() === null;
+        if (!$result) {
+            $logger->debug('Removing ' . $this . '.  DocType cannot be a child of any element.');
+        }
+
+        return $result;
     }
 
     /**

@@ -78,7 +78,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     /**
      * Required by Cleanable interface.
      */
-    public function clean(LoggerInterface $logger = null)
+    public function clean(LoggerInterface $logger)
     {
         return AbstractToken::cleanChildTokens(
             $this->configuration,
@@ -90,7 +90,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     /**
      * Required by the Removable interface.
      */
-    public function remove(LoggerInterface $logger = null)
+    public function remove(LoggerInterface $logger)
     {
         $hasRemovableElements = $this->configuration->get('element-blacklist') != '';
         $hasRemovableTypes = $this->configuration->get('type-blacklist') != '';
@@ -98,11 +98,9 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                if ($logger !== null) {
-                    $logger->debug('Removing ' . $child);
-                }
-
+                $logger->debug('Removing ' . $child);
                 $this->removeChild($child);
+
                 continue;
             }
 
@@ -110,11 +108,9 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
             if ($hasRemovableElements &&
                 $child->getType() == Token::ELEMENT &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                if ($logger !== null) {
-                    $logger->debug('Removing ' . $child);
-                }
-
+                $logger->debug('Removing ' . $child);
                 $this->removeChild($child);
+
                 continue;
             }
 

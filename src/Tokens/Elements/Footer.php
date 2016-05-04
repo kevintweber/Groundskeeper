@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
  */
 class Footer extends OpenElement implements FlowContent
 {
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         $footer = new Footer($this->configuration, 'footer');
         $header = new Header($this->configuration, 'header');
@@ -19,9 +19,7 @@ class Footer extends OpenElement implements FlowContent
         if ($this->hasAncestor($footer) ||
             $this->hasAncestor($header) ||
             $this->hasAncestor($main)) {
-            if ($logger !== null) {
-                $logger->debug('Removing ' . $this . '. Element "footer" should not be a descendant of "footer", "header", or "main" elements.');
-            }
+            $logger->debug('Removing ' . $this . '. Element "footer" should not be a descendant of "footer", "header", or "main" elements.');
 
             return false;
         }

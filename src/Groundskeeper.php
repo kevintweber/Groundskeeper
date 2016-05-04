@@ -5,13 +5,14 @@ namespace Groundskeeper;
 use Groundskeeper\Tokens\Tokenizer;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class Groundskeeper implements LoggerAwareInterface
 {
     /** @var Configuration */
     private $configuration;
 
-    /** @var null|LoggerInterface */
+    /** @var LoggerInterface */
     private $logger;
 
     /**
@@ -21,7 +22,7 @@ class Groundskeeper implements LoggerAwareInterface
      */
     public function __construct($options = array())
     {
-        $this->logger = null;
+        $this->logger = new NullLogger();
         if ($options instanceof Configuration) {
             $this->configuration = $options;
 

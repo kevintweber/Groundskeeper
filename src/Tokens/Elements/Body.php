@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\SectioningRoot;
 use Groundskeeper\Tokens\Token;
@@ -35,15 +36,13 @@ class Body extends OpenElement implements SectioningRoot
         );
     }
 
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         // "body" element must be a child of "html" element.
         if ($this->getParent() !== null &&
             $this->getParent()->getType() === Token::ELEMENT &&
             $this->getParent()->getName() != 'html') {
-            if ($logger !== null) {
-                $logger->debug('Element "body" must be a child of "html" element.');
-            }
+            $logger->debug('Element "body" must be a child of "html" element.');
 
             return false;
         }

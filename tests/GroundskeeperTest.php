@@ -210,11 +210,11 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><!DOCTYPE asdf1>asdf2</div>',
                 0,
                 '<div><!DOCTYPE asdf1>asdf2</div>',
-                0,
-                '<div>asdf2</div>',
                 1,
                 '<div>asdf2</div>',
-                1
+                2,
+                '<div>asdf2</div>',
+                2
             ),
             'element only' => array(
                 '<asdf/>',
@@ -414,6 +414,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 1
             ),
+            'head - child of non-html element' => array(
+                '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+                '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+                0,
+                '<html><head><title></title></head><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+                4,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                3,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                3
+            ),
             'head - extra elements' => array(
                 '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
@@ -490,6 +501,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1,
                 '<html><head><title>Asd</title></head><body>Yo!</body></html>',
                 1
+            ),
+            'body - child of non-html element' => array(
+                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
+                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div><body></body></html>',
+                3,
+                '<html><head><title>Asdf1</title></head><body></body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body></body></html>',
+                2
             )
         );
     }

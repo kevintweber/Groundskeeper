@@ -27,13 +27,11 @@ class Link extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger = null)
+    protected function doClean(LoggerInterface $logger)
     {
         // Must have "href" attribute.
         if (!$this->hasAttribute('href')) {
-            if ($logger !== null) {
-                $logger->debug('Element "link" requires "href" attribute.');
-            }
+            $logger->debug('Element "link" requires "href" attribute.');
 
             return false;
         }
@@ -48,18 +46,14 @@ class Link extends ClosedElement implements MetadataContent
             if ($attrCount > 1) {
                 // If both, then we don't know which one should be kept,
                 // so we recommend to delete the entire element.
-                if ($logger !== null) {
-                    $logger->debug('Element "link" requires either "rel" or "itemprop" attribute, but not both.');
-                }
+                $logger->debug('Element "link" requires either "rel" or "itemprop" attribute, but not both.');
 
                 return false;
             }
         }
 
         if ($attrCount == 0) {
-            if ($logger !== null) {
-                $logger->debug('Element "link" requires either "rel" or "itemprop" attribute.');
-            }
+            $logger->debug('Element "link" requires either "rel" or "itemprop" attribute.');
 
             return false;
         }
@@ -67,9 +61,7 @@ class Link extends ClosedElement implements MetadataContent
         // If inside "body" element, then we check if allowed.
         $body = new Body($this->configuration, 'body');
         if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
-            if ($logger !== null) {
-                $logger->debug('Element "link" does not have the correct attributes to be allowed inside the "body" element.');
-            }
+            $logger->debug('Element "link" does not have the correct attributes to be allowed inside the "body" element.');
 
             return false;
         }
