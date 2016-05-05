@@ -342,11 +342,11 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><html><head><title>Asdf1</title></head><body>Yo!</body></html>asdf</div>',
                 0,
                 '<div><html><head><title>Asdf1</title></head><body>Yo!</body></html>asdf</div>',
-                0,
-                '<div>asdf</div>',
                 1,
                 '<div>asdf</div>',
-                1
+                2,
+                '<div>asdf</div>',
+                2
             ),
             'html - bad child tokens' => array(
                 '<html><!-- asdf --><![CDATA[asdf]]><head><title>Asdf1</title></head>asdf<body>Yo!</body></html>',
@@ -501,6 +501,39 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1,
                 '<html><head><title>Asd</title></head><body>Yo!</body></html>',
                 1
+            ),
+            'meta' => array(
+                '<html><head><title>Asdf1</title><meta name="keywords" content="test" /></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
+                0
+            ),
+            'meta - missing content' => array(
+                '<html><head><title>Asdf1</title><meta name="keywords"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><meta name="keywords"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><meta name="keywords" content=""/></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title>Asdf1</title><meta name="keywords" content=""/></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title>Asdf1</title><meta name="keywords" content=""/></head><body>Yo!</body></html>',
+                1
+            ),
+            'meta - with charset child of head' => array(
+                '<html><head><title>Asdf1</title><meta charset="UTF-8"/></head><body>Yo!<meta charset="utf-16"/></body></html>',
+                '<html><head><title>Asdf1</title><meta charset="UTF-8"/></head><body>Yo!<meta charset="utf-16"/></body></html>',
+                0,
+                '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!<meta charset="utf-16"/></body></html>',
+                3,
+                '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
+                3,
+                '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
+                3
             ),
             'body - child of non-html element' => array(
                 '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',

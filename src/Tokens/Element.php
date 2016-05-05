@@ -8,12 +8,14 @@ use Psr\Log\LoggerInterface;
 
 class Element extends AbstractToken implements Cleanable, ContainsChildren, Removable
 {
+    const ATTR_BOOL      = 'ci_boo'; // boolean
     const ATTR_CI_ENUM   = 'ci_enu'; // case-insensitive enumeration
     const ATTR_CI_SSENUM = 'ci_sse'; // case-insensitive space-separated enumeration
-    const ATTR_JS        = 'cs_jsc';
+    const ATTR_INT       = 'ci_int'; // integer
+    const ATTR_JS        = 'cs_jsc'; // javascript
     const ATTR_CI_STRING = 'ci_str'; // case-insensitive string
     const ATTR_CS_STRING = 'cs_str'; // case-sensitive string
-    const ATTR_URI       = 'cs_uri';
+    const ATTR_URI       = 'cs_uri'; // uri
 
     /** @var array */
     protected $attributes;

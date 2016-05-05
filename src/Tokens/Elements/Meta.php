@@ -2,9 +2,11 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
+use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 class Meta extends ClosedElement implements MetadataContent
@@ -34,6 +36,12 @@ class Meta extends ClosedElement implements MetadataContent
 
                 return false;
             }
+        }
+
+        // "name" attribute requires "content" attribute.
+        if ($this->hasAttribute('name') && !$this->hasAttribute('content')) {
+            $logger->debug('A "meta" element with a "name" attribute requires a "content" attribute.  Adding empty "content" attribute.');
+            $this->addAttribute('content', '');
         }
 
         return true;

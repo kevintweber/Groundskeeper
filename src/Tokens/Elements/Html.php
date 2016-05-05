@@ -29,6 +29,8 @@ class Html extends OpenElement
     {
         // HTML element must not have parent elements.
         if ($this->getParent() !== null) {
+            $logger->debug('Element "html" must not have a parent element.');
+
             return false;
         }
 
