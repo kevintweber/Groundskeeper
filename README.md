@@ -34,7 +34,7 @@ $cleanHtml = $groundskeeper->clean($dirtyHtml);
 
 ### Options
 * `clean-strategy`: Describes how the HTML document will be cleaned.
-  * Options: `none`, `standard`, `aggressive`; Default: `standard`
+  * Options: `none`, `lenient`, `standard`, `aggressive`; Default: `standard`
     * `none` - No cleaning will be done.
     * `lenient` - Like `standard` except no markup will be removed.
     * `standard` - Standard compliant HTML will be output.  Unfixable malformed HTML will be removed.
@@ -42,13 +42,13 @@ $cleanHtml = $groundskeeper->clean($dirtyHtml);
 * `element-blacklist`: Describes which elements will be removed from the output.
   * Options: Comma seperated list of elements; Default: `` (empty list)
 * `indent-spaces`: The number of spaces for indentation when using pretty output.
-  * Options: integer greater than or equals to 0; Default: 4
+  * Options: integer greater than or equal to 0; Default: 4
 * `output`: Describes how the HTML will be output.
   * Options: `compact`, `pretty`; Default: `compact`
     * `compact` - Will remove all whitespace between elements, and will set `indent-spaces` to 0.
     * `pretty` - One element per line with indentation.  Inline elements are left inline.  Handy for debugging.
 * `type-blacklist`: Describes which token types will be removed from the output.
-  * Options: Comma seperated list of any of the following: `cdata`, `comment`, `doctype`, `element`, `text`; Default: `cdata,comment`
+  * Options: Comma seperated list of any of the following: `cdata`, `comment`, `doctype`, `element`, `php`, `text`; Default: `cdata,comment`
 
 ## Change log
 

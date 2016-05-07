@@ -31,6 +31,7 @@ abstract class AbstractToken implements Token
             && $type !== Token::COMMENT
             && $type !== Token::DOCTYPE
             && $type !== Token::ELEMENT
+            && $type !== Token::PHP
             && $type !== Token::TEXT) {
             throw new \InvalidArgumentException('Invalid type: ' . $type);
         }

@@ -127,6 +127,7 @@ class Configuration
                     Token::COMMENT,
                     Token::DOCTYPE,
                     Token::ELEMENT,
+                    Token::PHP,
                     Token::TEXT
                 );
                 $valueArray = explode(',', $value);

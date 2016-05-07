@@ -8,6 +8,7 @@ interface Token
     const COMMENT   = 'comment';
     const DOCTYPE   = 'doctype';
     const ELEMENT   = 'element';
+    const PHP       = 'php';
     const TEXT      = 'text';
 
     /**

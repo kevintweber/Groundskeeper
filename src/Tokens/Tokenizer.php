@@ -58,6 +58,12 @@ class Tokenizer
         case 'element':
             return $this->createElement($basicToken);
 
+        case 'php':
+            return new Php(
+                $this->configuration,
+                $basicToken->getValue()
+            );
+
         case 'text':
             return new Text(
                 $this->configuration,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Groundskeeper\Token\ElementTypes;
+namespace Groundskeeper\Tokens\ElementTypes;
 
 /**
  * Script Supporting elements.

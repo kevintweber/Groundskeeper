@@ -26,14 +26,16 @@ class Address extends OpenElement implements FlowContent
             foreach ($this->children as $child) {
                 if ($child instanceof HeadingContent) {
                     $logger->debug('Heading Content elements not allowed as "address" element child.');
+                    $this->removeChild($child);
 
-                    return false;
+                    continue;
                 }
 
                 if ($child instanceof SectioningContent) {
                     $logger->debug('Sectioning Content elements not allowed as "address" element child.');
+                    $this->removeChild($child);
 
-                    return false;
+                    continue;
                 }
 
                 if ($child->getType() == Token::ELEMENT) {
@@ -41,8 +43,9 @@ class Address extends OpenElement implements FlowContent
                         $child->getName() == 'footer' ||
                         $child->getName() == 'address') {
                         $logger->debug('Elements "header", "footer", and "address" not allowed as "address" element child.');
+                        $this->removeChild($child);
 
-                        return false;
+                        continue;
                     }
                 }
             }

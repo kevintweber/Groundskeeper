@@ -370,6 +370,39 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<a title="www.example.com">Example.com</a>',
                 1
             ),
+            'address - heading content child' => array(
+                '<body><address>asdf1<br/>asdf3<h1>asdf2</h1></address></body>',
+                '<body><address>asdf1<br/>asdf3<h1>asdf2</h1></address></body>',
+                0,
+                '<body><address>asdf1<br/>asdf3<h1>asdf2</h1></address></body>',
+                0,
+                '<body><address>asdf1<br/>asdf3</address></body>',
+                1,
+                '<body><address>asdf1<br/>asdf3</address></body>',
+                1
+            ),
+            'address - address child' => array(
+                '<body><address>asdf1<address>asdf2</address></address></body>',
+                '<body><address>asdf1<address>asdf2</address></address></body>',
+                0,
+                '<body><address>asdf1<address>asdf2</address></address></body>',
+                0,
+                '<body><address>asdf1</address></body>',
+                1,
+                '<body><address>asdf1</address></body>',
+                1
+            ),
+            'address - sectioning content child' => array(
+                '<body><address>asdf1<article>asdf2</article></address></body>',
+                '<body><address>asdf1<article>asdf2</article></address></body>',
+                0,
+                '<body><address>asdf1<article>asdf2</article></address></body>',
+                0,
+                '<body><address>asdf1</address></body>',
+                1,
+                '<body><address>asdf1</address></body>',
+                1
+            ),
             'base - correct usage' => array(
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
@@ -402,6 +435,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 2,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 2
+            ),
+            'blockquote - correct usage' => array(
+                '<div><blockquote id="yo" cite="www.example.com">Yo!</blockquote></div>',
+                '<div><blockquote id="yo" cite="www.example.com">Yo!</blockquote></div>',
+                0,
+                '<div><blockquote id="yo" cite="www.example.com">Yo!</blockquote></div>',
+                0,
+                '<div><blockquote id="yo" cite="www.example.com">Yo!</blockquote></div>',
+                0,
+                '<div><blockquote id="yo" cite="www.example.com">Yo!</blockquote></div>',
+                0
             ),
             'body - child of non-html element' => array(
                 '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
@@ -678,6 +722,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
                 3
             ),
+            'style - correct usage' => array(
+                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                0
+            ),
             'title contains comment' => array(
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
@@ -699,6 +754,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1,
                 '<html><head><title>Asd</title></head><body>Yo!</body></html>',
                 1
+            ),
+            'ul - contains incorrect tokens and elements' => array(
+                '<ul><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
+                '<ul><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
+                0,
+                '<ul><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
+                0,
+                '<ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
+                2,
+                '<ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
+                2
             )
         );
     }
@@ -774,16 +840,22 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
     public function testCleanWithTypeRemoval($removedTypes,
                                              $html,
                                              $expectedOutput,
-                                             $expectedLogCount)
+                                             $expectedLogCount,
+                                             $debugOutputLog = false)
     {
         $groundskeeper = new Groundskeeper(array(
             'type-blacklist' => $removedTypes
         ));
         $testableLogger = new TestableLogger();
         $groundskeeper->setLogger($testableLogger);
+        $result = $groundskeeper->clean($html);
+        if ($debugOutputLog) {
+            var_dump($testableLogger->getLogs());
+        }
+
         $this->assertEquals(
             $expectedOutput,
-            $groundskeeper->clean($html)
+            $result
         );
         $this->assertEquals(
             $expectedLogCount,
@@ -815,6 +887,12 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
             'text only' => array(
                 'text',
                 '<!-- comment --><div class="asdf1">asdf5</div>',
+                '<!-- comment --><div class="asdf1"></div>',
+                1
+            ),
+            'php only' => array(
+                'php',
+                '<!-- comment --><div class="asdf1"><?php echo "asdf5"; ?></div>',
                 '<!-- comment --><div class="asdf1"></div>',
                 1
             )
