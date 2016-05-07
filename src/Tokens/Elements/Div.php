@@ -6,11 +6,11 @@ use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 
 /**
- * "main" element
+ * "div" element
  *
- * https://html.spec.whatwg.org/multipage/semantics.html#the-main-element
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-div-element
  */
-class Main extends OpenElement implements FlowContent
+class Div extends OpenElement implements FlowContent
 {
 
 }

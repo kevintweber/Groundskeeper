@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
 use Groundskeeper\Tokens\Token;
@@ -13,7 +14,7 @@ use Psr\Log\LoggerInterface;
  *
  * https://html.spec.whatwg.org/multipage/semantics.html#the-ol-element
  */
-class Ol extends OpenElement
+class Ol extends OpenElement implements FlowContent
 {
     protected function getAllowedAttributes()
     {

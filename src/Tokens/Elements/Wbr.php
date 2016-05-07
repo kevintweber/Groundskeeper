@@ -7,11 +7,11 @@ use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 
 /**
- * "br" element
+ * "wbr" element
  *
- * https://html.spec.whatwg.org/multipage/semantics.html#the-br-element
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-wbr-element
  */
-class Br extends ClosedElement implements FlowContent, PhrasingContent
+class Wbr extends ClosedElement implements FlowContent, PhrasingContent
 {
 
 }
