@@ -12,7 +12,7 @@ use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
  *
  * https://html.spec.whatwg.org/multipage/semantics.html#the-var-element
  */
-class Var extends OpenElement implements FlowContent, PhrasingContent, InlineElement
+class VarElement extends OpenElement implements FlowContent, PhrasingContent, InlineElement
 {
 
 }
