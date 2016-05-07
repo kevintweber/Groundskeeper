@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
@@ -29,41 +30,43 @@ class Link extends ClosedElement implements MetadataContent
 
     protected function doClean(LoggerInterface $logger)
     {
-        // Must have "href" attribute.
-        if (!$this->hasAttribute('href')) {
-            $logger->debug('Element "link" requires "href" attribute.');
-
-            return false;
-        }
-
-        // Must have either "rel" or "itemprop" attribute, but not both.
-        $attrCount = 0;
-        foreach ($this->attributes as $key => $value) {
-            if ($key == 'rel' || $key == 'itemprop') {
-                $attrCount++;
-            }
-
-            if ($attrCount > 1) {
-                // If both, then we don't know which one should be kept,
-                // so we recommend to delete the entire element.
-                $logger->debug('Element "link" requires either "rel" or "itemprop" attribute, but not both.');
+        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            // Must have "href" attribute.
+            if (!$this->hasAttribute('href')) {
+                $logger->debug('Element "link" requires "href" attribute.');
 
                 return false;
             }
-        }
 
-        if ($attrCount == 0) {
-            $logger->debug('Element "link" requires either "rel" or "itemprop" attribute.');
+            // Must have either "rel" or "itemprop" attribute, but not both.
+            $attrCount = 0;
+            foreach ($this->attributes as $key => $value) {
+                if ($key == 'rel' || $key == 'itemprop') {
+                    $attrCount++;
+                }
 
-            return false;
-        }
+                if ($attrCount > 1) {
+                    // If both, then we don't know which one should be kept,
+                    // so we recommend to delete the entire element.
+                    $logger->debug('Element "link" requires either "rel" or "itemprop" attribute, but not both.');
 
-        // If inside "body" element, then we check if allowed.
-        $body = new Body($this->configuration, 'body');
-        if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
-            $logger->debug('Element "link" does not have the correct attributes to be allowed inside the "body" element.');
+                    return false;
+                }
+            }
 
-            return false;
+            if ($attrCount == 0) {
+                $logger->debug('Element "link" requires either "rel" or "itemprop" attribute.');
+
+                return false;
+            }
+
+            // If inside "body" element, then we check if allowed.
+            $body = new Body($this->configuration, 'body');
+            if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
+                $logger->debug('Element "link" does not have the correct attributes to be allowed inside the "body" element.');
+
+                return false;
+            }
         }
 
         return true;

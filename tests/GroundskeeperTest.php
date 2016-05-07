@@ -315,7 +315,172 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<asdf role="asdf1">Text goes here</asdf>',
                 1
             ),
-            'html' => array(
+            'a - correct usage' => array(
+                '<a href="www.example.com">Example.com</a>',
+                '<a href="www.example.com">Example.com</a>',
+                0,
+                '<a href="www.example.com">Example.com</a>',
+                0,
+                '<a href="www.example.com">Example.com</a>',
+                0,
+                '<a href="www.example.com">Example.com</a>',
+                0
+            ),
+            'a - itemprop requires href' => array(
+                '<a itemprop="yo">Example.com</a>',
+                '<a itemprop="yo">Example.com</a>',
+                0,
+                '<a itemprop="yo" href="">Example.com</a>',
+                1,
+                '<a itemprop="yo" href="">Example.com</a>',
+                1,
+                '<a itemprop="yo" href="">Example.com</a>',
+                1
+            ),
+            'a - with comment and illegal attribute' => array(
+                '<a href="www.example.com" with="stuff"><!-- comment -->Example.com</a>',
+                '<a href="www.example.com" with="stuff"><!-- comment -->Example.com</a>',
+                0,
+                '<a href="www.example.com" with="stuff"><!-- comment -->Example.com</a>',
+                0,
+                '<a href="www.example.com"><!-- comment -->Example.com</a>',
+                1,
+                '<a href="www.example.com"><!-- comment -->Example.com</a>',
+                1
+            ),
+            'a - with child a' => array(
+                '<a href="www.example.com">Example.com<a href="www.example.org">Example.org</a></a>',
+                '<a href="www.example.com">Example.com<a href="www.example.org">Example.org</a></a>',
+                0,
+                '<a href="www.example.com">Example.com<a href="www.example.org">Example.org</a></a>',
+                0,
+                '<a href="www.example.com">Example.com</a>',
+                1,
+                '<a href="www.example.com">Example.com</a>',
+                1
+            ),
+            'a - without href' => array(
+                '<a title="www.example.com" target="_blank">Example.com</a>',
+                '<a title="www.example.com" target="_blank">Example.com</a>',
+                0,
+                '<a title="www.example.com" target="_blank">Example.com</a>',
+                0,
+                '<a title="www.example.com">Example.com</a>',
+                1,
+                '<a title="www.example.com">Example.com</a>',
+                1
+            ),
+            'base - correct usage' => array(
+                '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
+                0
+            ),
+            'base - href required' => array(
+                '<html><head><title>Asdf1</title><base class="www.example.com"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><base class="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><base class="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2
+            ),
+            'base - must be child of head' => array(
+                '<html><head><title>Asdf1</title></head><body>Yo!<base href="www.example.com"/></body></html>',
+                '<html><head><title>Asdf1</title></head><body>Yo!<base href="www.example.com"/></body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!<base href="www.example.com"/></body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2
+            ),
+            'body - child of non-html element' => array(
+                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
+                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div><body></body></html>',
+                3,
+                '<html><head><title>Asdf1</title></head><body></body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body></body></html>',
+                2
+            ),
+            'head - child of non-html element' => array(
+                '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+                '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+                0,
+                '<html><head><title></title></head><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+                4,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                3,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                3
+            ),
+            'head - extra elements' => array(
+                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                1
+            ),
+            'head - no title' => array(
+                '<html><head></head><body>Yo!</body></html>',
+                '<html><head></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title></title></head><body>Yo!</body></html>',
+                1
+            ),
+            'head - multiple titles' => array(
+                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                1
+            ),
+            'head - multiple base' => array(
+                '<html><head><base href="asdf" /><title>Asdf1</title><base href="asdf" /></head><body>Yo!</body></html>',
+                '<html><head><base href="asdf"/><title>Asdf1</title><base href="asdf"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><base href="asdf"/><title>Asdf1</title><base href="asdf"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><base href="asdf"/><title>Asdf1</title></head><body>Yo!</body></html>',
+                1,
+                '<html><head><base href="asdf"/><title>Asdf1</title></head><body>Yo!</body></html>',
+                1
+            ),
+            'head - contains comment' => array(
+                '<html><head> <!-- Comment here! -->  <title>Asdf1</title></head><body>Yo!</body></html>',
+                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
+                0
+            ),
+            'html - correct usage' => array(
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 0,
@@ -414,95 +579,73 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 1
             ),
-            'head - child of non-html element' => array(
-                '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
-                '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
+            'link - correct usage in head' => array(
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title></title></head><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
-                4,
-                '<html><head><title></title></head><body>Yo!</body></html>',
-                3,
-                '<html><head><title></title></head><body>Yo!</body></html>',
-                3
-            ),
-            'head - extra elements' => array(
-                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
-                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title><p>Asdf2</p></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                1,
-                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                1
-            ),
-            'head - no title' => array(
-                '<html><head></head><body>Yo!</body></html>',
-                '<html><head></head><body>Yo!</body></html>',
-                0,
-                '<html><head><title></title></head><body>Yo!</body></html>',
-                1,
-                '<html><head><title></title></head><body>Yo!</body></html>',
-                1,
-                '<html><head><title></title></head><body>Yo!</body></html>',
-                1
-            ),
-            'head - multiple titles' => array(
-                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
-                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
-                0,
-                '<html><head><title>Asdf1</title><title>Asdf2</title></head><body>Yo!</body></html>',
-                0,
-                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                1,
-                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                1
-            ),
-            'head - multiple base' => array(
-                '<html><head><base href="asdf" /><title>Asdf1</title><base href="asdf" /></head><body>Yo!</body></html>',
-                '<html><head><base href="asdf"/><title>Asdf1</title><base href="asdf"/></head><body>Yo!</body></html>',
-                0,
-                '<html><head><base href="asdf"/><title>Asdf1</title><base href="asdf"/></head><body>Yo!</body></html>',
-                0,
-                '<html><head><base href="asdf"/><title>Asdf1</title></head><body>Yo!</body></html>',
-                1,
-                '<html><head><base href="asdf"/><title>Asdf1</title></head><body>Yo!</body></html>',
-                1
-            ),
-            'head - contains comment' => array(
-                '<html><head> <!-- Comment here! -->  <title>Asdf1</title></head><body>Yo!</body></html>',
-                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
-                0,
-                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
-                0,
-                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
-                0,
-                '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
                 0
             ),
-            'title contains comment' => array(
-                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
-                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+            'link - correct usage in body' => array(
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0,
-                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0,
-                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0,
-                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0
             ),
-            'title contains markup' => array(
-                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
-                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+            'link - missing href' => array(
+                '<html><head><title>Asdf1</title><link rel="help"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link rel="help"/></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link rel="help"/></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asd</title></head><body>Yo!</body></html>',
-                1,
-                '<html><head><title>Asd</title></head><body>Yo!</body></html>',
-                1
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2
             ),
-            'meta' => array(
+            'link - missing rel' => array(
+                '<html><head><title>Asdf1</title><link href="www.example.com"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link href="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><link href="www.example.com"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2
+            ),
+            'link - both rel and itemprop' => array(
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"  itemprop="help"/></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help" itemprop="help"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title><link href="www.example.com" rel="help" itemprop="help"/></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2
+            ),
+            'link - incorrect usage in body' => array(
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="help"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="help"/>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="help"/>Yo!</body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2,
+                '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
+                2
+            ),
+            'meta - correct usage' => array(
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test" /></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
                 0,
@@ -535,16 +678,27 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
                 3
             ),
-            'body - child of non-html element' => array(
-                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
-                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div></html>',
+            'title contains comment' => array(
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title></head><div><body id="yo">Yo!</body></div><body></body></html>',
-                3,
-                '<html><head><title>Asdf1</title></head><body></body></html>',
-                2,
-                '<html><head><title>Asdf1</title></head><body></body></html>',
-                2
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
+                0
+            ),
+            'title contains markup' => array(
+                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asd<b>f1</b></title></head><body>Yo!</body></html>',
+                0,
+                '<html><head><title>Asd</title></head><body>Yo!</body></html>',
+                1,
+                '<html><head><title>Asd</title></head><body>Yo!</body></html>',
+                1
             )
         );
     }
@@ -661,7 +815,7 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
             'text only' => array(
                 'text',
                 '<!-- comment --><div class="asdf1">asdf5</div>',
-                '<!-- comment --><div class="asdf1"/>',
+                '<!-- comment --><div class="asdf1"></div>',
                 1
             )
         );
