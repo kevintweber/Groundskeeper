@@ -17,7 +17,7 @@ interface InteractiveContent
     // video (if the controls attribute is present)
 
     /**
-     * @return boolean True if interactive content.
+     * @return bool True if interactive content.
      */
     public function isInteractiveContent();
 }

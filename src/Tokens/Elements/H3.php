@@ -11,5 +11,4 @@ use Groundskeeper\Tokens\ElementTypes\OpenElement;
  */
 class H3 extends OpenElement implements FlowContent, HeadingContent
 {
-
 }

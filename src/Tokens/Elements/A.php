@@ -9,6 +9,7 @@ use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
+use Groundskeeper\Tokens\ElementTypes\TransparentElement;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -17,7 +18,7 @@ use Psr\Log\LoggerInterface;
  *
  * https://html.spec.whatwg.org/multipage/semantics.html#the-a-element
  */
-class A extends OpenElement implements FlowContent, InteractiveContent, PhrasingContent, InlineElement
+class A extends OpenElement implements FlowContent, InteractiveContent, PhrasingContent, InlineElement, TransparentElement
 {
     protected function getAllowedAttributes()
     {
@@ -91,5 +92,10 @@ class A extends OpenElement implements FlowContent, InteractiveContent, Phrasing
     public function isInteractiveContent()
     {
         return $this->hasAttribute('href');
+    }
+
+    public function isTransparentElement()
+    {
+        return true;
     }
 }

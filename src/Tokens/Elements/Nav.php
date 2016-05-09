@@ -11,5 +11,4 @@ use Groundskeeper\Tokens\ElementTypes\SectioningContent;
  */
 class Nav extends OpenElement implements FlowContent, SectioningContent
 {
-
 }

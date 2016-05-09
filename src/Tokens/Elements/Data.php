@@ -25,5 +25,4 @@ class Data extends OpenElement implements FlowContent, PhrasingContent, InlineEl
             parent::getAllowedAttributes()
         );
     }
-
 }

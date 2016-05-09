@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Token as CleanableToken;
 use Kevintweber\HtmlTokenizer\HtmlTokenizer;
 use Kevintweber\HtmlTokenizer\Tokens\Element as BasicElement;
 use Kevintweber\HtmlTokenizer\Tokens\Token as BasicToken;

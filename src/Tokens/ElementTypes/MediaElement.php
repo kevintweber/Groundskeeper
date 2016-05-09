@@ -11,5 +11,4 @@ namespace Groundskeeper\Tokens\ElementTypes;
  */
 interface MediaElement
 {
-
 }

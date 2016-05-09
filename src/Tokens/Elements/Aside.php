@@ -11,5 +11,4 @@ use Groundskeeper\Tokens\ElementTypes\SectioningContent;
  */
 class Aside extends OpenElement implements FlowContent, SectioningContent
 {
-
 }

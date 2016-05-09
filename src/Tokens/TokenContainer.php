@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Exceptions\ValidationException;
 use Groundskeeper\Tokens\Elements\Element;
 use Psr\Log\LoggerInterface;
 

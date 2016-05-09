@@ -25,5 +25,4 @@ class Q extends OpenElement implements FlowContent, PhrasingContent, InlineEleme
             parent::getAllowedAttributes()
         );
     }
-
 }

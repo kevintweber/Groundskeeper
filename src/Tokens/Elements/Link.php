@@ -42,7 +42,7 @@ class Link extends ClosedElement implements MetadataContent
             $attrCount = 0;
             foreach ($this->attributes as $key => $value) {
                 if ($key == 'rel' || $key == 'itemprop') {
-                    $attrCount++;
+                    ++$attrCount;
                 }
 
                 if ($attrCount > 1) {
@@ -77,7 +77,7 @@ class Link extends ClosedElement implements MetadataContent
      *
      * https://html.spec.whatwg.org/multipage/semantics.html#allowed-in-the-body
      *
-     * @return boolean True if allowed.
+     * @return bool True if allowed.
      */
     public function isAllowedInBody()
     {

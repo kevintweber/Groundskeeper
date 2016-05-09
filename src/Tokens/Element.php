@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Exceptions\ValidationException;
 use Psr\Log\LoggerInterface;
 
 class Element extends AbstractToken implements Cleanable, ContainsChildren, Removable
@@ -55,7 +54,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      *
      * @param string $key
      *
-     * @return boolean True if the attribute is present.
+     * @return bool True if the attribute is present.
      */
     public function hasAttribute($key)
     {

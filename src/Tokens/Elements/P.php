@@ -12,5 +12,4 @@ use Groundskeeper\Tokens\ElementTypes\OpenElement;
  */
 class P extends OpenElement implements FlowContent
 {
-
 }

@@ -14,5 +14,4 @@ use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
  */
 class Samp extends OpenElement implements FlowContent, PhrasingContent, InlineElement
 {
-
 }

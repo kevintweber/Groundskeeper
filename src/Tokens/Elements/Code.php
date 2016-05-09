@@ -14,5 +14,4 @@ use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
  */
 class Code extends OpenElement implements FlowContent, PhrasingContent, InlineElement
 {
-
 }

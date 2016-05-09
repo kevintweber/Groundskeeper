@@ -4,7 +4,6 @@ namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**

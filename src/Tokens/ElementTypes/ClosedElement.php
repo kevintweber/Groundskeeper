@@ -2,7 +2,6 @@
 
 namespace Groundskeeper\Tokens\ElementTypes;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\Token;
 

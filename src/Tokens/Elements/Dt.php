@@ -18,32 +18,30 @@ class Dt extends OpenElement
 {
     protected function doClean(LoggerInterface $logger)
     {
-        // Must be child of "dl" element.
-        $parent = $this->getParent();
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT &&
-            $parent !== null &&
-            $parent->getName() != 'dl') {
-            $logger->debug('Element "dt" must be a child of a "dl" element.');
+        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            // Must be child of "dl" element.
+            $parent = $this->getParent();
+            if ($parent !== null &&
+                $parent->getName() != 'dl') {
+                $logger->debug('Element "dt" must be a child of a "dl" element.');
 
-            return false;
-        }
-
-        // No "header", "footer", sectioning content, or heading content descendants.
-        foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
+                return false;
             }
 
-            if ($child->getType() != Token::ELEMENT) {
-                if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $logger->debug('Removing ' . $child . '. Element "dt" cannot contain "header", "footer", section content, or heading content elements.');
-                    $this->removeChild($child);
+            // No "header", "footer", sectioning content, or heading content descendants.
+            foreach ($this->children as $child) {
+                if ($child->getType() == Token::COMMENT ||
+                    $child->getType() == Token::TEXT) {
+                    continue;
                 }
 
-                continue;
-            }
+                if ($child->getType() != Token::ELEMENT) {
+                    $logger->debug('Removing ' . $child . '. Element "dt" cannot contain "header", "footer", section content, or heading content elements.');
+                    $this->removeChild($child);
 
-            if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                    continue;
+                }
+
                 if ($child->getName() == 'header' ||
                     $child->getName() == 'footer' ||
                     $child instanceof SectioningContent ||

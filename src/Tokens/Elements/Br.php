@@ -13,5 +13,4 @@ use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
  */
 class Br extends ClosedElement implements FlowContent, PhrasingContent
 {
-
 }

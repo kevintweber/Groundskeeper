@@ -56,7 +56,7 @@ class Html extends OpenElement
 
             // Check for HEAD and BODY
             if ($child->getName() == 'head') {
-                $headCount++;
+                ++$headCount;
                 if ($bodyCount == 0) {
                     $headIsFirst = true;
                 }
@@ -70,7 +70,7 @@ class Html extends OpenElement
                     continue;
                 }
             } elseif ($child->getName() == 'body') {
-                $bodyCount++;
+                ++$bodyCount;
 
                 // Remove extraneous BODY elements.
                 if ($bodyCount > 1 &&

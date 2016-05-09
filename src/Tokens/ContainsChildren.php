@@ -16,7 +16,7 @@ interface ContainsChildren
      *
      * @param Token $token The token to search for.
      *
-     * @return boolean True if $token is present.
+     * @return bool True if $token is present.
      */
     public function hasChild(Token $token);
 

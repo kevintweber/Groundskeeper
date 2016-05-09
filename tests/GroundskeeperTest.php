@@ -458,6 +458,61 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body></body></html>',
                 2
             ),
+            'dl -correct usage' => array(
+                '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
+                '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
+                0,
+                '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
+                0,
+                '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
+                0,
+                '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
+                0
+            ),
+            'dl - contains text and wrong element' => array(
+                '<dl><dt>Authors</dt><dd>Kevin</dd>Weber<p>Whoa!</p></dl>',
+                '<dl><dt>Authors</dt><dd>Kevin</dd>Weber<p>Whoa!</p></dl>',
+                0,
+                '<dl><dt>Authors</dt><dd>Kevin</dd>Weber<p>Whoa!</p></dl>',
+                0,
+                '<dl><dt>Authors</dt><dd>Kevin</dd></dl>',
+                2,
+                '<dl><dt>Authors</dt><dd>Kevin</dd></dl>',
+                2
+            ),
+            'dd & dt - wrong parent' => array(
+                '<div>Whoa!<dd>asdf1</dd><dt>asdf2</dt></div>',
+                '<div>Whoa!<dd>asdf1</dd><dt>asdf2</dt></div>',
+                0,
+                '<div>Whoa!<dd>asdf1</dd><dt>asdf2</dt></div>',
+                0,
+                '<div>Whoa!</div>',
+                4,
+                '<div>Whoa!</div>',
+                4
+            ),
+            'dt - incorrect child elements' => array(
+                '<dl><dt>asdf1<H2>asdf2</H2></dt><dt><![CDATA[ hmmm... ]]></dt></dl>',
+                '<dl><dt>asdf1<h2>asdf2</h2></dt><dt><![CDATA[hmmm...]]></dt></dl>',
+                0,
+                '<dl><dt>asdf1<h2>asdf2</h2></dt><dt><![CDATA[hmmm...]]></dt></dl>',
+                0,
+                '<dl><dt>asdf1</dt><dt></dt></dl>',
+                2,
+                '<dl><dt>asdf1</dt><dt></dt></dl>',
+                2
+            ),
+            'footer - bad child' => array(
+                '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
+                '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
+                0,
+                '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
+                0,
+                '<div><footer>asdf1asdf3</footer></div>',
+                2,
+                '<div><footer>asdf1asdf3</footer></div>',
+                2
+            ),
             'head - child of non-html element' => array(
                 '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
                 '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
@@ -523,6 +578,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 0,
                 '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
                 0
+            ),
+            'header - bad child' => array(
+                '<div><footer>asdf1<header>asdf2</header>asdf3</footer></div>',
+                '<div><footer>asdf1<header>asdf2</header>asdf3</footer></div>',
+                0,
+                '<div><footer>asdf1<header>asdf2</header>asdf3</footer></div>',
+                0,
+                '<div><footer>asdf1asdf3</footer></div>',
+                2,
+                '<div><footer>asdf1asdf3</footer></div>',
+                2
             ),
             'html - correct usage' => array(
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
@@ -721,6 +787,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 3,
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
                 3
+            ),
+            'ol - contains incorrect tokens and elements' => array(
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                0,
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                0,
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
+                2,
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
+                2
             ),
             'style - correct usage' => array(
                 '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',

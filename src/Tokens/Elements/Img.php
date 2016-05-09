@@ -2,10 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
-use Groundskeeper\Tokens\ElementTypes\MediaElement;
-use Psr\Log\LoggerInterface;
 
 /**
  * "img" element

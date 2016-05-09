@@ -11,7 +11,7 @@ interface Cleanable
      *
      * @param LoggerInterface $logger Will log any cleaning actions.
      *
-     * @return boolean True if clean.
+     * @return bool True if clean.
      */
     public function clean(LoggerInterface $logger);
 }

@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * "head" element
+ *
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-head-element
  */
 class Head extends OpenElement
 {
@@ -42,14 +44,14 @@ class Head extends OpenElement
             }
 
             if ($child->getName() == 'title') {
-                $titleCount++;
+                ++$titleCount;
                 if ($titleCount > 1 &&
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
                     $logger->debug('Removing ' . $child . '. Only one "title" element allowed.');
                     $this->removeChild($child);
                 }
             } elseif ($child->getName() == 'base') {
-                $baseCount++;
+                ++$baseCount;
                 if ($baseCount > 1 &&
                     $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
                     $logger->debug('Removing ' . $child . '. Maximum one "base" element allowed.');

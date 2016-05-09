@@ -52,7 +52,7 @@ class CompactTest extends \PHPUnit_Framework_TestCase
     Just some text.
     </body>
 </html>",
-                '<html><body>Just some text.</body></html>'
+                '<html><body> Just some text. </body></html>'
             )
         );
     }

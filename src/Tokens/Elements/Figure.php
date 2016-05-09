@@ -13,5 +13,4 @@ use Groundskeeper\Tokens\ElementTypes\SectioningRoot;
  */
 class Figure extends OpenElement implements FlowContent, SectioningRoot
 {
-
 }

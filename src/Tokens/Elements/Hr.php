@@ -6,5 +6,4 @@ use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 
 class Hr extends ClosedElement
 {
-
 }
