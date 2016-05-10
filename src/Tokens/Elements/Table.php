@@ -42,11 +42,10 @@ class Table extends OpenElement implements FlowContent
                     $child->getName() == 'tfoot' ||
                     $child instanceof ScriptSupporting)
                     continue;
-                }
-
-                $logger->debug('Removing ' . $child . '. Only "caption", "colgroup", "thead", "tbody", "tr", "tfoot", and script supporting elements allowed as children of "table" element.');
-                $this->removeChild($child);
             }
+
+            $logger->debug('Removing ' . $child . '. Only "caption", "colgroup", "thead", "tbody", "tr", "tfoot", and script supporting elements allowed as children of "table" element.');
+            $this->removeChild($child);
         }
 
         return true;
