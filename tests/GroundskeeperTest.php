@@ -689,6 +689,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 1
             ),
+            'li - menu' => array(
+                '<menu><li>asdf</li></menu><menu type="toolbar"><li>asdf</li></menu>',
+                '<menu><li>asdf</li></menu><menu type="toolbar"><li>asdf</li></menu>',
+                0,
+                '<menu type="context"><li>asdf</li></menu><menu type="toolbar"><li>asdf</li></menu>',
+                1,
+                '<menu type="context"></menu><menu type="toolbar"><li>asdf</li></menu>',
+                3,
+                '<menu type="context"></menu><menu type="toolbar"><li>asdf</li></menu>',
+                3
+            ),
+            'li - wrong parent' => array(
+                '<div><li>asdf</li></div>',
+                '<div><li>asdf</li></div>',
+                0,
+                '<div><li>asdf</li></div>',
+                0,
+                '<div></div>',
+                2,
+                '<div></div>',
+                2
+            ),
             'link - correct usage in head' => array(
                 '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
@@ -789,28 +811,105 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 3
             ),
             'ol - contains incorrect tokens and elements' => array(
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value=2>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
                 0,
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
                 0,
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li><script><![CDATA[asdf]]></script></ol>',
                 2,
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li><script><![CDATA[asdf]]></script></ol>',
                 2
             ),
+            'q' => array(
+                '<div>asdf1<q cite="asdf2" well="asdf3">asdf4</q>asdf5</div>',
+                '<div>asdf1<q cite="asdf2" well="asdf3">asdf4</q>asdf5</div>',
+                0,
+                '<div>asdf1<q cite="asdf2" well="asdf3">asdf4</q>asdf5</div>',
+                0,
+                '<div>asdf1<q cite="asdf2">asdf4</q>asdf5</div>',
+                1,
+                '<div>asdf1<q cite="asdf2">asdf4</q>asdf5</div>',
+                1
+            ),
             'style - correct usage' => array(
-                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
-                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title><style>/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
+                '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
                 0
             ),
-            'title contains comment' => array(
+            'table - correct usage' => array(
+                '<table><thead><tr><th>Animal</th><th colspan=2>Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan=2>Black</td></tr></tbody><tfoot><tr><td colspan=2>---</td><td>---</td></tr></tfoot></table>',
+                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                0,
+                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                0,
+                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                0,
+                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                0
+            ),
+            'table - inappropriate children' => array(
+                '<table>Whoa!<hr /><tr><!-- comment --></tr></table>',
+                '<table>Whoa!<hr/><tr><!-- comment --></tr></table>',
+                0,
+                '<table>Whoa!<hr/><tr><!-- comment --></tr></table>',
+                0,
+                '<table><tr><!-- comment --></tr></table>',
+                2,
+                '<table><tr><!-- comment --></tr></table>',
+                2
+            ),
+            'tbody,thead, and tfoot - wrong parent' => array(
+                '<div><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></div>',
+                '<div><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></div>',
+                0,
+                '<div><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></div>',
+                0,
+                '<div></div>',
+                6,
+                '<div></div>',
+                6
+            ),
+            'tbody,thead, and tfoot - text children' => array(
+                '<table><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></table>',
+                '<table><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></table>',
+                0,
+                '<table><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></table>',
+                0,
+                '<table><thead></thead><tbody></tbody><tfoot></tfoot></table>',
+                3,
+                '<table><thead></thead><tbody></tbody><tfoot></tfoot></table>',
+                3
+            ),
+            'tbody,thead, and tfoot - wrong element children' => array(
+                '<table><thead><!-- comment --><div>whoa</div></thead><tbody><!-- comment --><div>whoa</div></tbody><tfoot><!-- comment --><div>whoa</div></tfoot></table>',
+                '<table><thead><!-- comment --><div>whoa</div></thead><tbody><!-- comment --><div>whoa</div></tbody><tfoot><!-- comment --><div>whoa</div></tfoot></table>',
+                0,
+                '<table><thead><!-- comment --><div>whoa</div></thead><tbody><!-- comment --><div>whoa</div></tbody><tfoot><!-- comment --><div>whoa</div></tfoot></table>',
+                0,
+                '<table><thead><!-- comment --></thead><tbody><!-- comment --></tbody><tfoot><!-- comment --></tfoot></table>',
+                3,
+                '<table><thead><!-- comment --></thead><tbody><!-- comment --></tbody><tfoot><!-- comment --></tfoot></table>',
+                3
+            ),
+            'td and th - incorrect parents' => array(
+                '<div><th>oops</th></div><div><td>oops</td></div>',
+                '<div><th>oops</th></div><div><td>oops</td></div>',
+                0,
+                '<div><th>oops</th></div><div><td>oops</td></div>',
+                0,
+                '<div></div><div></div>',
+                4,
+                '<div></div><div></div>',
+                4
+            ),
+            'title - contains comment' => array(
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
                 0,
@@ -832,16 +931,27 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asd</title></head><body>Yo!</body></html>',
                 1
             ),
+            'tr - wrong parent and children' => array(
+                '<div><tr>Hmm...</tr></div><table><tr>asdf1<div>asdf2</div><td>yes</td></tr></table>',
+                '<div><tr>Hmm...</tr></div><table><tr>asdf1<div>asdf2</div><td>yes</td></tr></table>',
+                0,
+                '<div><tr>Hmm...</tr></div><table><tr>asdf1<div>asdf2</div><td>yes</td></tr></table>',
+                0,
+                '<div></div><table><tr><td>yes</td></tr></table>',
+                4,
+                '<div></div><table><tr><td>yes</td></tr></table>',
+                4
+            ),
             'ul - contains incorrect tokens and elements' => array(
-                '<ul><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
-                '<ul><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
+                '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
+                '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
                 0,
-                '<ul><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
+                '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',
                 0,
-                '<ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
-                2,
-                '<ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
-                2
+                '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
+                3,
+                '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
+                3
             )
         );
     }

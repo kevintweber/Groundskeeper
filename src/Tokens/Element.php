@@ -49,6 +49,15 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         return $this->attributes;
     }
 
+    public function getAttribute($key)
+    {
+        if (!$this->hasAttribute($key)) {
+            throw new \InvalidArgumentException('Invalid attribute key: ' . $key);
+        }
+
+        return $this->attributes[$key];
+    }
+
     /**
      * Hasser for 'attributes'.
      *

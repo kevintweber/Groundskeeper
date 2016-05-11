@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
