@@ -27,18 +27,16 @@ class Param extends ClosedElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Must be child of "object" element.
-            $parent = $this->getParent();
-            if ($parent !== null && $parent->getName() !== 'object') {
-                $logger->debug('Element "param" must be a child of "object" element.');
+        // Must be child of "object" element.
+        $parent = $this->getParent();
+        if ($parent !== null && $parent->getName() !== 'object') {
+            $logger->debug($this . ' must be a child of "object" element.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

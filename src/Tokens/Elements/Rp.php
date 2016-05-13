@@ -13,18 +13,17 @@ use Psr\Log\LoggerInterface;
  */
 class Rp extends OpenElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
         // Must be child of "ruby" element.
         $parent = $this->getParent();
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT &&
-            $parent !== null &&
+        if ($parent !== null &&
             $parent->getName() != 'ruby') {
-            $logger->debug('Element "rp" must be a child of a "ruby" element.');
+            $logger->debug($this . ' must be a child of a "ruby" element.');
 
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

@@ -8,7 +8,13 @@ use Groundskeeper\Tokens\ElementTypes\SectioningContent;
 
 /**
  * "aside" element
+ *
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-aside-element
  */
 class Aside extends OpenElement implements FlowContent, SectioningContent
 {
+    protected function removeInvalidChildren(LoggerInterface $logger)
+    {
+        /// @todo Remove "main" element descendents.
+    }
 }

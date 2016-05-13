@@ -21,7 +21,7 @@ class Embed extends ClosedElement implements FlowContent, PhrasingContent, Embed
             '/^src$/i' => Element::ATTR_URI,
             '/^type$/i' => Element::ATTR_CS_STRING,
             '/^name$/i' => Element::ATTR_CS_STRING,
-            '/^[a-z_-]$/i' => Element::ATTR_CS_STRING,
+            '/^[a-z_-]$/i' => Element::ATTR_CS_STRING
         );
 
         return array_merge(

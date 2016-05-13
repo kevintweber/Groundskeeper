@@ -13,18 +13,17 @@ use Psr\Log\LoggerInterface;
  */
 class Dd extends OpenElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
         // Must be child of "dl" element.
         $parent = $this->getParent();
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT &&
-            $parent !== null &&
+        if ($parent !== null &&
             $parent->getName() != 'dl') {
-            $logger->debug('Element "dt" must be a child of a "dl" element.');
+            $logger->debug($this . ' must be a child of a "dl" element.');
 
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

@@ -2,10 +2,8 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -34,17 +32,15 @@ class Form extends OpenElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            $form = new self($this->configuration, 'form');
-            if ($this->hasAncestor($form)) {
-                $logger->debug('Element "form" cannot be have "form" element ancestor.');
+        $form = new self($this->configuration, 'form');
+        if ($this->hasAncestor($form)) {
+            $logger->debug($this . ' cannot be have a "form" element ancestor.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

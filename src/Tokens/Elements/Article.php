@@ -8,6 +8,8 @@ use Groundskeeper\Tokens\ElementTypes\SectioningContent;
 
 /**
  * "article" element
+ *
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-article-element
  */
 class Article extends OpenElement implements FlowContent, SectioningContent
 {

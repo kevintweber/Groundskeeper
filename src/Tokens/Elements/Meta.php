@@ -26,23 +26,26 @@ class Meta extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function fixSelf(LoggerInterface $logger)
+    {
+        // "name" attribute requires "content" attribute.
+        if ($this->hasAttribute('name') && !$this->hasAttribute('content')) {
+            $logger->debug('Modifying ' . $this . '. A "meta" element with a "name" attribute requires a "content" attribute.  Adding empty "content" attribute.');
+            $this->addAttribute('content', '');
+        }
+    }
+
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
         // If "charset" attribute is present, the must be child of "head" element.
         if ($this->hasAttribute('charset') && $this->getParent() !== null) {
-            if ($this->getParent()->getType() !== Token::ELEMENT || $this->getParent()->getName() != 'head') {
-                $logger->debug('Element "meta" with a "charset" attribute must be a "head" element child.');
+            if (!$this->getParent() instanceof Head) {
+                $logger->debug($this . ' with a "charset" attribute must be a "head" element child.');
 
-                return false;
+                return true;
             }
         }
 
-        // "name" attribute requires "content" attribute.
-        if ($this->hasAttribute('name') && !$this->hasAttribute('content')) {
-            $logger->debug('A "meta" element with a "name" attribute requires a "content" attribute.  Adding empty "content" attribute.');
-            $this->addAttribute('content', '');
-        }
-
-        return true;
+        return false;
     }
 }

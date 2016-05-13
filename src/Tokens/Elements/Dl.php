@@ -2,7 +2,6 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
@@ -16,7 +15,7 @@ use Psr\Log\LoggerInterface;
  */
 class Dl extends OpenElement implements FlowContent
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
         // Only "dd", "dt", and ScriptSupporting elements allowed.
         foreach ($this->children as $child) {
@@ -25,10 +24,8 @@ class Dl extends OpenElement implements FlowContent
             }
 
             if ($child->getType() != Token::ELEMENT) {
-                if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $logger->debug('Removing ' . $child . '. Only elements "dd", "dt", and script supporting elements allowed as children of "dl" element.');
-                    $this->removeChild($child);
-                }
+                $logger->debug('Removing ' . $child . '. Only elements "dd", "dt", and script supporting elements allowed as children of "dl" element.');
+                $this->removeChild($child);
 
                 continue;
             }
@@ -39,12 +36,8 @@ class Dl extends OpenElement implements FlowContent
                 continue;
             }
 
-            if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                $logger->debug('Removing ' . $child . '. Only elements "dd", "dt", and script supporting elements allowed as children of "dl" element.');
-                $this->removeChild($child);
-            }
+            $logger->debug('Removing ' . $child . '. Only elements "dd", "dt", and script supporting elements allowed as children of "dl" element.');
+            $this->removeChild($child);
         }
-
-        return true;
     }
 }

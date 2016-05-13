@@ -24,7 +24,7 @@ class Area extends ClosedElement implements FlowContent, PhrasingContent
             '/^target$/i' => Element::ATTR_CS_STRING,
             '/^download$/i' => Element::ATTR_CS_STRING,
             '/^ping$/i' => Element::ATTR_URI,
-            '/^rel$/i' => Element::ATTR_CS_STRING,
+            '/^rel$/i' => Element::ATTR_CS_STRING
         );
 
         return array_merge(

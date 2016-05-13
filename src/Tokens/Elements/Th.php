@@ -30,19 +30,17 @@ class Th extends OpenElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // "tr" must be parent.
-            $parent = $this->getParent();
-            if ($parent !== null &&
-                $parent->getName() != 'tr') {
-                $logger->debug('Element "th" must be a child of "tr" element.');
+        // "tr" must be parent.
+        $parent = $this->getParent();
+        if ($parent !== null &&
+            $parent->getName() != 'tr') {
+            $logger->debug($this . ' must be a child of "tr" element.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

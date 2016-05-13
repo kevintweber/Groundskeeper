@@ -15,28 +15,38 @@ use Psr\Log\LoggerInterface;
  */
 class Head extends OpenElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function fixSelf(LoggerInterface $logger)
     {
-        // "head" element must be a child of "html" element.
-        if ($this->getParent() !== null &&
-            $this->getParent()->getType() === Token::ELEMENT &&
-            $this->getParent()->getName() != 'html') {
-            $logger->debug('Element "head" must be a child of "html" element.');
-
-            return false;
+        // Look for "title" element
+        foreach ($this->children as $child) {
+            if ($child instanceof Title) {
+                return;
+            }
         }
 
+        // Missing title.
+        $logger->debug('Adding "title" element. One "title" element required.');
+        $title = new Title($this->configuration, 'title');
+        $this->prependChild($title);
+    }
+
+    protected function removeInvalidChildren(LoggerInterface $logger)
+    {
         // "head" element must contain only metadata content elements.
         // "head" element must contain exactly one "title" element.
         // "head" element must contain either 0 or 1 "base" element.
         $titleCount = 0;
         $baseCount = 0;
         foreach ($this->children as $child) {
-            if (!$child instanceof MetadataContent &&
-                $child->getType() !== 'comment' &&
-                $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
+            }
+
+            if (!$child instanceof MetadataContent) {
                 $logger->debug('Removing ' . $child . '. Only children of metadata content allowed.');
                 $this->removeChild($child);
+
+                continue;
             }
 
             if ($child->getType() != Token::ELEMENT) {
@@ -45,28 +55,36 @@ class Head extends OpenElement
 
             if ($child->getName() == 'title') {
                 ++$titleCount;
-                if ($titleCount > 1 &&
-                    $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                if ($titleCount > 1) {
                     $logger->debug('Removing ' . $child . '. Only one "title" element allowed.');
                     $this->removeChild($child);
+
+                    continue;
                 }
             } elseif ($child->getName() == 'base') {
                 ++$baseCount;
-                if ($baseCount > 1 &&
-                    $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                if ($baseCount > 1) {
                     $logger->debug('Removing ' . $child . '. Maximum one "base" element allowed.');
+
                     $this->removeChild($child);
+
+                    continue;
                 }
             }
         }
+    }
 
-        // Missing title.
-        if ($titleCount == 0) {
-            $logger->debug('Adding "title" element. One "title" element required.');
-            $title = new Title($this->configuration, 'title');
-            $this->prependChild($title);
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        // "head" element must be a child of "html" element.
+        if ($this->getParent() !== null &&
+            $this->getParent()->getType() === Token::ELEMENT &&
+            $this->getParent()->getName() != 'html') {
+            $logger->debug($this . ' must be a child of "html" element.');
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

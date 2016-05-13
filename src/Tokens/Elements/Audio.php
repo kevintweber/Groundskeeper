@@ -39,45 +39,41 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            $hasSrc = $this->hasAttribute('src');
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
-
-                if ($child->getType() == Token::TEXT) {
-                    continue;
-                }
-
-                if ($child->getType() !== Token::ELEMENT) {
-                    $logger->debug('Removing ' . $child . '. Only elements allowed as children of "audio" element.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-
-                if (!$hasSrc && $child->getName() == 'source') {
-                    continue;
-                }
-
-                if ($child->getName() == 'track') {
-                    continue;
-                }
-
-                if ($child instanceof TransparentElement &&
-                    $child->isTransparentElement()) {
-                    continue;
-                }
-
-                $logger->debug('Removing ' . $child . '. Only "source", "track", and transparent elements allowed as children of "audio" element.');
-                $this->removeChild($child);
+        $hasSrc = $this->hasAttribute('src');
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
             }
-        }
 
-        return true;
+            if ($child->getType() == Token::TEXT) {
+                continue;
+            }
+
+            if ($child->getType() !== Token::ELEMENT) {
+                $logger->debug('Removing ' . $child . '. Only elements allowed as children of "audio" element.');
+                $this->removeChild($child);
+
+                continue;
+            }
+
+            if (!$hasSrc && $child->getName() == 'source') {
+                continue;
+            }
+
+            if ($child->getName() == 'track') {
+                continue;
+            }
+
+            if ($child instanceof TransparentElement &&
+                $child->isTransparentElement()) {
+                continue;
+            }
+
+            $logger->debug('Removing ' . $child . '. Only "source", "track", and transparent elements allowed as children of "audio" element.');
+            $this->removeChild($child);
+        }
     }
 
     public function isInteractiveContent()

@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * "html" element
+ *
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-html-element
  */
 class Html extends OpenElement
 {
@@ -25,66 +27,20 @@ class Html extends OpenElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function fixSelf(LoggerInterface $logger)
     {
-        // HTML element must not have parent elements.
-        if ($this->getParent() !== null) {
-            $logger->debug('Element "html" must not have a parent element.');
-
-            return false;
-        }
-
-        // Only chidlren allowed are HEAD element followed by BODY element.
         $bodyCount = 0;
         $headCount = 0;
         $headIsFirst = false;
         foreach ($this->children as $key => $child) {
-            // Ignore comments.
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            // Invalid token.
-            if ($child->getType() != Token::ELEMENT) {
-                if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $logger->debug('Removing ' . $child . '. "html" element only allows "head" and "body" elements children.');
-                    $this->removeChild($child);
-                }
-
-                continue;
-            }
-
             // Check for HEAD and BODY
-            if ($child->getName() == 'head') {
+            if ($child instanceof Head) {
                 ++$headCount;
                 if ($bodyCount == 0) {
                     $headIsFirst = true;
                 }
-
-                // Remove extraneous HEAD elements.
-                if ($headCount > 1 &&
-                    $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $logger->debug('Removing ' . $child . '. Only one "head" element allowed.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-            } elseif ($child->getName() == 'body') {
+            } elseif ($child instanceof Body) {
                 ++$bodyCount;
-
-                // Remove extraneous BODY elements.
-                if ($bodyCount > 1 &&
-                    $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $logger->debug('Removing ' . $child . '. Only one BODY element allowed.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-            } elseif ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-                $logger->debug('Removing ' . $child . '. Only "head" or "body" elements are allowed as "html" element children.');
-                $this->removeChild($child);
-
-                continue;
             }
         }
 
@@ -114,7 +70,62 @@ class Html extends OpenElement
                 }
             }
         }
+    }
 
-        return true;
+    protected function removeInvalidChildren(LoggerInterface $logger)
+    {
+        $bodyCount = 0;
+        $headCount = 0;
+        foreach ($this->children as $key => $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
+            }
+
+            // Invalid token.
+            if ($child->getType() != Token::ELEMENT) {
+                $logger->debug('Removing ' . $child . '. "html" element only allows "head" and "body" elements children.');
+                $this->removeChild($child);
+
+                continue;
+            }
+
+            // Check for HEAD and BODY
+            if ($child instanceof Head) {
+                ++$headCount;
+
+                // Remove extraneous HEAD elements.
+                if ($headCount > 1) {
+                    $logger->debug('Removing ' . $child . '. Only one "head" element allowed.');
+                    $this->removeChild($child);
+
+                    continue;
+                }
+            } elseif ($child instanceof Body) {
+                ++$bodyCount;
+
+                // Remove extraneous BODY elements.
+                if ($bodyCount > 1) {
+                    $logger->debug('Removing ' . $child . '. Only one BODY element allowed.');
+                    $this->removeChild($child);
+
+                    continue;
+                }
+            } else {
+                $logger->debug('Removing ' . $child . '. Only "head" or "body" elements are allowed as "html" element children.');
+                $this->removeChild($child);
+            }
+        }
+    }
+
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        // HTML element must not have parent elements.
+        if ($this->getParent() !== null) {
+            $logger->debug($this . ' must not have a parent element.');
+
+            return true;
+        }
+
+        return false;
     }
 }

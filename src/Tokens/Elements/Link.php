@@ -28,48 +28,46 @@ class Link extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Must have "href" attribute.
-            if (!$this->hasAttribute('href')) {
-                $logger->debug('Element "link" requires "href" attribute.');
+        // Must have "href" attribute.
+        if (!$this->hasAttribute('href')) {
+            $logger->debug($this . ' requires "href" attribute.');
 
-                return false;
+            return true;
+        }
+
+        // Must have either "rel" or "itemprop" attribute, but not both.
+        $attrCount = 0;
+        foreach ($this->attributes as $key => $value) {
+            if ($key == 'rel' || $key == 'itemprop') {
+                ++$attrCount;
             }
 
-            // Must have either "rel" or "itemprop" attribute, but not both.
-            $attrCount = 0;
-            foreach ($this->attributes as $key => $value) {
-                if ($key == 'rel' || $key == 'itemprop') {
-                    ++$attrCount;
-                }
+            if ($attrCount > 1) {
+                // If both, then we don't know which one should be kept,
+                // so we recommend to delete the entire element.
+                $logger->debug($this . ' requires either "rel" or "itemprop" attribute, but not both.');
 
-                if ($attrCount > 1) {
-                    // If both, then we don't know which one should be kept,
-                    // so we recommend to delete the entire element.
-                    $logger->debug('Element "link" requires either "rel" or "itemprop" attribute, but not both.');
-
-                    return false;
-                }
-            }
-
-            if ($attrCount == 0) {
-                $logger->debug('Element "link" requires either "rel" or "itemprop" attribute.');
-
-                return false;
-            }
-
-            // If inside "body" element, then we check if allowed.
-            $body = new Body($this->configuration, 'body');
-            if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
-                $logger->debug('Element "link" does not have the correct attributes to be allowed inside the "body" element.');
-
-                return false;
+                return true;
             }
         }
 
-        return true;
+        if ($attrCount == 0) {
+            $logger->debug($this . ' requires either "rel" or "itemprop" attribute.');
+
+            return true;
+        }
+
+        // If inside "body" element, then we check if allowed.
+        $body = new Body($this->configuration, 'body');
+        if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
+            $logger->debug($this . ' does not have the correct attributes to be allowed inside the "body" element.');
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

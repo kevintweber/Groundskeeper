@@ -30,21 +30,19 @@ class Source extends ClosedElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Child of "picture" element.
-            // Child of media element.
-            $parent = $this->getParent();
-            if ($parent !== null &&
-                $parent->getName() != 'picture' &&
-                !$parent instanceof MediaElement) {
-                $logger->debug('Element "picture" must be a child of "picture" element or a media element.');
+        // Child of "picture" element.
+        // Child of media element.
+        $parent = $this->getParent();
+        if ($parent !== null &&
+            $parent->getName() != 'picture' &&
+            !$parent instanceof MediaElement) {
+            $logger->debug($this . ' must be a child of "picture" element or a media element.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

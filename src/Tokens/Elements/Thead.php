@@ -15,40 +15,41 @@ use Psr\Log\LoggerInterface;
  */
 class Thead extends OpenElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // "table" must be parent.
-            $parent = $this->getParent();
-            if ($parent !== null && $parent->getName() != 'table') {
-                $logger->debug('Element "thead" must be a child of the "table" element.');
-
-                return false;
+        // Children can be "tr" and script supporting elements.
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
             }
 
-            // Children can be "tr" and script supporting elements.
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
-
-                if ($child->getType() !== Token::ELEMENT) {
-                    $logger->debug('Removing ' . $child . '. Only elements allowed as children of "thead" element.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-
-                if ($child->getName() == 'tr' ||
-                    $child instanceof ScriptSupporting) {
-                    continue;
-                }
-
-                $logger->debug('Removing ' . $child . '. Only "tr" and script supporting elements allowed as children of "thead" element.');
+            if ($child->getType() !== Token::ELEMENT) {
+                $logger->debug('Removing ' . $child . '. Only elements allowed as children of "thead" element.');
                 $this->removeChild($child);
+
+                continue;
             }
+
+            if ($child->getName() == 'tr' ||
+                $child instanceof ScriptSupporting) {
+                continue;
+            }
+
+            $logger->debug('Removing ' . $child . '. Only "tr" and script supporting elements allowed as children of "thead" element.');
+            $this->removeChild($child);
+        }
+    }
+
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        // "table" must be parent.
+        $parent = $this->getParent();
+        if ($parent !== null && $parent->getName() != 'table') {
+            $logger->debug($this . ' must be a child of the "table" element.');
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

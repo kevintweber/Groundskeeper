@@ -208,7 +208,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             if ($caseSensitivity == 'ci') {
                 $newValue = strtolower($value);
                 if ($newValue !== $value) {
-                    $logger->debug('The value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.  Element: ' . $this);
+                    $logger->debug('Within ' . $this . ' the value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.');
                     $this->attributes[$name] = $newValue;
                 }
             }
@@ -224,9 +224,18 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
             }
         }
 
-        $doCleanResult = $this->doClean($logger);
-        if (!$doCleanResult && $this->configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
-            return false;
+        // Fix self (if possible)
+        $this->fixSelf($logger);
+
+        // Remove self or children?
+        if ($this->configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
+            // Remove self?
+            if ($this->removeInvalidSelf($logger)) {
+                return false;
+            }
+
+            // Remove children?
+            $this->removeInvalidChildren($logger);
         }
 
         // Clean children.
@@ -237,9 +246,17 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function fixSelf(LoggerInterface $logger)
     {
-        return true;
+    }
+
+    protected function removeInvalidChildren(LoggerInterface $logger)
+    {
+    }
+
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        return false;
     }
 
     protected function getAllowedAttributes()

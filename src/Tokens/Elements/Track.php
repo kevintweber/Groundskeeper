@@ -29,20 +29,18 @@ class Track extends ClosedElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Must be child of "object" element.
-            $parent = $this->getParent();
-            if ($parent !== null &&
-                $parent->getName() !== 'video' &&
-                $parent->getName() !== 'audio') {
-                $logger->debug('Element "track" must be a child of "video" or "audio" element.');
+        // Must be child of "object" element.
+        $parent = $this->getParent();
+        if ($parent !== null &&
+            $parent->getName() !== 'video' &&
+            $parent->getName() !== 'audio') {
+            $logger->debug($this . ' must be a child of "video" or "audio" element.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

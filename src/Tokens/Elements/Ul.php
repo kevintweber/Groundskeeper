@@ -16,31 +16,27 @@ use Psr\Log\LoggerInterface;
  */
 class Ul extends OpenElement implements FlowContent
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Only "li" and ScriptSupporting elements allowed.
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
+        // Only "li" and ScriptSupporting elements allowed.
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
+            }
 
-                if ($child->getType() != Token::ELEMENT) {
-                    $logger->debug('Removing ' . $child . '. Only elements "li" and script supporting elements allowed as children of "ul" element.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-
-                if ($child->getName() == 'li' || $child instanceof ScriptSupporting) {
-                    continue;
-                }
-
+            if ($child->getType() != Token::ELEMENT) {
                 $logger->debug('Removing ' . $child . '. Only elements "li" and script supporting elements allowed as children of "ul" element.');
                 $this->removeChild($child);
-            }
-        }
 
-        return true;
+                continue;
+            }
+
+            if ($child->getName() == 'li' || $child instanceof ScriptSupporting) {
+                continue;
+            }
+
+            $logger->debug('Removing ' . $child . '. Only elements "li" and script supporting elements allowed as children of "ul" element.');
+            $this->removeChild($child);
+        }
     }
 }

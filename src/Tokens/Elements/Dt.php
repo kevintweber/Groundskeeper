@@ -16,42 +16,43 @@ use Psr\Log\LoggerInterface;
  */
 class Dt extends OpenElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Must be child of "dl" element.
-            $parent = $this->getParent();
-            if ($parent !== null &&
-                $parent->getName() != 'dl') {
-                $logger->debug('Element "dt" must be a child of a "dl" element.');
-
-                return false;
+        // No "header", "footer", sectioning content, or heading content descendants.
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT ||
+                $child->getType() == Token::TEXT) {
+                continue;
             }
 
-            // No "header", "footer", sectioning content, or heading content descendants.
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT ||
-                    $child->getType() == Token::TEXT) {
-                    continue;
-                }
+            if ($child->getType() != Token::ELEMENT) {
+                $logger->debug('Removing ' . $child . '. Element "dt" cannot contain "header", "footer", section content, or heading content elements.');
+                $this->removeChild($child);
 
-                if ($child->getType() != Token::ELEMENT) {
-                    $logger->debug('Removing ' . $child . '. Element "dt" cannot contain "header", "footer", section content, or heading content elements.');
-                    $this->removeChild($child);
+                continue;
+            }
 
-                    continue;
-                }
-
-                if ($child->getName() == 'header' ||
-                    $child->getName() == 'footer' ||
-                    $child instanceof SectioningContent ||
-                    $child instanceof HeadingContent) {
-                    $logger->debug('Removing ' . $child . '. No "header", "footer", and sectioning content, or heading content elements allowed as children of "dt" element.');
-                    $this->removeChild($child);
-                }
+            if ($child->getName() == 'header' ||
+                $child->getName() == 'footer' ||
+                $child instanceof SectioningContent ||
+                $child instanceof HeadingContent) {
+                $logger->debug('Removing ' . $child . '. No "header", "footer", and sectioning content, or heading content elements allowed as children of "dt" element.');
+                $this->removeChild($child);
             }
         }
+    }
 
-        return true;
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        // Must be child of "dl" element.
+        $parent = $this->getParent();
+        if ($parent !== null &&
+            $parent->getName() != 'dl') {
+            $logger->debug($this . ' must be a child of a "dl" element.');
+
+            return true;
+        }
+
+        return false;
     }
 }

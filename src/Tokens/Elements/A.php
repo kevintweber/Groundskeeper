@@ -39,54 +39,59 @@ class A extends OpenElement implements FlowContent, InteractiveContent, Phrasing
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function fixSelf(LoggerInterface $logger)
     {
         // If the "itemprop" attribute is specified on an "a" element, then
         // the "href" attribute must also be specified.
         if ($this->hasAttribute('itemprop') && !$this->hasAttribute('href')) {
-            $logger->debug('Element "a" with "itemprop" attribute requires the "href" attribute also.  Adding empty "href" attribute.');
+            $logger->debug($this . ' with "itemprop" attribute requires the "href" attribute also.  Adding empty "href" attribute.');
             $this->addAttribute('href', '');
         }
+    }
 
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // There must be no interactive content or "a" element descendants.
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
-
-                if ($child->getType() == Token::ELEMENT &&
-                    ($child->getName() == 'a' ||
-                     ($child instanceof InteractiveContent && $child->isInteractiveContent()))) {
-                    $logger->debug('Removing ' . $child . '. Element "a" cannot contain "a" or interactive content elements.');
-                    $this->removeChild($child);
-                }
+    protected function removeInvalidChildren(LoggerInterface $logger)
+    {
+        // There must be no interactive content or "a" element descendants.
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
             }
 
-            // The target, download, ping, rel, hreflang, type, and
-            // referrerpolicy attributes must be omitted if the href
-            // attribute is not present.
-            if (!$this->hasAttribute('href')) {
-                if ($this->hasAttribute('target') ||
-                    $this->hasAttribute('download') ||
-                    $this->hasAttribute('ping') ||
-                    $this->hasAttribute('rel') ||
-                    $this->hasAttribute('hreflang') ||
-                    $this->hasAttribute('type') ||
-                    $this->hasAttribute('referrerpolicy')) {
-                    $logger->debug('Removing invalid attributes.  Element "a" without "href" attribute cannot contain "target", "download", "ping", "rel", "hreflang", "type", or "referrerpolicy" attributes.');
-                    $this->removeAttribute('target');
-                    $this->removeAttribute('download');
-                    $this->removeAttribute('ping');
-                    $this->removeAttribute('rel');
-                    $this->removeAttribute('hreflang');
-                    $this->removeAttribute('type');
-                    $this->removeAttribute('referrerpolicy');
-                }
+            if ($child->getType() == Token::ELEMENT &&
+                ($child->getName() == 'a' ||
+                 ($child instanceof InteractiveContent && $child->isInteractiveContent()))) {
+                $logger->debug('Removing ' . $child . '. Element "a" cannot contain "a" or interactive content elements.');
+                $this->removeChild($child);
+            }
+        }
+    }
+
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        // The target, download, ping, rel, hreflang, type, and
+        // referrerpolicy attributes must be omitted if the href
+        // attribute is not present.
+        if (!$this->hasAttribute('href')) {
+            if ($this->hasAttribute('target') ||
+                $this->hasAttribute('download') ||
+                $this->hasAttribute('ping') ||
+                $this->hasAttribute('rel') ||
+                $this->hasAttribute('hreflang') ||
+                $this->hasAttribute('type') ||
+                $this->hasAttribute('referrerpolicy')
+            ) {
+                $logger->debug('Removing invalid attributes. ' . $this . ' without "href" attribute cannot contain "target", "download", "ping", "rel", "hreflang", "type", or "referrerpolicy" attributes.');
+                $this->removeAttribute('target');
+                $this->removeAttribute('download');
+                $this->removeAttribute('ping');
+                $this->removeAttribute('rel');
+                $this->removeAttribute('hreflang');
+                $this->removeAttribute('type');
+                $this->removeAttribute('referrerpolicy');
             }
         }
 
-        return true;
+        return false;
     }
 
     public function isInteractiveContent()

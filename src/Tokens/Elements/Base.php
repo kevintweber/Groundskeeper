@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * "base" element
+ *
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-base-element
  */
 class Base extends ClosedElement implements MetadataContent
 {
@@ -26,24 +28,22 @@ class Base extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // "base" element must be child of "head" element.
-            if ($this->getParent() !== null && $this->getParent()->getName() !== 'head') {
-                $logger->debug('Element "base" must be a "head" element child.');
+        // "base" element must be child of "head" element.
+        if ($this->getParent() !== null && $this->getParent()->getName() !== 'head') {
+            $logger->debug($this . ' must be a "head" element child.');
 
-                return false;
-            }
-
-            // Must have either "href" or "target" attribute or both.
-            if (!$this->hasAttribute('href') && !$this->hasAttribute('target')) {
-                $logger->debug('Element "base" must have either the "href" or "target" attribute or both.');
-
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        // Must have either "href" or "target" attribute or both.
+        if (!$this->hasAttribute('href') && !$this->hasAttribute('target')) {
+            $logger->debug($this . ' must have either the "href" or "target" attribute or both.');
+
+            return true;
+        }
+
+        return false;
     }
 }

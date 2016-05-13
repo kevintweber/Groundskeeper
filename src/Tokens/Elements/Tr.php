@@ -15,45 +15,46 @@ use Psr\Log\LoggerInterface;
  */
 class Tr extends OpenElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // "table" must be parent.
-            $parent = $this->getParent();
-            if ($parent !== null &&
-                $parent->getName() != 'thead' &&
-                $parent->getName() != 'tbody' &&
-                $parent->getName() != 'tfoot' &&
-                $parent->getName() != 'table') {
-                $logger->debug('Element "tr" must be a child of the "thead", "tbody", "tfoot", or "table" elements.');
-
-                return false;
+        // Children can be "td", "th", and script supporting elements.
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
             }
 
-            // Children can be "td", "th", and script supporting elements.
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
-
-                if ($child->getType() !== Token::ELEMENT) {
-                    $logger->debug('Removing ' . $child . '. Only elements allowed as children of "tr" element.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-
-                if ($child->getName() == 'td' ||
-                    $child->getName() == 'th' ||
-                    $child instanceof ScriptSupporting) {
-                    continue;
-                }
-
-                $logger->debug('Removing ' . $child . '. Only "td", "th", and script supporting elements allowed as children of "tr" element.');
+            if ($child->getType() !== Token::ELEMENT) {
+                $logger->debug('Removing ' . $child . '. Only elements allowed as children of "tr" element.');
                 $this->removeChild($child);
+
+                continue;
             }
+
+            if ($child->getName() == 'td' ||
+                $child->getName() == 'th' ||
+                $child instanceof ScriptSupporting) {
+                continue;
+            }
+
+            $logger->debug('Removing ' . $child . '. Only "td", "th", and script supporting elements allowed as children of "tr" element.');
+            $this->removeChild($child);
+        }
+    }
+
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        // "table" must be parent.
+        $parent = $this->getParent();
+        if ($parent !== null &&
+            $parent->getName() != 'thead' &&
+            $parent->getName() != 'tbody' &&
+            $parent->getName() != 'tfoot' &&
+            $parent->getName() != 'table') {
+            $logger->debug($this . ' must be a child of the "thead", "tbody", "tfoot", or "table" elements.');
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

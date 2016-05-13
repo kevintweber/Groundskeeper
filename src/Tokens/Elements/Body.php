@@ -8,6 +8,11 @@ use Groundskeeper\Tokens\ElementTypes\SectioningRoot;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
+/**
+ * "body" element
+ *
+ * https://html.spec.whatwg.org/multipage/semantics.html#the-body-element
+ */
 class Body extends OpenElement implements SectioningRoot
 {
     protected function getAllowedAttributes()
@@ -36,16 +41,22 @@ class Body extends OpenElement implements SectioningRoot
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
         // "body" element must be a child of "html" element.
         if ($this->getParent() !== null &&
             $this->getParent()->getType() === Token::ELEMENT &&
             $this->getParent()->getName() != 'html') {
-            $logger->debug('Element "body" must be a child of "html" element.');
+            $logger->debug($this . ' must be a child of "html" element.');
 
-            return false;
+            return true;
         }
+
+        return false;
+    }
+
+    protected function doClean(LoggerInterface $logger)
+    {
 
         return true;
     }

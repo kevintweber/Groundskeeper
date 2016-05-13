@@ -17,40 +17,36 @@ use Psr\Log\LoggerInterface;
  */
 class Address extends OpenElement implements FlowContent
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // No HeadingContent descendants
-            // No SectioningContent descendants
-            // No "header", "footer", or "address" element descendants.
-            foreach ($this->children as $child) {
-                if ($child instanceof HeadingContent) {
-                    $logger->debug('Heading Content elements not allowed as "address" element child.');
+        // No HeadingContent descendants
+        // No SectioningContent descendants
+        // No "header", "footer", or "address" element descendants.
+        foreach ($this->children as $child) {
+            if ($child instanceof HeadingContent) {
+                $logger->debug('Removing ' . $child . '. Heading Content elements not allowed as "address" element child.');
+                $this->removeChild($child);
+
+                continue;
+            }
+
+            if ($child instanceof SectioningContent) {
+                $logger->debug('Removing ' . $child . '. Sectioning Content elements not allowed as "address" element child.');
+                $this->removeChild($child);
+
+                continue;
+            }
+
+            if ($child->getType() == Token::ELEMENT) {
+                if ($child->getName() == 'header' ||
+                    $child->getName() == 'footer' ||
+                    $child->getName() == 'address') {
+                    $logger->debug('Removing ' . $child . '. Elements "header", "footer", and "address" not allowed as "address" element child.');
                     $this->removeChild($child);
 
                     continue;
-                }
-
-                if ($child instanceof SectioningContent) {
-                    $logger->debug('Sectioning Content elements not allowed as "address" element child.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-
-                if ($child->getType() == Token::ELEMENT) {
-                    if ($child->getName() == 'header' ||
-                        $child->getName() == 'footer' ||
-                        $child->getName() == 'address') {
-                        $logger->debug('Elements "header", "footer", and "address" not allowed as "address" element child.');
-                        $this->removeChild($child);
-
-                        continue;
-                    }
                 }
             }
         }
-
-        return true;
     }
 }

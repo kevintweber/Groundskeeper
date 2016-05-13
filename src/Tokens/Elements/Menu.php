@@ -29,31 +29,30 @@ class Menu extends OpenElement implements FlowContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function fixSelf(LoggerInterface $logger)
     {
         if (!$this->hasAttribute('type')) {
-            $logger->debug('Adding the default type attribute for the "menu" element.');
+            $logger->debug('Modifying ' . $this . '. Adding the default "type" attribute for the "menu" element.');
             $this->addAttribute('type', 'context');
         }
+    }
 
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // Only "li" and ScriptSupporting elements allowed.
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
-
-                if ($child->getType() != Token::ELEMENT) {
-                    $logger->debug('Removing ' . $child . '. Only elements "li", "menuitem", "hr", "menu", and script supporting elements allowed as children of "menu" element.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
-
-                /// @todo
+    protected function removeInvalidChildren(LoggerInterface $logger)
+    {
+        // Only "li" and ScriptSupporting elements allowed.
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
             }
-        }
 
-        return true;
+            if ($child->getType() != Token::ELEMENT) {
+                $logger->debug('Removing ' . $child . '. Only elements "li", "menuitem", "hr", "menu", and script supporting elements allowed as children of "menu" element.');
+                $this->removeChild($child);
+
+                continue;
+            }
+
+            /// @todo
+        }
     }
 }

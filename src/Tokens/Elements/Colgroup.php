@@ -14,7 +14,7 @@ class Colgroup extends Element
     protected function getAllowedAttributes()
     {
         $colgroupAllowedAttributes = array(
-            '/^span$/i' => Element::ATTR_INT,
+            '/^span$/i' => Element::ATTR_INT
         );
 
         return array_merge(

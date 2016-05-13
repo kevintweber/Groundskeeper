@@ -28,11 +28,11 @@ class Time extends OpenElement implements FlowContent, PhrasingContent
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
         // If attribute "datetime" is not present, then only TEXT type
         // children allowed.
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT && !$this->hasAttribute('datetime')) {
+        if (!$this->hasAttribute('datetime')) {
             foreach ($this->children as $child) {
                 if ($child->getType() == Token::COMMENT) {
                     continue;
@@ -46,7 +46,5 @@ class Time extends OpenElement implements FlowContent, PhrasingContent
                 }
             }
         }
-
-        return true;
     }
 }

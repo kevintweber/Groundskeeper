@@ -16,23 +16,31 @@ use Psr\Log\LoggerInterface;
  */
 class Dfn extends OpenElement implements FlowContent, PhrasingContent, InlineElement
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
         // There must be no dfn element descendants.
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
-                    continue;
-                }
+        foreach ($this->children as $child) {
+            if ($child->getType() == Token::COMMENT) {
+                continue;
+            }
 
-                if ($child->getType() == Token::ELEMENT &&
-                    $child->getName() == 'dfn') {
-                    $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
-                    $this->removeChild($child);
-                }
+            if ($child->getType() == Token::ELEMENT &&
+                $child->getName() == 'dfn') {
+                $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
+                $this->removeChild($child);
             }
         }
+    }
 
-        return true;
+    protected function removeInvalidSelf(LoggerInterface $logger)
+    {
+        $dfn = new self($this->configuration, 'dfn');
+        if ($this->hasAncestor($dfn)) {
+            $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
+
+            return true;
+        }
+
+        return false;
     }
 }

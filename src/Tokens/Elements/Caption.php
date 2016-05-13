@@ -18,18 +18,16 @@ class Caption extends OpenElement implements FlowContent
     /**
      * @todo Caption must be *first* child of table.
      */
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            $parent = $this->getParent();
-            if ($parent->getType() !== Token::ELEMENT &&
-                $parent->getName() != 'table') {
-                $logger->debug('Element "caption" must be child of "table" element.');
+        $parent = $this->getParent();
+        if ($parent->getType() !== Token::ELEMENT &&
+            $parent->getName() != 'table') {
+            $logger->debug($this . ' must be child of "table" element.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

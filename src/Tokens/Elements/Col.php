@@ -26,18 +26,16 @@ class Col extends ClosedElement
         );
     }
 
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
-            // "colgroup" must be parent.
-            $parent = $this->getParent();
-            if ($parent !== null && $parent->getName() != 'colgroup') {
-                $logger->debug('Element "col" must be a child of the "colgroup" element.');
+        // "colgroup" must be parent.
+        $parent = $this->getParent();
+        if ($parent !== null && $parent->getName() != 'colgroup') {
+            $logger->debug($this . ' must be a child of the "colgroup" element.');
 
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

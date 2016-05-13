@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
  */
 class Title extends OpenElement implements MetadataContent
 {
-    protected function doClean(LoggerInterface $logger)
+    protected function removeInvalidChildren(LoggerInterface $logger)
     {
         // TITLE must contain only non-whitespace text or comments.
         foreach ($this->children as $child) {
@@ -21,13 +21,10 @@ class Title extends OpenElement implements MetadataContent
                 continue;
             }
 
-            if ($child->getType() != Token::TEXT &&
-                $this->configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            if ($child->getType() != Token::TEXT) {
                 $logger->debug('Removing ' . $child . '. Only text allowed inside TITLE.');
                 $this->removeChild($child);
             }
         }
-
-        return true;
     }
 }
