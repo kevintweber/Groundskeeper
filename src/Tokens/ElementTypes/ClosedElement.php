@@ -5,7 +5,7 @@ namespace Groundskeeper\Tokens\ElementTypes;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\Token;
 
-class ClosedElement extends Element
+abstract class ClosedElement extends Element
 {
     /**
      * Reimplement appendChild so that no children can be added.

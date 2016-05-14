@@ -315,15 +315,48 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<asdf role="asdf1">Text goes here</asdf>',
                 1
             ),
+            'element with attrribute whose key and value are the same' => array(
+                '<asdf id="id">Text goes here</asdf>',
+                '<asdf id="id">Text goes here</asdf>',
+                0,
+                '<asdf id="id">Text goes here</asdf>',
+                0,
+                '<asdf id="id">Text goes here</asdf>',
+                0,
+                '<asdf id="id">Text goes here</asdf>',
+                0
+            ),
+            'element with boolean attribute' => array(
+                '<form novalidate="novalidate"></form>',
+                '<form novalidate="novalidate"></form>',
+                0,
+                '<form novalidate></form>',
+                1,
+                '<form novalidate></form>',
+                1,
+                '<form novalidate></form>',
+                1
+            ),
             'a - correct usage' => array(
-                '<a href="www.example.com">Example.com</a>',
-                '<a href="www.example.com">Example.com</a>',
+                '<a href="https://www.example.com">Example.com</a>',
+                '<a href="https://www.example.com">Example.com</a>',
                 0,
-                '<a href="www.example.com">Example.com</a>',
+                '<a href="https://www.example.com">Example.com</a>',
                 0,
-                '<a href="www.example.com">Example.com</a>',
+                '<a href="https://www.example.com">Example.com</a>',
                 0,
-                '<a href="www.example.com">Example.com</a>',
+                '<a href="https://www.example.com">Example.com</a>',
+                0
+            ),
+            'a - correct usage - relative url' => array(
+                '<a href="/asdf">Example.com</a>',
+                '<a href="/asdf">Example.com</a>',
+                0,
+                '<a href="/asdf">Example.com</a>',
+                0,
+                '<a href="/asdf">Example.com</a>',
+                0,
+                '<a href="/asdf">Example.com</a>',
                 0
             ),
             'a - itemprop requires href' => array(
@@ -502,6 +535,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div>Whoa!</div>',
                 2
             ),
+            'dt - contains wrong element' => array(
+                '<dl><dt>Authors<section>Hmmm...</section></dt><dd>Kevin</dd></dl>',
+                '<dl><dt>Authors<section>Hmmm...</section></dt><dd>Kevin</dd></dl>',
+                0,
+                '<dl><dt>Authors<section>Hmmm...</section></dt><dd>Kevin</dd></dl>',
+                0,
+                '<dl><dt>Authors</dt><dd>Kevin</dd></dl>',
+                1,
+                '<dl><dt>Authors</dt><dd>Kevin</dd></dl>',
+                1
+            ),
             'footer - bad child' => array(
                 '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
                 '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
@@ -599,6 +643,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><footer>asdf1asdf3</footer></div>',
                 1,
                 '<div><footer>asdf1asdf3</footer></div>',
+                1
+            ),
+            'header - header ancestor' => array(
+                '<header><div><header>asdf1</header>asdf2</div><hr/>asdf3</header>',
+                '<header><div><header>asdf1</header>asdf2</div><hr/>asdf3</header>',
+                0,
+                '<header><div><header>asdf1</header>asdf2</div><hr/>asdf3</header>',
+                0,
+                '<header><div>asdf2</div><hr/>asdf3</header>',
+                1,
+                '<header><div>asdf2</div><hr/>asdf3</header>',
                 1
             ),
             'html - correct usage' => array(
@@ -699,6 +754,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 1
+            ),
+            'img - malformed height and width' => array(
+                '<img height="2.4" width="5e2" />',
+                '<img height="2.4" width="5e2"/>',
+                0,
+                '<img height="2" width="5"/>',
+                2,
+                '<img height="2" width="5"/>',
+                2,
+                '<img height="2" width="5"/>',
+                2
+            ),
+            'img - malformed height and width again' => array(
+                '<img height="-2.4" width />',
+                '<img height="-2.4" width/>',
+                0,
+                '<img height="-2" width/>',
+                1,
+                '<img/>',
+                3,
+                '<img/>',
+                3
             ),
             'li - menu' => array(
                 '<menu><li>asdf</li></menu><menu type="toolbar"><li>asdf</li></menu>',

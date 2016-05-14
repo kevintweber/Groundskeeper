@@ -196,17 +196,52 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
 
             // Handle case-insensitivity.
             // Standard is case-insensitive attribute values should be lower case.
-            if ($caseSensitivity == 'ci') {
+            if ($caseSensitivity == 'ci' && $value !== true) {
                 $newValue = strtolower($value);
                 if ($newValue !== $value) {
-                    $logger->debug('Within ' . $this . ' the value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.');
+                    $logger->debug('Within ' . $this . ', the value for the attribute "' . $name . '" is case-insensitive.  The value has been converted to lower case.');
                     $this->attributes[$name] = $newValue;
                 }
             }
 
+            // Validate value types.
             switch (substr($attributeType, 0, 3)) {
+            case 'boo': // boolean
+                if ($this->attributes[$name] !== true) {
+                    $logger->debug('Within ' . $this . ', the attribute "' . $name . '" is a boolean attribute.  The value has been removed.');
+                    $this->attributes[$name] = true;
+                }
+
+                break;
+
             case 'enu': // enumeration
                 /// @todo
+                break;
+
+            case 'int': // integer
+                if ($this->attributes[$name] === true) {
+                    if ($this->configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
+                        $logger->debug('Within ' . $this . ', the value for the attribute "' . $name . '" is required to be an positive, non-zero integer.  The value is invalid, therefore the attribute has been removed.');
+                        unset($this->attributes[$name]);
+                    }
+
+                    break;
+                }
+
+                if (!is_int($this->attributes[$name])) {
+                    $origonalValue = (string) $this->attributes[$name];
+                    $this->attributes[$name] = (int) $this->attributes[$name];
+                    if ($origonalValue != ((string) $this->attributes[$name])) {
+                        $logger->debug('Within ' . $this . ', the value for the attribute "' . $name . '" is required to be an positive, non-zero integer.  The value has been converted to an integer.');
+                    }
+                }
+
+                if ($this->attributes[$name] <= 0 &&
+                    $this->configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
+                    $logger->debug('Within ' . $this . ', the value for the attribute "' . $name . '" is required to be an positive, non-zero integer.  The value is invalid, therefore the attribute has been removed.');
+                    unset($this->attributes[$name]);
+                }
+
                 break;
 
             case 'uri': // URI
@@ -472,7 +507,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         $output = $prefix . '<' . $this->name;
         foreach ($this->attributes as $key => $value) {
             $output .= ' ' . strtolower($key);
-            if (is_string($value)) {
+            if ($value !== true) {
                 /// @todo Escape double quotes in value.
                 $output .= '="' . $value . '"';
             }

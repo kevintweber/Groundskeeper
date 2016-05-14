@@ -4,7 +4,7 @@ namespace Groundskeeper\Tokens\ElementTypes;
 
 use Groundskeeper\Tokens\Element;
 
-class OpenElement extends Element
+abstract class OpenElement extends Element
 {
     /**
      * Required by the Token interface.
