@@ -5,6 +5,7 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -61,7 +62,7 @@ class Html extends OpenElement
         // Handle BODY before HEAD.
         if (!$headIsFirst && $bodyCount > 0 && $headCount > 0) {
             foreach ($this->children as $key => $child) {
-                if ($child->getType() == Token::ELEMENT && $child->getName() == 'body') {
+                if ($child instanceof Body) {
                     $logger->debug('Moved "body" element to end of "html" element children.');
                     unset($this->children[$key]);
                     $this->appendChild($child);
@@ -77,15 +78,7 @@ class Html extends OpenElement
         $bodyCount = 0;
         $headCount = 0;
         foreach ($this->children as $key => $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            // Invalid token.
-            if ($child->getType() != Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. "html" element only allows "head" and "body" elements children.');
-                $this->removeChild($child);
-
+            if ($child instanceof NonParticipating) {
                 continue;
             }
 
@@ -105,7 +98,7 @@ class Html extends OpenElement
 
                 // Remove extraneous BODY elements.
                 if ($bodyCount > 1) {
-                    $logger->debug('Removing ' . $child . '. Only one BODY element allowed.');
+                    $logger->debug('Removing ' . $child . '. Only one "body" element allowed.');
                     $this->removeChild($child);
 
                     continue;
@@ -121,7 +114,7 @@ class Html extends OpenElement
     {
         // HTML element must not have parent elements.
         if ($this->getParent() !== null) {
-            $logger->debug($this . ' must not have a parent element.');
+            $logger->debug('Removing ' . $this . '. Must not have a parent element.');
 
             return true;
         }

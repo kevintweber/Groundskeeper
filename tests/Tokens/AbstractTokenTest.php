@@ -8,27 +8,18 @@ class AbstractTokenTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorAndDefaults()
     {
-        $abstractTokenMock = $this->createAbstractTokenMock('comment');
+        $abstractTokenMock = $this->createAbstractTokenMock();
         $this->assertNull($abstractTokenMock->getParent());
-        $this->assertEquals('comment', $abstractTokenMock->getType());
         $this->assertEquals(0, $abstractTokenMock->getDepth());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionInConstructor()
-    {
-        $abstractTokenMock = $this->createAbstractTokenMock('asdf');
-    }
-
-    protected function createAbstractTokenMock($type = 'comment')
+    protected function createAbstractTokenMock()
     {
         $configuration = new Configuration();
 
         return $this->getMockForAbstractClass(
             'Groundskeeper\\Tokens\\AbstractToken',
-            array($type, $configuration, null)
+            array($configuration, null)
         );
     }
 }

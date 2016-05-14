@@ -19,27 +19,14 @@ abstract class AbstractToken implements Token
     /** @var null|Token */
     private $parent;
 
-    /** @var string */
-    private $type;
-
     /**
      * Constructor
      */
-    public function __construct($type, Configuration $configuration)
+    public function __construct(Configuration $configuration)
     {
-        if ($type !== Token::CDATA
-            && $type !== Token::COMMENT
-            && $type !== Token::DOCTYPE
-            && $type !== Token::ELEMENT
-            && $type !== Token::PHP
-            && $type !== Token::TEXT) {
-            throw new \InvalidArgumentException('Invalid type: ' . $type);
-        }
-
         $this->configuration = $configuration;
         $this->depth = 0;
         $this->parent = null;
-        $this->type = $type;
     }
 
     /**
@@ -87,14 +74,6 @@ abstract class AbstractToken implements Token
         return $this->parent->hasAncestor($element);
     }
 
-    /**
-     * Required by the Token interface.
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
     public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger)
     {
         if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
@@ -104,8 +83,7 @@ abstract class AbstractToken implements Token
         foreach ($children as $key => $child) {
             if ($child instanceof Cleanable) {
                 $isClean = $child->clean($logger);
-                if (!$isClean  && $configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
-                    $logger->debug('Unable to fix.  Removing ' . $child);
+                if (!$isClean && $configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
                     unset($children[$key]);
                 }
             }
@@ -113,6 +91,8 @@ abstract class AbstractToken implements Token
 
         return true;
     }
+
+    abstract public function getType();
 
     public function __toString()
     {

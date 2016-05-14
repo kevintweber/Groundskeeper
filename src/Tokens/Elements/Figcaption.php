@@ -18,8 +18,8 @@ class Figcaption extends OpenElement implements FlowContent, SectioningRoot
     {
         // Must be child of "figure" element.
         $parent = $this->getParent();
-        if ($parent !== null && $parent->getName() != 'figure') {
-            $logger->debug($this . ' must be a child of a "figure" element.');
+        if ($parent !== null && !$parent instanceof Figure) {
+            $logger->debug('Removing ' . $this . '. Must be a child of a "figure" element.');
 
             return true;
         }

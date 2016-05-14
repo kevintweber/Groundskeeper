@@ -12,9 +12,9 @@ abstract class AbstractValuedToken extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct($type, Configuration $configuration, $value = null)
+    public function __construct(Configuration $configuration, $value = null)
     {
-        parent::__construct($type, $configuration);
+        parent::__construct($configuration);
 
         $this->value = $value;
     }

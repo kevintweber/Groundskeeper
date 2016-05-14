@@ -6,12 +6,9 @@ use Groundskeeper\Configuration;
 
 class Text extends AbstractValuedToken
 {
-    /**
-     * Constructor
-     */
-    public function __construct(Configuration $configuration, $value = null)
+    public function getType()
     {
-        parent::__construct(Token::TEXT, $configuration, $value);
+        return Token::TEXT;
     }
 
     /**

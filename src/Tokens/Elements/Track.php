@@ -34,9 +34,9 @@ class Track extends ClosedElement
         // Must be child of "object" element.
         $parent = $this->getParent();
         if ($parent !== null &&
-            $parent->getName() !== 'video' &&
-            $parent->getName() !== 'audio') {
-            $logger->debug($this . ' must be a child of "video" or "audio" element.');
+            $parent instanceof Video &&
+            $parent instanceof Audio) {
+            $logger->debug('Removing ' . $this . '. Must be a child of "video" or "audio" element.');
 
             return true;
         }

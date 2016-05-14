@@ -40,7 +40,7 @@ class Meta extends ClosedElement implements MetadataContent
         // If "charset" attribute is present, the must be child of "head" element.
         if ($this->hasAttribute('charset') && $this->getParent() !== null) {
             if (!$this->getParent() instanceof Head) {
-                $logger->debug($this . ' with a "charset" attribute must be a "head" element child.');
+                $logger->debug('Removing ' . $this . '. Element "meta" with a "charset" attribute must be a "head" element child.');
 
                 return true;
             }

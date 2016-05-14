@@ -6,6 +6,7 @@ use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -41,18 +42,18 @@ class Menu extends OpenElement implements FlowContent
     {
         // Only "li" and ScriptSupporting elements allowed.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
+            if ($child instanceof NonParticipating) {
                 continue;
             }
 
-            if ($child->getType() != Token::ELEMENT) {
+            if (!$child instanceof Li &&
+                !$child instanceof Menuitem &&
+                !$child instanceof Hr &&
+                !$child instanceof Menu &&
+                !$child instanceof ScriptSupporting) {
                 $logger->debug('Removing ' . $child . '. Only elements "li", "menuitem", "hr", "menu", and script supporting elements allowed as children of "menu" element.');
                 $this->removeChild($child);
-
-                continue;
             }
-
-            /// @todo
         }
     }
 }

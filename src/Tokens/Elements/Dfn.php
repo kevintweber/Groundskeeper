@@ -6,6 +6,7 @@ use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -20,12 +21,7 @@ class Dfn extends OpenElement implements FlowContent, PhrasingContent, InlineEle
     {
         // There must be no dfn element descendants.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            if ($child->getType() == Token::ELEMENT &&
-                $child->getName() == 'dfn') {
+            if ($child instanceof Dfn) {
                 $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
                 $this->removeChild($child);
             }
@@ -34,7 +30,7 @@ class Dfn extends OpenElement implements FlowContent, PhrasingContent, InlineEle
 
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        $dfn = new self($this->configuration, 'dfn');
+        $dfn = new self($this->configuration);
         if ($this->hasAncestor($dfn)) {
             $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
 

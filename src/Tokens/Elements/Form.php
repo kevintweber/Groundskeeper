@@ -36,7 +36,7 @@ class Form extends OpenElement
     {
         $form = new self($this->configuration, 'form');
         if ($this->hasAncestor($form)) {
-            $logger->debug($this . ' cannot be have a "form" element ancestor.');
+            $logger->debug('Removing ' . $this . '. Cannot be have a "form" element ancestor.');
 
             return true;
         }

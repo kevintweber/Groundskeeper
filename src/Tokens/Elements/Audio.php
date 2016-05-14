@@ -10,6 +10,8 @@ use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
+use Groundskeeper\Tokens\NonParticipating;
+use Groundskeeper\Tokens\Text;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -43,26 +45,23 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
     {
         $hasSrc = $this->hasAttribute('src');
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
+            if ($child instanceof NonParticipanting ||
+                $child instanceof Text) {
                 continue;
             }
 
-            if ($child->getType() == Token::TEXT) {
-                continue;
-            }
-
-            if ($child->getType() !== Token::ELEMENT) {
+            if (!$child instanceof Element) {
                 $logger->debug('Removing ' . $child . '. Only elements allowed as children of "audio" element.');
                 $this->removeChild($child);
 
                 continue;
             }
 
-            if (!$hasSrc && $child->getName() == 'source') {
+            if (!$hasSrc && $child instanceof Source) {
                 continue;
             }
 
-            if ($child->getName() == 'track') {
+            if ($child instanceof Track) {
                 continue;
             }
 
@@ -71,7 +70,7 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
                 continue;
             }
 
-            $logger->debug('Removing ' . $child . '. Only "source", "track", and transparent elements allowed as children of "audio" element.');
+            $logger->debug('Removing ' . $child . '. Only text, "source", "track", and transparent elements allowed as children of "audio" element.');
             $this->removeChild($child);
         }
     }

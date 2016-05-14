@@ -31,15 +31,15 @@ class Base extends ClosedElement implements MetadataContent
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
         // "base" element must be child of "head" element.
-        if ($this->getParent() !== null && $this->getParent()->getName() !== 'head') {
-            $logger->debug($this . ' must be a "head" element child.');
+        if ($this->getParent() !== null && !($this->getParent() instanceof Head)) {
+            $logger->debug('Removing ' . $this . '. Must be a "head" element child.');
 
             return true;
         }
 
         // Must have either "href" or "target" attribute or both.
         if (!$this->hasAttribute('href') && !$this->hasAttribute('target')) {
-            $logger->debug($this . ' must have either the "href" or "target" attribute or both.');
+            $logger->debug('Removing ' . $this . '. Must have either the "href" or "target" attribute or both.');
 
             return true;
         }

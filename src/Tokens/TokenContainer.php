@@ -3,7 +3,7 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Elements\Element;
+use Groundskeeper\Tokens\Element;
 use Psr\Log\LoggerInterface;
 
 final class TokenContainer implements Cleanable, ContainsChildren, Removable
@@ -97,7 +97,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
             // Check types.
             if ($hasRemovableTypes &&
                 !$this->configuration->isAllowedType($child->getType())) {
-                $logger->debug('Removing ' . $child);
+                $logger->debug('Removing ' . $child . ' on type blacklist.');
                 $this->removeChild($child);
 
                 continue;
@@ -105,9 +105,9 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
 
             // Check elements.
             if ($hasRemovableElements &&
-                $child->getType() == Token::ELEMENT &&
+                $child instanceof Element &&
                 !$this->configuration->isAllowedElement($child->getName())) {
-                $logger->debug('Removing ' . $child);
+                $logger->debug('Removing ' . $child . ' on element blacklist.');
                 $this->removeChild($child);
 
                 continue;

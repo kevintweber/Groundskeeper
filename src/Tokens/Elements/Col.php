@@ -30,8 +30,8 @@ class Col extends ClosedElement
     {
         // "colgroup" must be parent.
         $parent = $this->getParent();
-        if ($parent !== null && $parent->getName() != 'colgroup') {
-            $logger->debug($this . ' must be a child of the "colgroup" element.');
+        if ($parent !== null && !$parent instanceof Colgroup) {
+            $logger->debug('Removing ' . $this . '. Must be a child of the "colgroup" element.');
 
             return true;
         }

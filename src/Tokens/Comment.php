@@ -2,19 +2,14 @@
 
 namespace Groundskeeper\Tokens;
 
-use Groundskeeper\Configuration;
-
 /**
  * Commend token type.
  */
-class Comment extends AbstractValuedToken
+class Comment extends AbstractValuedToken implements NonParticipating
 {
-    /**
-     * Constructor
-     */
-    public function __construct(Configuration $configuration, $value = null)
+    public function getType()
     {
-        parent::__construct(Token::COMMENT, $configuration, $value);
+        return Token::COMMENT;
     }
 
     /**

@@ -18,6 +18,15 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('asdf', $element->getName());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExceptionInConstructor()
+    {
+        $configuration = new Configuration();
+        $element = new Element($configuration, 5);
+    }
+
     public function testAttributes()
     {
         $configuration = new Configuration();
@@ -26,6 +35,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($element->getAttributes());
         $element->addAttribute('class', 'c-asdf');
         $this->assertTrue($element->hasAttribute('class'));
+        $this->assertEquals('c-asdf', $element->getAttribute('class'));
         $this->assertEquals(1, count($element->getAttributes()));
         $element->addAttribute('id', 'i-asdf');
         $this->assertEquals(2, count($element->getAttributes()));
@@ -37,6 +47,16 @@ class ElementTest extends \PHPUnit_Framework_TestCase
             array('id' => 'i-asdf'),
             $element->getAttributes()
         );
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExceptionInGetAttribute()
+    {
+        $configuration = new Configuration();
+        $element = new Element($configuration, 'asdf');
+        $element->getAttribute('qwerty');
     }
 
     /**
@@ -72,16 +92,6 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($element->hasChild($newElement));
         $this->assertFalse($element->removeChild($newElement));
         $this->assertFalse($element->hasChild($newElement));
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionInSetName()
-    {
-        $configuration = new Configuration();
-        $element = new Element($configuration, 'asdf');
-        $element->setName(5);
     }
 
     public function testCleanWithNoCleanStategy()

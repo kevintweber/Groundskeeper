@@ -7,12 +7,9 @@ use Psr\Log\LoggerInterface;
 
 class DocType extends AbstractValuedToken implements Cleanable
 {
-    /**
-     * Constructor
-     */
-    public function __construct(Configuration $configuration, $value = null)
+    public function getType()
     {
-        parent::__construct(Token::DOCTYPE, $configuration, $value);
+        return Token::DOCTYPE;
     }
 
     /**
@@ -20,14 +17,14 @@ class DocType extends AbstractValuedToken implements Cleanable
      */
     public function clean(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE || $this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_LENIENT) {
             return true;
         }
 
         // DocType must not have any parent elements.
         $result = $this->getParent() === null;
         if (!$result) {
-            $logger->debug('Removing ' . $this . '.  DocType cannot be a child of any element.');
+            $logger->debug('Removing ' . $this . '. DocType cannot be a child of any element.');
         }
 
         return $result;

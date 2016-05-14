@@ -2,16 +2,11 @@
 
 namespace Groundskeeper\Tokens;
 
-use Groundskeeper\Configuration;
-
-class Php extends AbstractValuedToken
+class Php extends AbstractValuedToken implements NonParticipating
 {
-    /**
-     * Constructor
-     */
-    public function __construct(Configuration $configuration, $value = null)
+    public function getType()
     {
-        parent::__construct(Token::PHP, $configuration, $value);
+        return Token::PHP;
     }
 
     /**

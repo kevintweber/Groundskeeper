@@ -6,6 +6,8 @@ use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
+use Groundskeeper\Tokens\NonParticipating;
+use Groundskeeper\Tokens\Text;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -34,11 +36,11 @@ class Time extends OpenElement implements FlowContent, PhrasingContent
         // children allowed.
         if (!$this->hasAttribute('datetime')) {
             foreach ($this->children as $child) {
-                if ($child->getType() == Token::COMMENT) {
+                if ($child instanceof NonParticipating) {
                     continue;
                 }
 
-                if ($child->getType() != Token::TEXT) {
+                if (!$child instanceof Text) {
                     $logger->debug('Removing ' . $child . '. Element "time" without "datetime" attribute may only contain TEXT.');
                     $this->removeChild($child);
 

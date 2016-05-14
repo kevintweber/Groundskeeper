@@ -21,9 +21,9 @@ class Caption extends OpenElement implements FlowContent
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
         $parent = $this->getParent();
-        if ($parent->getType() !== Token::ELEMENT &&
-            $parent->getName() != 'table') {
-            $logger->debug($this . ' must be child of "table" element.');
+        if ($parent !== null &&
+            !($parent instanceof Table)) {
+            $logger->debug('Removing '. $this . '. Must be child of "table" element.');
 
             return true;
         }

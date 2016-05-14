@@ -7,6 +7,7 @@ use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -22,7 +23,7 @@ class Ol extends OpenElement implements FlowContent
         $olAllowedAttributes = array(
             '/^reversed$/i' => Element::ATTR_BOOL,
             '/^start$/i' => Element::ATTR_INT,
-            '/^type$/i' => Element::ATTR_CS_STRING,
+            '/^type$/i' => Element::ATTR_CS_STRING
         );
 
         return array_merge(
@@ -35,18 +36,9 @@ class Ol extends OpenElement implements FlowContent
     {
         // Only "li" and ScriptSupporting elements allowed.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            if ($child->getType() != Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Only elements "li" and script supporting elements allowed as children of "ol" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() == 'li' || $child instanceof ScriptSupporting) {
+            if ($child instanceof NonParticipating ||
+                $child instanceof Li ||
+                $child instanceof ScriptSupporting) {
                 continue;
             }
 

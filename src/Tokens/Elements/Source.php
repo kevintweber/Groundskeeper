@@ -36,9 +36,9 @@ class Source extends ClosedElement
         // Child of media element.
         $parent = $this->getParent();
         if ($parent !== null &&
-            $parent->getName() != 'picture' &&
+            !$parent instanceof Picture &&
             !$parent instanceof MediaElement) {
-            $logger->debug($this . ' must be a child of "picture" element or a media element.');
+            $logger->debug('Removing ' . $this . ' must be a child of "picture" element or a media element.');
 
             return true;
         }

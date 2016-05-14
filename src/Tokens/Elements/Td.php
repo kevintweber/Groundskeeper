@@ -33,9 +33,8 @@ class Td extends OpenElement implements SectioningRoot
     {
         // "tr" must be parent.
         $parent = $this->getParent();
-        if ($parent !== null &&
-            $parent->getName() != 'tr') {
-            $logger->debug($this . ' must be a child of "tr" element.');
+        if ($parent !== null && !$parent instanceof Tr) {
+            $logger->debug('Removing ' . $this . '. Must be a child of "tr" element.');
 
             return true;
         }

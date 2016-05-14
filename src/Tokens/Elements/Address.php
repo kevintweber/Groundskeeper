@@ -37,15 +37,11 @@ class Address extends OpenElement implements FlowContent
                 continue;
             }
 
-            if ($child->getType() == Token::ELEMENT) {
-                if ($child->getName() == 'header' ||
-                    $child->getName() == 'footer' ||
-                    $child->getName() == 'address') {
-                    $logger->debug('Removing ' . $child . '. Elements "header", "footer", and "address" not allowed as "address" element child.');
-                    $this->removeChild($child);
-
-                    continue;
-                }
+            if ($child instanceof Header ||
+                $child instanceof Footer ||
+                $child instanceof Address) {
+                $logger->debug('Removing ' . $child . '. Elements "header", "footer", and "address" not allowed as "address" element child.');
+                $this->removeChild($child);
             }
         }
     }

@@ -8,6 +8,7 @@ use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -22,22 +23,13 @@ class Picture extends OpenElement implements FlowContent, PhrasingContent, Embed
     {
         $encounteredImgElement = false;
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
+            if ($child instanceof NonParticipating ||
+                $child instanceof Source ||
+                $child instanceof ScriptSupporting) {
                 continue;
             }
 
-            if ($child->getType() !== Token::ELEMENT) {
-                $logger->debug('Removing ' . $child); /// @todo better message
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child instanceof ScriptSupporting) {
-                continue;
-            }
-
-            if ($child->getName() == 'img') {
+            if ($child instanceof Img) {
                 if ($encounteredImgElement) {
                     $logger->debug('Removing ' . $child . '. Only one "img" element allowed as child of "picture" element.');
                     $this->removeChild($child);
@@ -50,12 +42,8 @@ class Picture extends OpenElement implements FlowContent, PhrasingContent, Embed
                 continue;
             }
 
-            if ($child->getName() != 'source') {
-                $logger->debug('Removing ' . $child . '. Only one "img" element and zero to many "source" elements allowed as children of the "picture" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
+            $logger->debug('Removing ' . $child . '. Only one "img" element and zero to many "source" elements allowed as children of the "picture" element.');
+            $this->removeChild($child);
         }
     }
 }

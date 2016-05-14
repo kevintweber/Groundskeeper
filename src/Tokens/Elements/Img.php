@@ -25,7 +25,7 @@ class Img extends ClosedElement
             '/^ismap$/i' => Element::ATTR_CS_STRING,
             '/^width$/i' => Element::ATTR_INT,
             '/^height$/i' => Element::ATTR_INT,
-            '/^referrerpolicy$/i' => Element::ATTR_CS_STRING,
+            '/^referrerpolicy$/i' => Element::ATTR_CS_STRING
         );
 
         return array_merge(

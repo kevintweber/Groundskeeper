@@ -6,6 +6,7 @@ use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -20,18 +21,9 @@ class Ul extends OpenElement implements FlowContent
     {
         // Only "li" and ScriptSupporting elements allowed.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            if ($child->getType() != Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Only elements "li" and script supporting elements allowed as children of "ul" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() == 'li' || $child instanceof ScriptSupporting) {
+            if ($child instanceof NonParticipating ||
+                $child instanceof Li ||
+                $child instanceof ScriptSupporting) {
                 continue;
             }
 

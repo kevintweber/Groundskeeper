@@ -2,6 +2,7 @@
 
 namespace Groundskeeper;
 
+use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\Token;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,6 +48,10 @@ class Configuration
 
     public function isAllowedElement($element)
     {
+        if ($element instanceof Element) {
+            $element = $element->getName();
+        }
+
         $disallowedElementArray = explode(',', $this->options['element-blacklist']);
 
         return array_search($element, $disallowedElementArray) === false;
@@ -54,6 +59,10 @@ class Configuration
 
     public function isAllowedType($type)
     {
+        if ($type instanceof Token) {
+            $type = $type->getType();
+        }
+
         $disallowedTypeArray = explode(',', $this->options['type-blacklist']);
 
         return array_search($type, $disallowedTypeArray) === false;

@@ -6,6 +6,8 @@ use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\HeadingContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\SectioningContent;
+use Groundskeeper\Tokens\NonParticipating;
+use Groundskeeper\Tokens\Text;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -20,20 +22,8 @@ class Dt extends OpenElement
     {
         // No "header", "footer", sectioning content, or heading content descendants.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT ||
-                $child->getType() == Token::TEXT) {
-                continue;
-            }
-
-            if ($child->getType() != Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Element "dt" cannot contain "header", "footer", section content, or heading content elements.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() == 'header' ||
-                $child->getName() == 'footer' ||
+            if ($child instanceof Header ||
+                $child instanceof Footer ||
                 $child instanceof SectioningContent ||
                 $child instanceof HeadingContent) {
                 $logger->debug('Removing ' . $child . '. No "header", "footer", and sectioning content, or heading content elements allowed as children of "dt" element.');
@@ -47,8 +37,8 @@ class Dt extends OpenElement
         // Must be child of "dl" element.
         $parent = $this->getParent();
         if ($parent !== null &&
-            $parent->getName() != 'dl') {
-            $logger->debug($this . ' must be a child of a "dl" element.');
+            !$parent instanceof Dl) {
+            $logger->debug('Removing ' . $this . '. Must be a child of a "dl" element.');
 
             return true;
         }

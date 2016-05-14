@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tests;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Element;
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,13 +62,15 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         ));
         $this->assertTrue($configuration->isAllowedElement('div'));
         $this->assertFalse($configuration->isAllowedElement('em'));
-        $this->assertFalse($configuration->isAllowedElement('asdf'));
+        $asdf = new Element($configuration, 'asdf');
+        $this->assertFalse($configuration->isAllowedElement($asdf));
     }
 
     public function testIsAllowedType()
     {
         $configuration = new Configuration();
-        $this->assertTrue($configuration->isAllowedType('element'));
+        $asdf = new Element($configuration, 'asdf');
+        $this->assertTrue($configuration->isAllowedType($asdf));
         $this->assertFalse($configuration->isAllowedType('comment'));
     }
 }

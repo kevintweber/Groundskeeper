@@ -32,7 +32,7 @@ class Label extends OpenElement implements FlowContent, InteractiveContent, Phra
     {
         $label = new self($this->configuration, 'label');
         if ($this->hasAncestor($label)) {
-            $logger->debug($this . ' cannot be have "label" element ancestor.');
+            $logger->debug('Removing ' . $this . '. Cannot be have "label" element ancestor.');
 
             return true;
         }

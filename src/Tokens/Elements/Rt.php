@@ -17,9 +17,8 @@ class Rt extends OpenElement
     {
         // Must be child of "ruby" element.
         $parent = $this->getParent();
-        if ($parent !== null &&
-            $parent->getName() != 'ruby') {
-            $logger->debug($this . ' must be a child of a "ruby" element.');
+        if ($parent !== null && !$parent instanceof Ruby) {
+            $logger->debug('Removing ' . $this . '. Must be a child of a "ruby" element.');
 
             return true;
         }

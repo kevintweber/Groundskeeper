@@ -31,8 +31,8 @@ class Param extends ClosedElement
     {
         // Must be child of "object" element.
         $parent = $this->getParent();
-        if ($parent !== null && $parent->getName() !== 'object') {
-            $logger->debug($this . ' must be a child of "object" element.');
+        if ($parent !== null && !$parent instanceof Object) {
+            $logger->debug('Removing ' . $this . '. Must be a child of "object" element.');
 
             return true;
         }

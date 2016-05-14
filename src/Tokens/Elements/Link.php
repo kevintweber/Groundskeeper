@@ -32,7 +32,7 @@ class Link extends ClosedElement implements MetadataContent
     {
         // Must have "href" attribute.
         if (!$this->hasAttribute('href')) {
-            $logger->debug($this . ' requires "href" attribute.');
+            $logger->debug('Removing ' . $this . '. Requires "href" attribute.');
 
             return true;
         }
@@ -47,14 +47,14 @@ class Link extends ClosedElement implements MetadataContent
             if ($attrCount > 1) {
                 // If both, then we don't know which one should be kept,
                 // so we recommend to delete the entire element.
-                $logger->debug($this . ' requires either "rel" or "itemprop" attribute, but not both.');
+                $logger->debug('Removing ' . $this . '. Requires either "rel" or "itemprop" attribute, but not both.');
 
                 return true;
             }
         }
 
         if ($attrCount == 0) {
-            $logger->debug($this . ' requires either "rel" or "itemprop" attribute.');
+            $logger->debug('Removing ' . $this . '. Requires either "rel" or "itemprop" attribute.');
 
             return true;
         }
@@ -62,7 +62,7 @@ class Link extends ClosedElement implements MetadataContent
         // If inside "body" element, then we check if allowed.
         $body = new Body($this->configuration, 'body');
         if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
-            $logger->debug($this . ' does not have the correct attributes to be allowed inside the "body" element.');
+            $logger->debug('Removing ' . $this . '. Does not have the correct attributes to be allowed inside the "body" element.');
 
             return true;
         }

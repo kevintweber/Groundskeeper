@@ -5,6 +5,7 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -38,7 +39,7 @@ class Head extends OpenElement
         $titleCount = 0;
         $baseCount = 0;
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
+            if ($child instanceof NonParticipating) {
                 continue;
             }
 
@@ -49,11 +50,7 @@ class Head extends OpenElement
                 continue;
             }
 
-            if ($child->getType() != Token::ELEMENT) {
-                continue;
-            }
-
-            if ($child->getName() == 'title') {
+            if ($child instanceof Title) {
                 ++$titleCount;
                 if ($titleCount > 1) {
                     $logger->debug('Removing ' . $child . '. Only one "title" element allowed.');
@@ -61,7 +58,7 @@ class Head extends OpenElement
 
                     continue;
                 }
-            } elseif ($child->getName() == 'base') {
+            } elseif ($child instanceof Base) {
                 ++$baseCount;
                 if ($baseCount > 1) {
                     $logger->debug('Removing ' . $child . '. Maximum one "base" element allowed.');
@@ -77,10 +74,9 @@ class Head extends OpenElement
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
         // "head" element must be a child of "html" element.
-        if ($this->getParent() !== null &&
-            $this->getParent()->getType() === Token::ELEMENT &&
-            $this->getParent()->getName() != 'html') {
-            $logger->debug($this . ' must be a child of "html" element.');
+        $parent = $this->getParent();
+        if ($parent !== null && !$parent instanceof Html) {
+            $logger->debug('Removing ' . $this . '. Must be a child of "html" element.');
 
             return true;
         }

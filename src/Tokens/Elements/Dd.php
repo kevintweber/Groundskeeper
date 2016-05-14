@@ -18,8 +18,8 @@ class Dd extends OpenElement
         // Must be child of "dl" element.
         $parent = $this->getParent();
         if ($parent !== null &&
-            $parent->getName() != 'dl') {
-            $logger->debug($this . ' must be a child of a "dl" element.');
+            !$parent instanceof Dl) {
+            $logger->debug('Removing ' . $this . '. Must be a child of a "dl" element.');
 
             return true;
         }

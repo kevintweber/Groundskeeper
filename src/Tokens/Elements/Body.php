@@ -45,19 +45,12 @@ class Body extends OpenElement implements SectioningRoot
     {
         // "body" element must be a child of "html" element.
         if ($this->getParent() !== null &&
-            $this->getParent()->getType() === Token::ELEMENT &&
-            $this->getParent()->getName() != 'html') {
-            $logger->debug($this . ' must be a child of "html" element.');
+            !($this->getParent() instanceof Html)) {
+            $logger->debug('Removing ' . $this . '. Must be a child of "html" element.');
 
             return true;
         }
 
         return false;
-    }
-
-    protected function doClean(LoggerInterface $logger)
-    {
-
-        return true;
     }
 }

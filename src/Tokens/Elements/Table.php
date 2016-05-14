@@ -6,6 +6,7 @@ use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -22,23 +23,13 @@ class Table extends OpenElement implements FlowContent
     protected function removeInvalidChildren(LoggerInterface $logger)
     {
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            if ($child->getType() !== Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Only elements allowed as children of "table" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() == 'caption' ||
-                $child->getName() == 'colgroup' ||
-                $child->getName() == 'thead' ||
-                $child->getName() == 'tbody' ||
-                $child->getName() == 'tr' ||
-                $child->getName() == 'tfoot' ||
+            if ($child instanceof NonParticipating ||
+                $child instanceof Caption ||
+                $child instanceof Colgroup ||
+                $child instanceof Thead ||
+                $child instanceof Tbody ||
+                $child instanceof Tr ||
+                $child instanceof Tfoot ||
                 $child instanceof ScriptSupporting) {
                 continue;
             }

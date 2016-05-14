@@ -5,6 +5,7 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -19,19 +20,9 @@ class Dl extends OpenElement implements FlowContent
     {
         // Only "dd", "dt", and ScriptSupporting elements allowed.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            if ($child->getType() != Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Only elements "dd", "dt", and script supporting elements allowed as children of "dl" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() == 'dd' ||
-                $child->getName() == 'dt' ||
+            if ($child instanceof NonParticipating ||
+                $child instanceof Dd ||
+                $child instanceof Dt ||
                 $child instanceof ScriptSupporting) {
                 continue;
             }

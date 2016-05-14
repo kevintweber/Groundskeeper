@@ -18,13 +18,7 @@ class Li extends OpenElement
     protected function getAllowedAttributes()
     {
         // "value" attribute for "li" which are children of "ol" elements.
-        $parent = $this->getParent();
-        if ($parent == null) {
-            return parent::getAllowedAttributes();
-        }
-
-        if ($parent->getType() === Token::ELEMENT &&
-            $parent->getName() == 'ol') {
+        if ($this->getParent() instanceof Ol) {
             $liAllowedAttributes = array(
                 '/^value$/i' => Element::ATTR_INT
             );
@@ -45,22 +39,18 @@ class Li extends OpenElement
         // Inside ul elements.
         // Inside menu elements whose type attribute is in the toolbar state.
         $parent = $this->getParent();
-        if ($parent === null) {
+        if ($parent === null || $parent instanceof Ol || $parent instanceof Ul) {
             return false;
         }
 
-        if ($parent->getName() == 'ol' || $parent->getName() == 'ul') {
-            return false;
-        }
-
-        if ($parent->getName() == 'menu' && $parent->hasAttribute('type')) {
+        if ($parent instanceof Menu && $parent->hasAttribute('type')) {
             $typeAttributeValue = $parent->getAttribute('type');
             if ($typeAttributeValue == 'toolbar') {
                 return false;
             }
         }
 
-        $logger->debug($this . ' only allowed inside "ol", "ul" and "menu[type=toolbar]" elements.');
+        $logger->debug('Removing ' . $this . '. Only allowed inside the "li" element are "ol", "ul" and "menu[type=toolbar]" elements.');
 
         return true;
     }

@@ -5,6 +5,7 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -19,18 +20,8 @@ class Tfoot extends OpenElement
     {
         // Children can be "tr" and script supporting elements.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
-                continue;
-            }
-
-            if ($child->getType() !== Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Only elements allowed as children of "tfoot" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() == 'tr' ||
+            if ($child instanceof NonParticipating ||
+                $child instanceof Tr ||
                 $child instanceof ScriptSupporting) {
                 continue;
             }

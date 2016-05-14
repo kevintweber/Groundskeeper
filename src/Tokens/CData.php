@@ -2,16 +2,13 @@
 
 namespace Groundskeeper\Tokens;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Token;
 
 class CData extends AbstractValuedToken
 {
-    /**
-     * Constructor
-     */
-    public function __construct(Configuration $configuration, $value = null)
+    public function getType()
     {
-        parent::__construct(Token::CDATA, $configuration, $value);
+        return Token::CDATA;
     }
 
     /**

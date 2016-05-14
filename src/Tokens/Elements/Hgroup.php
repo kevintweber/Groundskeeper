@@ -5,6 +5,7 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\HeadingContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
+use Groundskeeper\Tokens\NonParticipanting;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -21,24 +22,17 @@ class Hgroup extends OpenElement implements FlowContent, HeadingContent
         // "template" elements required.
         $headingContentElementCount = 0;
         foreach ($this->children as $child) {
-            if ($child->getType() === Token::COMMENT) {
+            if ($child instanceof NonParticipanting) {
                 continue;
             }
 
-            if ($child->getType() !== Token::ELEMENT) {
-                $logger->debug('Removing ' . $child . '. Only "h1"-"h6" and "template" elements allowed as child of "hgroup" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
-            if ($child->getName() !== 'h1' &&
-                $child->getName() !== 'h2' &&
-                $child->getName() !== 'h3' &&
-                $child->getName() !== 'h4' &&
-                $child->getName() !== 'h5' &&
-                $child->getName() !== 'h6' &&
-                $child->getName() !== 'tempate') {
+            if (!$child instanceof H1 &&
+                !$child instanceof H2 &&
+                !$child instanceof H3 &&
+                !$child instanceof H4 &&
+                !$child instanceof H5 &&
+                !$child instanceof H6 &&
+                !$child instanceof Tempate) {
                 $logger->debug('Removing ' .  $child . '. Only "h1"-"h6" and "template" elements allowed as child of "hgroup" element.');
                 $this->removeChild($child);
 
@@ -56,12 +50,8 @@ class Hgroup extends OpenElement implements FlowContent, HeadingContent
         }
 
         // Handle no child HeadingContent.
-        if ($headingContentElementCount == 0) {
-            $logger->debug($this . ' must contain at least one of the following elements: "h1", "h2", "h3", "h4", "h5", "h6", or "template".');
+        $logger->debug('Removing ' . $this . '. Must contain at least one of the following elements: "h1", "h2", "h3", "h4", "h5", "h6", or "template".');
 
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

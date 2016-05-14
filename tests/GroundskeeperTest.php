@@ -210,11 +210,11 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><!DOCTYPE asdf1>asdf2</div>',
                 0,
                 '<div><!DOCTYPE asdf1>asdf2</div>',
+                0,
+                '<div>asdf2</div>',
                 1,
                 '<div>asdf2</div>',
-                2,
-                '<div>asdf2</div>',
-                2
+                1
             ),
             'element only' => array(
                 '<asdf/>',
@@ -421,9 +421,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><base class="www.example.com"/></head><body>Yo!</body></html>',
                 0,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2,
+                1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2
+                1
             ),
             'base - must be child of head' => array(
                 '<html><head><title>Asdf1</title></head><body>Yo!<base href="www.example.com"/></body></html>',
@@ -432,9 +432,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body>Yo!<base href="www.example.com"/></body></html>',
                 0,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2,
+                1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2
+                1
             ),
             'blockquote - correct usage' => array(
                 '<div><blockquote id="yo" cite="www.example.com">Yo!</blockquote></div>',
@@ -457,6 +457,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 2,
                 '<html><head><title>Asdf1</title></head><body></body></html>',
                 2
+            ),
+            'body - no html element parent' => array(
+                '<div><body>asdf1</body>asdf2</div>',
+                '<div><body>asdf1</body>asdf2</div>',
+                0,
+                '<div><body>asdf1</body>asdf2</div>',
+                0,
+                '<div>asdf2</div>',
+                1,
+                '<div>asdf2</div>',
+                1
             ),
             'dl -correct usage' => array(
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
@@ -487,19 +498,8 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div>Whoa!<dd>asdf1</dd><dt>asdf2</dt></div>',
                 0,
                 '<div>Whoa!</div>',
-                4,
-                '<div>Whoa!</div>',
-                4
-            ),
-            'dt - incorrect child elements' => array(
-                '<dl><dt>asdf1<H2>asdf2</H2></dt><dt><![CDATA[ hmmm... ]]></dt></dl>',
-                '<dl><dt>asdf1<h2>asdf2</h2></dt><dt><![CDATA[hmmm...]]></dt></dl>',
-                0,
-                '<dl><dt>asdf1<h2>asdf2</h2></dt><dt><![CDATA[hmmm...]]></dt></dl>',
-                0,
-                '<dl><dt>asdf1</dt><dt></dt></dl>',
                 2,
-                '<dl><dt>asdf1</dt><dt></dt></dl>',
+                '<div>Whoa!</div>',
                 2
             ),
             'footer - bad child' => array(
@@ -509,9 +509,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
                 0,
                 '<div><footer>asdf1asdf3</footer></div>',
-                2,
+                1,
                 '<div><footer>asdf1asdf3</footer></div>',
-                2
+                1
             ),
             'head - child of non-html element' => array(
                 '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
@@ -579,6 +579,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><!-- Comment here! --><title>Asdf1</title></head><body>Yo!</body></html>',
                 0
             ),
+            'head - no html element parent' => array(
+                '<div><head>asdf1</head>asdf2</div>',
+                '<div><head>asdf1</head>asdf2</div>',
+                0,
+                '<div><head><title></title>asdf1</head>asdf2</div>',
+                1,
+                '<div>asdf2</div>',
+                2,
+                '<div>asdf2</div>',
+                2
+            ),
             'header - bad child' => array(
                 '<div><footer>asdf1<header>asdf2</header>asdf3</footer></div>',
                 '<div><footer>asdf1<header>asdf2</header>asdf3</footer></div>',
@@ -586,9 +597,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><footer>asdf1<header>asdf2</header>asdf3</footer></div>',
                 0,
                 '<div><footer>asdf1asdf3</footer></div>',
-                2,
+                1,
                 '<div><footer>asdf1asdf3</footer></div>',
-                2
+                1
             ),
             'html - correct usage' => array(
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
@@ -619,9 +630,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><html><head><title>Asdf1</title></head><body>Yo!</body></html>asdf</div>',
                 0,
                 '<div>asdf</div>',
-                2,
+                1,
                 '<div>asdf</div>',
-                2
+                1
             ),
             'html - bad child tokens' => array(
                 '<html><!-- asdf --><![CDATA[asdf]]><head><title>Asdf1</title></head>asdf<body>Yo!</body></html>',
@@ -696,9 +707,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<menu type="context"><li>asdf</li></menu><menu type="toolbar"><li>asdf</li></menu>',
                 1,
                 '<menu type="context"></menu><menu type="toolbar"><li>asdf</li></menu>',
-                3,
+                2,
                 '<menu type="context"></menu><menu type="toolbar"><li>asdf</li></menu>',
-                3
+                2
             ),
             'li - wrong parent' => array(
                 '<div><li>asdf</li></div>',
@@ -707,9 +718,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><li>asdf</li></div>',
                 0,
                 '<div></div>',
-                2,
+                1,
                 '<div></div>',
-                2
+                1
             ),
             'link - correct usage in head' => array(
                 '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"/></head><body>Yo!</body></html>',
@@ -740,9 +751,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><link rel="help"/></head><body>Yo!</body></html>',
                 0,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2,
+                1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2
+                1
             ),
             'link - missing rel' => array(
                 '<html><head><title>Asdf1</title><link href="www.example.com"/></head><body>Yo!</body></html>',
@@ -751,9 +762,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><link href="www.example.com"/></head><body>Yo!</body></html>',
                 0,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2,
+                1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2
+                1
             ),
             'link - both rel and itemprop' => array(
                 '<html><head><title>Asdf1</title><link href="www.example.com" rel="help"  itemprop="help"/></head><body>Yo!</body></html>',
@@ -762,9 +773,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><link href="www.example.com" rel="help" itemprop="help"/></head><body>Yo!</body></html>',
                 0,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2,
+                1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2
+                1
             ),
             'link - incorrect usage in body' => array(
                 '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="help"/>Yo!</body></html>',
@@ -773,9 +784,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="help"/>Yo!</body></html>',
                 0,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2,
+                1,
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
-                2
+                1
             ),
             'meta - correct usage' => array(
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test" /></head><body>Yo!</body></html>',
@@ -806,9 +817,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!<meta charset="utf-16"/></body></html>',
                 1,
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
-                3,
+                2,
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
-                3
+                2
             ),
             'ol - contains incorrect tokens and elements' => array(
                 '<ol class="qwerty"><!-- <h1>bad</h1> --><li value=2>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
@@ -872,9 +883,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></div>',
                 0,
                 '<div></div>',
-                6,
+                3,
                 '<div></div>',
-                6
+                3
             ),
             'tbody,thead, and tfoot - text children' => array(
                 '<table><thead>whoa</thead><tbody>whoa</tbody><tfoot>whoa</tfoot></table>',
@@ -905,9 +916,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><th>oops</th></div><div><td>oops</td></div>',
                 0,
                 '<div></div><div></div>',
-                4,
+                2,
                 '<div></div><div></div>',
-                4
+                2
             ),
             'title - contains comment' => array(
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
@@ -938,9 +949,9 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><tr>Hmm...</tr></div><table><tr>asdf1<div>asdf2</div><td>yes</td></tr></table>',
                 0,
                 '<div></div><table><tr><td>yes</td></tr></table>',
-                4,
+                3,
                 '<div></div><table><tr><td>yes</td></tr></table>',
-                4
+                3
             ),
             'ul - contains incorrect tokens and elements' => array(
                 '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',

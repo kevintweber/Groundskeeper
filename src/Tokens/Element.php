@@ -30,7 +30,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      */
     public function __construct(Configuration $configuration, $name, array $attributes = array())
     {
-        parent::__construct(Token::ELEMENT, $configuration);
+        parent::__construct($configuration);
 
         $this->attributes = array();
         foreach ($attributes as $key => $value) {
@@ -38,7 +38,12 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         }
 
         $this->children = array();
-        $this->setName($name);
+
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException('Element name must be string type.');
+        }
+
+        $this->name = trim(strtolower($name));
     }
 
     /**
@@ -153,20 +158,6 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Chainable setter for 'name'.
-     */
-    public function setName($name)
-    {
-        if (!is_string($name)) {
-            throw new \InvalidArgumentException('Element name must be string type.');
-        }
-
-        $this->name = trim(strtolower($name));
-
-        return $this;
     }
 
     /**
@@ -446,7 +437,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
 
             // Check elements.
             if ($hasRemovableElements &&
-                $child->getType() == Token::ELEMENT &&
+                $child instanceof self &&
                 !$this->configuration->isAllowedElement($child->getName())) {
                 $logger->debug('Removing ' . $child);
                 $this->removeChild($child);
@@ -507,6 +498,11 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         }
 
         return $output;
+    }
+
+    public function getType()
+    {
+        return Token::ELEMENT;
     }
 
     public function __toString()

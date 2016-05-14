@@ -54,9 +54,6 @@ class Tokenizer
                 $basicToken->getValue()
             );
 
-        case 'element':
-            return $this->createElement($basicToken);
-
         case 'php':
             return new Php(
                 $this->configuration,
@@ -70,9 +67,7 @@ class Tokenizer
             );
         }
 
-        throw new \RuntimeException(
-            'Invalid token type: ' . $basicToken->getType()
-        );
+        return $this->createElement($basicToken);
     }
 
     private function createElement(BasicElement $basicElement)

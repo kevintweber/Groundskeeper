@@ -10,6 +10,7 @@ use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
@@ -53,13 +54,12 @@ class A extends OpenElement implements FlowContent, InteractiveContent, Phrasing
     {
         // There must be no interactive content or "a" element descendants.
         foreach ($this->children as $child) {
-            if ($child->getType() == Token::COMMENT) {
+            if ($child instanceof NonParticipating) {
                 continue;
             }
 
-            if ($child->getType() == Token::ELEMENT &&
-                ($child->getName() == 'a' ||
-                 ($child instanceof InteractiveContent && $child->isInteractiveContent()))) {
+            if ($child instanceof self &&
+                ($child instanceof InteractiveContent && $child->isInteractiveContent())) {
                 $logger->debug('Removing ' . $child . '. Element "a" cannot contain "a" or interactive content elements.');
                 $this->removeChild($child);
             }
