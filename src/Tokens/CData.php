@@ -2,8 +2,6 @@
 
 namespace Groundskeeper\Tokens;
 
-use Groundskeeper\Tokens\Token;
-
 class CData extends AbstractValuedToken
 {
     public function getType()

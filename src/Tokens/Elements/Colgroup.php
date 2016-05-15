@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 
 /**
@@ -14,7 +15,7 @@ class Colgroup extends Element
     protected function getAllowedAttributes()
     {
         $colgroupAllowedAttributes = array(
-            '/^span$/i' => Element::ATTR_INT
+            '/^span$/i' => Attribute::INT
         );
 
         return array_merge(

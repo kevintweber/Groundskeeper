@@ -2,12 +2,10 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\HeadingContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\SectioningContent;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -39,7 +37,7 @@ class Address extends OpenElement implements FlowContent
 
             if ($child instanceof Header ||
                 $child instanceof Footer ||
-                $child instanceof Address) {
+                $child instanceof self) {
                 $logger->debug('Removing ' . $child . '. Elements "header", "footer", and "address" not allowed as "address" element child.');
                 $this->removeChild($child);
             }

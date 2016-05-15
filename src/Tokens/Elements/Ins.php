@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
@@ -18,8 +19,8 @@ class Ins extends OpenElement implements FlowContent, PhrasingContent, InlineEle
     protected function getAllowedAttributes()
     {
         $insAllowedAttributes = array(
-            '/^cite$/i' => Element::ATTR_URI,
-            '/^datetime$/i' => Element::ATTR_CS_STRING
+            '/^cite$/i' => Attribute::URI,
+            '/^datetime$/i' => Attribute::CS_STRING
        );
 
         return array_merge(

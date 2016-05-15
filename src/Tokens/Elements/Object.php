@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
@@ -18,14 +19,14 @@ class Object extends OpenElement implements FlowContent, PhrasingContent, Embedd
     protected function getAllowedAttributes()
     {
         $objectAllowedAttributes = array(
-            '/^data$/i' => Element::ATTR_CS_STRING,
-            '/^type$/i' => Element::ATTR_CS_STRING,
-            '/^typemustmatch$/i' => Element::ATTR_CS_STRING,
-            '/^name$/i' => Element::ATTR_CS_STRING,
-            '/^usemap$/i' => Element::ATTR_CS_STRING,
-            '/^form$/i' => Element::ATTR_CS_STRING,
-            '/^width$/i' => Element::ATTR_INT,
-            '/^height$/i' => Element::ATTR_INT
+            '/^data$/i' => Attribute::CS_STRING,
+            '/^type$/i' => Attribute::CS_STRING,
+            '/^typemustmatch$/i' => Attribute::CS_STRING,
+            '/^name$/i' => Attribute::CS_STRING,
+            '/^usemap$/i' => Attribute::CS_STRING,
+            '/^form$/i' => Attribute::CS_STRING,
+            '/^width$/i' => Attribute::INT,
+            '/^height$/i' => Attribute::INT
         );
 
         return array_merge(

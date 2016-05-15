@@ -2,8 +2,6 @@
 
 namespace Groundskeeper\Tokens;
 
-use Groundskeeper\Configuration;
-
 class Text extends AbstractValuedToken
 {
     public function getType()

@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MediaElement;
 use Psr\Log\LoggerInterface;
@@ -17,11 +17,11 @@ class Source extends ClosedElement
     protected function getAllowedAttributes()
     {
         $sourceAllowedAttributes = array(
-            '/^src$/i' => Element::ATTR_URI,
-            '/^type$/i' => Element::ATTR_CS_STRING,
-            '/^srcset$/i' => Element::ATTR_CS_STRING,
-            '/^sizes$/i' => Element::ATTR_CS_STRING,
-            '/^media$/i' => Element::ATTR_CS_STRING
+            '/^src$/i' => Attribute::URI,
+            '/^type$/i' => Attribute::CS_STRING,
+            '/^srcset$/i' => Attribute::CS_STRING,
+            '/^sizes$/i' => Attribute::CS_STRING,
+            '/^media$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

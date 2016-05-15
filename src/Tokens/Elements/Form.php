@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Psr\Log\LoggerInterface;
@@ -16,14 +17,14 @@ class Form extends OpenElement
     protected function getAllowedAttributes()
     {
         $formAllowedAttributes = array(
-            '/^accept-charset$/i' => Element::ATTR_CS_STRING,
-            '/^action$/i' => Element::ATTR_URI,
-            '/^autocomplete$/i' => Element::ATTR_CI_ENUM . '("","on","off")',
-            '/^enctype$/i' => Element::ATTR_CS_STRING,
-            '/^method$/i' => Element::ATTR_CI_ENUM . '("","get","post","dialog"|"get")',
-            '/^name$/i' => Element::ATTR_CS_STRING,
-            '/^novalidate$/i' => Element::ATTR_BOOL,
-            '/^target$/i' => Element::ATTR_CS_STRING
+            '/^accept-charset$/i' => Attribute::CS_STRING,
+            '/^action$/i' => Attribute::URI,
+            '/^autocomplete$/i' => Attribute::CI_ENUM . '("","on","off")',
+            '/^enctype$/i' => Attribute::CS_STRING,
+            '/^method$/i' => Attribute::CI_ENUM . '("","get","post","dialog"|"get")',
+            '/^name$/i' => Attribute::CS_STRING,
+            '/^novalidate$/i' => Attribute::BOOL,
+            '/^target$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

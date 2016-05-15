@@ -2,10 +2,10 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 class Meta extends ClosedElement implements MetadataContent
@@ -13,11 +13,11 @@ class Meta extends ClosedElement implements MetadataContent
     protected function getAllowedAttributes()
     {
         $metaAllowedAttributes = array(
-            '/^name$/i' => Element::ATTR_CS_STRING,
-            '/^http-equiv$/i' => Element::ATTR_CI_ENUM . '("content-language","content-type","default-style","refresh","set-cookie","x-ua-compatible","content-security-policy")',
-            '/^content$/i' => Element::ATTR_CS_STRING,
-            '/^charset$/i' => Element::ATTR_CI_STRING,
-            '/^property$/i' => Element::ATTR_CS_STRING  // Facebook OG attribute name.
+            '/^name$/i' => Attribute::CS_STRING,
+            '/^http-equiv$/i' => Attribute::CI_ENUM . '("content-language","content-type","default-style","refresh","set-cookie","x-ua-compatible","content-security-policy")',
+            '/^content$/i' => Attribute::CS_STRING,
+            '/^charset$/i' => Attribute::CI_STRING,
+            '/^property$/i' => Attribute::CS_STRING  // Facebook OG attribute name.
         );
 
         return array_merge(

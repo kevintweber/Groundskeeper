@@ -2,13 +2,11 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
 use Groundskeeper\Tokens\NonParticipating;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,9 +19,9 @@ class Ol extends OpenElement implements FlowContent
     protected function getAllowedAttributes()
     {
         $olAllowedAttributes = array(
-            '/^reversed$/i' => Element::ATTR_BOOL,
-            '/^start$/i' => Element::ATTR_INT,
-            '/^type$/i' => Element::ATTR_CS_STRING
+            '/^reversed$/i' => Attribute::BOOL,
+            '/^start$/i' => Attribute::INT,
+            '/^type$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

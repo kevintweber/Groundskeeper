@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
@@ -12,7 +12,6 @@ use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
 use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Text;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -25,17 +24,17 @@ class Video extends OpenElement implements FlowContent, PhrasingContent, Embedde
     protected function getAllowedAttributes()
     {
         $videoAllowedAttributes = array(
-            '/^src$/i' => Element::ATTR_URI,
-            '/^crossorigin$/i' => Element::ATTR_CS_STRING,
-            '/^poster$/i' => Element::ATTR_URI,
-            '/^preload$/i' => Element::ATTR_CI_ENUM . '("","none","metadata","auto"|"")',
-            '/^autoplay$/i' => Element::ATTR_BOOL,
-            '/^mediagroup$/i' => Element::ATTR_CS_STRING,
-            '/^loop$/i' => Element::ATTR_BOOL,
-            '/^muted$/i' => Element::ATTR_BOOL,
-            '/^controls$/i' => Element::ATTR_BOOL,
-            '/^width$/i' => Element::ATTR_INT,
-            '/^height$/i' => Element::ATTR_INT
+            '/^src$/i' => Attribute::URI,
+            '/^crossorigin$/i' => Attribute::CS_STRING,
+            '/^poster$/i' => Attribute::URI,
+            '/^preload$/i' => Attribute::CI_ENUM . '("","none","metadata","auto"|"")',
+            '/^autoplay$/i' => Attribute::BOOL,
+            '/^mediagroup$/i' => Attribute::CS_STRING,
+            '/^loop$/i' => Attribute::BOOL,
+            '/^muted$/i' => Attribute::BOOL,
+            '/^controls$/i' => Attribute::BOOL,
+            '/^width$/i' => Attribute::INT,
+            '/^height$/i' => Attribute::INT
         );
 
         return array_merge(

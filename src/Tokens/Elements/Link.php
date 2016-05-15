@@ -3,6 +3,7 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
@@ -13,13 +14,13 @@ class Link extends ClosedElement implements MetadataContent
     protected function getAllowedAttributes()
     {
         $linkAllowedAttributes = array(
-            '/^href$/i' => Element::ATTR_URI,
-            '/^crossorigin$/i' => Element::ATTR_CS_STRING,
-            '/^rel$/i' => Element::ATTR_CI_SSENUM . '("alternate","author","help","icon","license","next","pingback","prefetch","prev","search","stylesheet")',
-            '/^media$/i' => Element::ATTR_CI_STRING,
-            '/^hreflang$/i' => Element::ATTR_CS_STRING,
-            '/^type$/i' => Element::ATTR_CI_STRING,
-            '/^sizes$/i' => Element::ATTR_CI_STRING
+            '/^href$/i' => Attribute::URI,
+            '/^crossorigin$/i' => Attribute::CS_STRING,
+            '/^rel$/i' => Attribute::CI_SSENUM . '("alternate","author","help","icon","license","next","pingback","prefetch","prev","search","stylesheet")',
+            '/^media$/i' => Attribute::CI_STRING,
+            '/^hreflang$/i' => Attribute::CS_STRING,
+            '/^type$/i' => Attribute::CI_STRING,
+            '/^sizes$/i' => Attribute::CI_STRING
         );
 
         return array_merge(
@@ -39,8 +40,9 @@ class Link extends ClosedElement implements MetadataContent
 
         // Must have either "rel" or "itemprop" attribute, but not both.
         $attrCount = 0;
-        foreach ($this->attributes as $key => $value) {
-            if ($key == 'rel' || $key == 'itemprop') {
+        foreach ($this->attributes as $attribute) {
+            if ($attribute->getName() == 'rel' ||
+                $attribute->getName() == 'itemprop') {
                 ++$attrCount;
             }
 
@@ -84,9 +86,9 @@ class Link extends ClosedElement implements MetadataContent
         }
 
         if ($this->hasAttribute('rel') &&
-            ($this->attributes['rel'] == 'pingback' ||
-             $this->attributes['rel'] == 'prefetch' ||
-             $this->attributes['rel'] == 'stylesheet')) {
+            ($this->attributes['rel']->getValue() == 'pingback' ||
+             $this->attributes['rel']->getValue() == 'prefetch' ||
+             $this->attributes['rel']->getValue() == 'stylesheet')) {
             return true;
         }
 

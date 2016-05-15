@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
@@ -14,13 +14,13 @@ class Script extends OpenElement implements FlowContent, MetadataContent, Phrasi
     protected function getAllowedAttributes()
     {
         $scriptAllowedAttributes = array(
-            '/^src$/i' => Element::ATTR_URI,
-            '/^type$/i' => Element::ATTR_CS_STRING,
-            '/^charset$/i' => Element::ATTR_CS_STRING,
-            '/^async$/i' => Element::ATTR_BOOL,
-            '/^defer$/i' => Element::ATTR_BOOL,
-            '/^crossorigin$/i' => Element::ATTR_CS_STRING,
-            '/^nonce$/i' => Element::ATTR_CS_STRING
+            '/^src$/i' => Attribute::URI,
+            '/^type$/i' => Attribute::CS_STRING,
+            '/^charset$/i' => Attribute::CS_STRING,
+            '/^async$/i' => Attribute::BOOL,
+            '/^defer$/i' => Attribute::BOOL,
+            '/^crossorigin$/i' => Attribute::CS_STRING,
+            '/^nonce$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

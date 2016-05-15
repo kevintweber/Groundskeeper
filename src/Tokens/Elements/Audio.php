@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
@@ -10,9 +10,7 @@ use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
-use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Text;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -25,14 +23,14 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
     protected function getAllowedAttributes()
     {
         $audioAllowedAttributes = array(
-            '/^src$/i' => Element::ATTR_URI,
-            '/^crossorigin$/i' => Element::ATTR_CS_STRING,
-            '/^preload$/i' => Element::ATTR_CI_ENUM . '("","none","metadata","auto"|"")',
-            '/^autoplay$/i' => Element::ATTR_BOOL,
-            '/^mediagroup$/i' => Element::ATTR_CS_STRING,
-            '/^loop$/i' => Element::ATTR_BOOL,
-            '/^muted$/i' => Element::ATTR_BOOL,
-            '/^controls$/i' => Element::ATTR_BOOL
+            '/^src$/i' => Attribute::URI,
+            '/^crossorigin$/i' => Attribute::CS_STRING,
+            '/^preload$/i' => Attribute::CI_ENUM . '("","none","metadata","auto"|"")',
+            '/^autoplay$/i' => Attribute::BOOL,
+            '/^mediagroup$/i' => Attribute::CS_STRING,
+            '/^loop$/i' => Attribute::BOOL,
+            '/^muted$/i' => Attribute::BOOL,
+            '/^controls$/i' => Attribute::BOOL
         );
 
         return array_merge(

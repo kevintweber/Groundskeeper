@@ -2,8 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
@@ -11,7 +10,6 @@ use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
 use Groundskeeper\Tokens\NonParticipating;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -24,14 +22,14 @@ class A extends OpenElement implements FlowContent, InteractiveContent, Phrasing
     protected function getAllowedAttributes()
     {
         $aAllowedAttributes = array(
-            '/^href$/i' => Element::ATTR_URI,
-            '/^target$/i' => Element::ATTR_CS_STRING,
-            '/^download$/i' => Element::ATTR_CS_STRING,
-            '/^ping$/i' => Element::ATTR_URI,
-            '/^rel$/i' => Element::ATTR_CS_STRING,
-            '/^hreflang$/i' => Element::ATTR_CS_STRING,
-            '/^type$/i' => Element::ATTR_CS_STRING,
-            '/^referrerpolicy$/i' => Element::ATTR_CS_STRING
+            '/^href$/i' => Attribute::URI,
+            '/^target$/i' => Attribute::CS_STRING,
+            '/^download$/i' => Attribute::CS_STRING,
+            '/^ping$/i' => Attribute::URI,
+            '/^rel$/i' => Attribute::CS_STRING,
+            '/^hreflang$/i' => Attribute::CS_STRING,
+            '/^type$/i' => Attribute::CS_STRING,
+            '/^referrerpolicy$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

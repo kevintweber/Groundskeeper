@@ -2,13 +2,12 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Text;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +20,7 @@ class Time extends OpenElement implements FlowContent, PhrasingContent
     protected function getAllowedAttributes()
     {
         $timeAllowedAttributes = array(
-            '/^datetime$/i' => Element::ATTR_CS_STRING
+            '/^datetime$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

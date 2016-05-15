@@ -811,14 +811,14 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 0
             ),
             'link - correct usage in body' => array(
-                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
-                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example1.com" rel="stylesheet"/><link href="www.example2.com" itemprop="stylesheet"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example1.com" rel="stylesheet"/><link href="www.example2.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example1.com" rel="stylesheet"/><link href="www.example2.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example1.com" rel="stylesheet"/><link href="www.example2.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0,
-                '<html><head><title>Asdf1</title></head><body><link href="www.example.com" rel="stylesheet"/><link href="www.example.com" itemprop="stylesheet"/>Yo!</body></html>',
+                '<html><head><title>Asdf1</title></head><body><link href="www.example1.com" rel="stylesheet"/><link href="www.example2.com" itemprop="stylesheet"/>Yo!</body></html>',
                 0
             ),
             'link - missing href' => array(
@@ -898,15 +898,26 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
                 2
             ),
+            'ol - li[value] children' => array(
+                '<ol><li value=1>asdf1</li><li value=3></li></ol>',
+                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                0,
+                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                0,
+                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                0,
+                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                0
+            ),
             'ol - contains incorrect tokens and elements' => array(
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value=2>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
                 0,
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ol>',
                 0,
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li><script><![CDATA[asdf]]></script></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
                 2,
-                '<ol class="qwerty"><!-- <h1>bad</h1> --><li value="2">asdf1</li><script><![CDATA[asdf]]></script></ol>',
+                '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
                 2
             ),
             'q' => array(
@@ -1040,7 +1051,18 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 3,
                 '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ul>',
                 3
-            )
+            ),
+            'ul - li[value] children' => array(
+                '<ul><li value=1>asdf1</li><li value=3>asdf3</li></ul>',
+                '<ul><li value="1">asdf1</li><li value="3">asdf3</li></ul>',
+                0,
+                '<ul><li value="1">asdf1</li><li value="3">asdf3</li></ul>',
+                0,
+                '<ul><li>asdf1</li><li>asdf3</li></ul>',
+                2,
+                '<ul><li>asdf1</li><li>asdf3</li></ul>',
+                2
+            ),
         );
     }
 

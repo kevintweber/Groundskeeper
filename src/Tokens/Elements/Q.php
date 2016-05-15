@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
@@ -18,7 +19,7 @@ class Q extends OpenElement implements FlowContent, PhrasingContent, InlineEleme
     protected function getAllowedAttributes()
     {
         $aAllowedAttributes = array(
-            '/^cite$/i' => Element::ATTR_CS_STRING
+            '/^cite$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

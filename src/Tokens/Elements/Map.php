@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
@@ -17,7 +18,7 @@ class Map extends OpenElement implements FlowContent, PhrasingContent, Transpare
     protected function getAllowedAttributes()
     {
         $mapAllowedAttributes = array(
-            '/^name$/i' => Element::ATTR_CS_STRING
+            '/^name$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

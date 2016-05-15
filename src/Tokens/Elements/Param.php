@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Psr\Log\LoggerInterface;
@@ -17,8 +17,8 @@ class Param extends ClosedElement
     protected function getAllowedAttributes()
     {
         $paramAllowedAttributes = array(
-            '/^name$/i' => Element::ATTR_CS_STRING,
-            '/^value$/i' => Element::ATTR_CS_STRING
+            '/^name$/i' => Attribute::CS_STRING,
+            '/^value$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

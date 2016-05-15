@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
@@ -17,7 +18,7 @@ class Data extends OpenElement implements FlowContent, PhrasingContent, InlineEl
     protected function getAllowedAttributes()
     {
         $dataAllowedAttributes = array(
-            '/^value$/i' => Element::ATTR_CS_STRING
+            '/^value$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

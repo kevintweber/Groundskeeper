@@ -3,10 +3,9 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Element;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\NonParticipating;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,7 +18,7 @@ class Html extends OpenElement
     protected function getAllowedAttributes()
     {
         $htmlAllowedAttributes = array(
-            '/^manifest$/i' => Element::ATTR_URI
+            '/^manifest$/i' => Attribute::URI
         );
 
         return array_merge(

@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
@@ -18,8 +18,8 @@ class Base extends ClosedElement implements MetadataContent
     protected function getAllowedAttributes()
     {
         $baseAllowedAttributes = array(
-            '/^href$/i' => Element::ATTR_URI,
-            '/^target$/i' => Element::ATTR_CS_STRING
+            '/^href$/i' => Attribute::URI,
+            '/^target$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

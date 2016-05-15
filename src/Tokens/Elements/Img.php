@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 
@@ -17,16 +18,16 @@ class Img extends ClosedElement
     protected function getAllowedAttributes()
     {
         $imgAllowedAttributes = array(
-            '/^alt$/i' => Element::ATTR_CS_STRING,
-            '/^src$/i' => Element::ATTR_URI,
-            '/^srcset$/i' => Element::ATTR_CS_STRING,
-            '/^sizes$/i' => Element::ATTR_CS_STRING,
-            '/^crossorigin$/i' => Element::ATTR_CS_STRING,
-            '/^usemap$/i' => Element::ATTR_CS_STRING,
-            '/^ismap$/i' => Element::ATTR_CS_STRING,
-            '/^width$/i' => Element::ATTR_INT,
-            '/^height$/i' => Element::ATTR_INT,
-            '/^referrerpolicy$/i' => Element::ATTR_CS_STRING
+            '/^alt$/i' => Attribute::CS_STRING,
+            '/^src$/i' => Attribute::URI,
+            '/^srcset$/i' => Attribute::CS_STRING,
+            '/^sizes$/i' => Attribute::CS_STRING,
+            '/^crossorigin$/i' => Attribute::CS_STRING,
+            '/^usemap$/i' => Attribute::CS_STRING,
+            '/^ismap$/i' => Attribute::CS_STRING,
+            '/^width$/i' => Attribute::INT,
+            '/^height$/i' => Attribute::INT,
+            '/^referrerpolicy$/i' => Attribute::CS_STRING
         );
 
         return array_merge(

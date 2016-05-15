@@ -2,6 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
@@ -18,14 +19,14 @@ class Iframe extends OpenElement implements FlowContent, PhrasingContent, Embedd
     protected function getAllowedAttributes()
     {
         $iframeAllowedAttributes = array(
-            '/^src$/i' => Element::ATTR_URI,
-            '/^srcdoc$/i' => Element::ATTR_CS_STRING,
-            '/^name$/i' => Element::ATTR_CS_STRING,
-            '/^sandbox$/i' => Element::ATTR_CS_STRING,
-            '/^allowfullscreen$/i' => Element::ATTR_CS_STRING,
-            '/^width$/i' => Element::ATTR_INT,
-            '/^height$/i' => Element::ATTR_INT,
-            '/^referrerpolicy$/i' => Element::ATTR_CS_STRING,
+            '/^src$/i' => Attribute::URI,
+            '/^srcdoc$/i' => Attribute::CS_STRING,
+            '/^name$/i' => Attribute::CS_STRING,
+            '/^sandbox$/i' => Attribute::CS_STRING,
+            '/^allowfullscreen$/i' => Attribute::CS_STRING,
+            '/^width$/i' => Attribute::INT,
+            '/^height$/i' => Attribute::INT,
+            '/^referrerpolicy$/i' => Attribute::CS_STRING,
         );
 
         return array_merge(

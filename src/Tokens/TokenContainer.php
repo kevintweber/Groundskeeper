@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens;
 
 use Groundskeeper\Configuration;
-use Groundskeeper\Tokens\Element;
 use Psr\Log\LoggerInterface;
 
 final class TokenContainer implements Cleanable, ContainsChildren, Removable

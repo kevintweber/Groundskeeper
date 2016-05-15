@@ -2,10 +2,10 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\SectioningRoot;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -18,21 +18,21 @@ class Body extends OpenElement implements SectioningRoot
     protected function getAllowedAttributes()
     {
         $bodyAllowedAttributes = array(
-            '/^onafterprint$/i' => Element::ATTR_JS,
-            '/^onbeforeprint$/i' => Element::ATTR_JS,
-            '/^onbeforeunload$/i' => Element::ATTR_JS,
-            '/^onhashchange$/i' => Element::ATTR_JS,
-            '/^onlanguagechange$/i' => Element::ATTR_JS,
-            '/^onmessage$/i' => Element::ATTR_JS,
-            '/^onoffline$/i' => Element::ATTR_JS,
-            '/^ononline$/i' => Element::ATTR_JS,
-            '/^onpagehide$/i' => Element::ATTR_JS,
-            '/^onpageshow$/i' => Element::ATTR_JS,
-            '/^onpopstate$/i' => Element::ATTR_JS,
-            '/^onrejectionhandled$/i' => Element::ATTR_JS,
-            '/^onstorage$/i' => Element::ATTR_JS,
-            '/^onunhandledrejection$/i' => Element::ATTR_JS,
-            '/^onunload$/i' => Element::ATTR_JS
+            '/^onafterprint$/i' => Attribute::JS,
+            '/^onbeforeprint$/i' => Attribute::JS,
+            '/^onbeforeunload$/i' => Attribute::JS,
+            '/^onhashchange$/i' => Attribute::JS,
+            '/^onlanguagechange$/i' => Attribute::JS,
+            '/^onmessage$/i' => Attribute::JS,
+            '/^onoffline$/i' => Attribute::JS,
+            '/^ononline$/i' => Attribute::JS,
+            '/^onpagehide$/i' => Attribute::JS,
+            '/^onpageshow$/i' => Attribute::JS,
+            '/^onpopstate$/i' => Attribute::JS,
+            '/^onrejectionhandled$/i' => Attribute::JS,
+            '/^onstorage$/i' => Attribute::JS,
+            '/^onunhandledrejection$/i' => Attribute::JS,
+            '/^onunload$/i' => Attribute::JS
         );
 
         return array_merge(

@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Psr\Log\LoggerInterface;
@@ -17,7 +17,7 @@ class Col extends ClosedElement
     protected function getAllowedAttributes()
     {
         $colAllowedAttributes = array(
-            '/^span$/i' => Element::ATTR_INT,
+            '/^span$/i' => Attribute::INT,
         );
 
         return array_merge(

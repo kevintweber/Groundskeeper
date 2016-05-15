@@ -2,7 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
+use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Psr\Log\LoggerInterface;
 
@@ -16,11 +16,11 @@ class Track extends ClosedElement
     protected function getAllowedAttributes()
     {
         $trackAllowedAttributes = array(
-            '/^kind$/i' => Element::ATTR_CS_STRING,
-            '/^src$/i' => Element::ATTR_URI,
-            '/^srclang$/i' => Element::ATTR_CS_STRING,
-            '/^label$/i' => Element::ATTR_CS_STRING,
-            '/^default$/i' => Element::ATTR_BOOL
+            '/^kind$/i' => Attribute::CS_STRING,
+            '/^src$/i' => Attribute::URI,
+            '/^srclang$/i' => Attribute::CS_STRING,
+            '/^label$/i' => Attribute::CS_STRING,
+            '/^default$/i' => Attribute::BOOL
         );
 
         return array_merge(

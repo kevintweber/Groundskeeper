@@ -2,10 +2,8 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -23,7 +21,7 @@ class Caption extends OpenElement implements FlowContent
         $parent = $this->getParent();
         if ($parent !== null &&
             !($parent instanceof Table)) {
-            $logger->debug('Removing '. $this . '. Must be child of "table" element.');
+            $logger->debug('Removing ' . $this . '. Must be child of "table" element.');
 
             return true;
         }

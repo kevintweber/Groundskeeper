@@ -6,8 +6,6 @@ use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InlineElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
-use Groundskeeper\Tokens\NonParticipating;
-use Groundskeeper\Tokens\Token;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +19,7 @@ class Dfn extends OpenElement implements FlowContent, PhrasingContent, InlineEle
     {
         // There must be no dfn element descendants.
         foreach ($this->children as $child) {
-            if ($child instanceof Dfn) {
+            if ($child instanceof self) {
                 $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
                 $this->removeChild($child);
             }
