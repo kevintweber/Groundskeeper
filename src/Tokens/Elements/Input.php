@@ -59,18 +59,6 @@ class Input extends ClosedElement implements FlowContent, InteractiveContent, Ph
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
-    {
-        $input = new self($this->configuration, 'input');
-        if ($this->hasAncestor($input)) {
-            $logger->debug('Removing ' . $this . '. Cannot be have "input" element ancestor.');
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function isInteractiveContent()
     {
         if (!$this->hasAttribute('type')) {

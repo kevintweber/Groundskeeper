@@ -436,6 +436,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<body><address>asdf1</address></body>',
                 1
             ),
+            'aside, ins, and del - correct usage' => array(
+                '<aside><ins datetime="2016-05-16"><p>I like fruit.</p></ins><del datetime="2016-05-16"><p>I like nuts.</p></del></aside>',
+                '<aside><ins datetime="2016-05-16"><p>I like fruit.</p></ins><del datetime="2016-05-16"><p>I like nuts.</p></del></aside>',
+                0,
+                '<aside><ins datetime="2016-05-16"><p>I like fruit.</p></ins><del datetime="2016-05-16"><p>I like nuts.</p></del></aside>',
+                0,
+                '<aside><ins datetime="2016-05-16"><p>I like fruit.</p></ins><del datetime="2016-05-16"><p>I like nuts.</p></del></aside>',
+                0,
+                '<aside><ins datetime="2016-05-16"><p>I like fruit.</p></ins><del datetime="2016-05-16"><p>I like nuts.</p></del></aside>',
+                0
+            ),
             'base - correct usage' => array(
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
@@ -788,6 +799,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 1
             ),
+            'iframe - correct usage' => array(
+                '<html><head><title>Asdf1</title></head><body><iframe src="https://www.example.com"><html>yo!</html></iframe></body></html>',
+                '<html><head><title>Asdf1</title></head><body><iframe src="https://www.example.com"></iframe></body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body><iframe src="https://www.example.com"></iframe></body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body><iframe src="https://www.example.com"></iframe></body></html>',
+                0,
+                '<html><head><title>Asdf1</title></head><body><iframe src="https://www.example.com"></iframe></body></html>',
+                0
+            ),
             'img - malformed height and width' => array(
                 '<img height="2.4" width="5e2" />',
                 '<img height="2.4" width="5e2"/>',
@@ -809,6 +831,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 3,
                 '<img/>',
                 3
+            ),
+            'label - malformed children' => array(
+                '<form action="form.html" method="POST"><label for="asdf"><input id="asdf" type="hidden" value="9"/><label>Whoa!</label></label></form>',
+                '<form action="form.html" method="POST"><label for="asdf"><input id="asdf" type="hidden" value="9"/><label>Whoa!</label></label></form>',
+                0,
+                '<form action="form.html" method="post"><label for="asdf"><input id="asdf" type="hidden" value="9"/><label>Whoa!</label></label></form>',
+                1,
+                '<form action="form.html" method="post"><label for="asdf"><input id="asdf" type="hidden" value="9"/></label></form>',
+                2,
+                '<form action="form.html" method="post"><label for="asdf"><input id="asdf" type="hidden" value="9"/></label></form>',
+                2
             ),
             'li - menu' => array(
                 '<menu><li>asdf</li></menu><menu type="toolbar"><li>asdf</li></menu>',
@@ -898,6 +931,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title></head><body>Yo!</body></html>',
                 1
             ),
+            'map and area - correct usage' => array(
+                '<p>Please select a shape:<img src="shapes.png" usemap="#shapes" alt="A red hollow box"><map name="shapes"><area shape=rect coords="50,50,100,100"><!-- the hole in the red box --><area shape=rect coords="25,25,125,125" href="red.html" alt="Red box."></map></p>',
+                '<p>Please select a shape:<img src="shapes.png" usemap="#shapes" alt="A red hollow box"/><map name="shapes"><area shape="rect" coords="50,50,100,100"/><!-- the hole in the red box --><area shape="rect" coords="25,25,125,125" href="red.html" alt="Red box."/></map></p>',
+                0,
+                '<p>Please select a shape:<img src="shapes.png" usemap="#shapes" alt="A red hollow box"/><map name="shapes"><area shape="rect" coords="50,50,100,100"/><!-- the hole in the red box --><area shape="rect" coords="25,25,125,125" href="red.html" alt="Red box."/></map></p>',
+                0,
+                '<p>Please select a shape:<img src="shapes.png" usemap="#shapes" alt="A red hollow box"/><map name="shapes"><area shape="rect" coords="50,50,100,100"/><!-- the hole in the red box --><area shape="rect" coords="25,25,125,125" href="red.html" alt="Red box."/></map></p>',
+                0,
+                '<p>Please select a shape:<img src="shapes.png" usemap="#shapes" alt="A red hollow box"/><map name="shapes"><area shape="rect" coords="50,50,100,100"/><!-- the hole in the red box --><area shape="rect" coords="25,25,125,125" href="red.html" alt="Red box."/></map></p>',
+                0
+            ),
             'meta - correct usage' => array(
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test" /></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
@@ -952,6 +996,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 2,
                 '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
                 2
+            ),
+            'option and select - correct usage' => array(
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                0,
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                0,
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                0,
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                0
+            ),
+            'option - malformed parent' => array(
+                '<p><option value="1">Asdf</option></p>',
+                '<p><option value="1">Asdf</option></p>',
+                0,
+                '<p><option value="1">Asdf</option></p>',
+                0,
+                '<p></p>',
+                1,
+                '<p></p>',
+                1
             ),
             'q' => array(
                 '<div>asdf1<q cite="asdf2" well="asdf3">asdf4</q>asdf5</div>',
