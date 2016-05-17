@@ -13,6 +13,8 @@ use Psr\Log\LoggerInterface;
  * "menu" element
  *
  * https://html.spec.whatwg.org/multipage/semantics.html#the-menu-element
+ *
+ * As of May 2016, implemented in only 8% of browsers.
  */
 class Menu extends OpenElement implements FlowContent
 {

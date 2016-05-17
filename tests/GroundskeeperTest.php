@@ -557,6 +557,39 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><footer>asdf1asdf3</footer></div>',
                 1
             ),
+            'form - correct usage' => array(
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"></label><input type="submit" value="Search..."></form>',
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                0
+            ),
+            'form - descendent form' => array(
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"><form action="yo!" method="post"><input type="hidden" value="9"/></form></label><input type="submit" value="Search..."></form>',
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/><form action="yo!" method="post"><input type="hidden" value="9"/></form></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/><form action="yo!" method="post"><input type="hidden" value="9"/></form></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                1,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                1
+            ),
+            'form - descendent form - testing error' => array(
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"><div action="yo!" method="post"><input type="hidden" value="9"/></div></label><input type="submit" value="Search..."></form>',
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/><div action="yo!" method="post"><input type="hidden" value="9"/></div></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/><div action="yo!" method="post"><input type="hidden" value="9"/></div></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/><div><input type="hidden" value="9"/></div></label><input type="submit" value="Search..."/></form>',
+                2,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/><div><input type="hidden" value="9"/></div></label><input type="submit" value="Search..."/></form>',
+                2
+            ),
             'head - child of non-html element' => array(
                 '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',
                 '<html><div><head><title>Asdf1</title></head></div><body>Yo!</body></html>',

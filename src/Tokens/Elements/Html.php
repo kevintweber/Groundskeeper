@@ -76,7 +76,7 @@ class Html extends OpenElement
     {
         $bodyCount = 0;
         $headCount = 0;
-        foreach ($this->children as $key => $child) {
+        foreach ($this->children as $child) {
             if ($child instanceof NonParticipating) {
                 continue;
             }

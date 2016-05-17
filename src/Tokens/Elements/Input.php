@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Tokens\Attribute;
-use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
@@ -13,7 +12,7 @@ use Psr\Log\LoggerInterface;
 /**
  * "input" element
  *
- * https://html.spec.whatwg.org/multipage/semantics.html#the-input-element
+ * https://html.spec.whatwg.org/multipage/forms.html#the-input-element
  */
 class Input extends ClosedElement implements FlowContent, InteractiveContent, PhrasingContent
 {
@@ -26,7 +25,7 @@ class Input extends ClosedElement implements FlowContent, InteractiveContent, Ph
             '/^autofocus$/i' => Attribute::BOOL,
             '/^checked$/i' => Attribute::BOOL,
             '/^dirname$/i' => Attribute::CS_STRING,
-            '/^disabled$/i' => Attribute::CS_STRING,
+            '/^disabled$/i' => Attribute::BOOL,
             '/^form$/i' => Attribute::CS_STRING,
             '/^formaction$/i' => Attribute::URI,
             '/^formenctype$/i' => Attribute::CS_STRING,

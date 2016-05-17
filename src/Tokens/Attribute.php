@@ -15,6 +15,7 @@ class Attribute
     const CI_STRING = 'ci_str'; // case-insensitive string
     const CS_STRING = 'cs_str'; // case-sensitive string
     const URI       = 'cs_uri'; // uri
+    const UNKNOWN   = 'cs_unk'; // unknown
 
     /** @var string */
     private $name;
@@ -68,7 +69,8 @@ class Attribute
             $typeEnum !== self::JS &&
             $typeEnum !== self::CI_STRING &&
             $typeEnum !== self::CS_STRING &&
-            $typeEnum !== self::URI) {
+            $typeEnum !== self::URI &&
+            $typeEnum !== self::UNKNOWN) {
             throw new \InvalidArgumentException('Invalid attribute type: ' . $typeEnum);
         }
 
@@ -158,6 +160,18 @@ class Attribute
 
             break;
 
+        case 'str': // string
+            $cleanResult = $this->cleanAttributeString(
+                $configuration,
+                $element,
+                $logger
+            );
+            if ($configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+                return $cleanResult;
+            }
+
+            break;
+
         case 'uri': // URI
             $cleanResult = $this->cleanAttributeUri(
                 $configuration,
@@ -170,7 +184,6 @@ class Attribute
 
             break;
         }
-
 
         return true;
     }
@@ -214,8 +227,26 @@ class Attribute
         return true;
     }
 
+    private function cleanAttributeString(Configuration $configuration, Element $element, LoggerInterface $logger)
+    {
+        if ($this->value === true) {
+            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" requires a string value.  The value is invalid, therefore the attribute has been removed.');
+
+            return false;
+        }
+
+        return true;
+    }
+
     private function cleanAttributeUri(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
+        // Check for empty attribute.
+        if ($this->value === true) {
+            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" requires a URI.  The value is invalid, therefore the attribute has been removed.');
+
+            return false;
+        }
+
         /// @todo
 
         return true;

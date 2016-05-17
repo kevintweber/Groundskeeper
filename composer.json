@@ -20,7 +20,7 @@
     ],
     "require": {
         "php" : ">=5.5.9",
-        "kevintweber/html-tokenizer" : "~0.2",
+        "kevintweber/html-tokenizer" : "*@dev",
         "psr/log" : "~1.0",
         "symfony/options-resolver" : "~3.0"
     },

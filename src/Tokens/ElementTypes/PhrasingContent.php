@@ -2,10 +2,11 @@
 
 namespace Groundskeeper\Tokens\ElementTypes;
 
+/**
+ * https://html.spec.whatwg.org/multipage/dom.html#phrasing-content-2
+ */
 interface PhrasingContent
 {
-    // https://html.spec.whatwg.org/multipage/dom.html#phrasing-content-2
-
     // a, abbr, area (if it is a descendant of a map element), audio, b,
     // bdi, bdo, br, button, canvas, cite, code, data, datalist, del, dfn,
     // em, embed, i, iframe, img, input, ins, kbd, keygen, label,

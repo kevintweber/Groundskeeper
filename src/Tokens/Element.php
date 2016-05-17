@@ -193,7 +193,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
                 $attributeParameters = array(
                     'name' => $attribute->getName(),
                     'regex' => '/\S*/i',
-                    'valueType' => Attribute::CS_STRING
+                    'valueType' => Attribute::UNKNOWN
                 );
                 $isStandard = false;
             }
