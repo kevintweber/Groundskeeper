@@ -28,7 +28,7 @@ class Dfn extends OpenElement implements FlowContent, PhrasingContent, InlineEle
 
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        $dfn = new self($this->configuration);
+        $dfn = new self($this->configuration, 0, 0, 'dfn');
         if ($this->hasAncestor($dfn)) {
             $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
 

@@ -47,14 +47,14 @@ class Html extends OpenElement
         // Handle missing HEAD element child.
         if ($headCount == 0) {
             $logger->debug('Missing "head" element added.');
-            $head = new Head($this->configuration, 'head');
+            $head = new Head($this->configuration, 0, 0, 'head');
             $this->prependChild($head);
         }
 
         // Handle missing BODY element child.
         if ($bodyCount == 0) {
             $logger->debug('Missing "body" element added.');
-            $body = new Body($this->configuration, 'body');
+            $body = new Body($this->configuration, 0, 0, 'body');
             $this->appendChild($body);
         }
 

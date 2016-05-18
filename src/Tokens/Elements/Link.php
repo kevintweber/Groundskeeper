@@ -62,7 +62,7 @@ class Link extends ClosedElement implements MetadataContent
         }
 
         // If inside "body" element, then we check if allowed.
-        $body = new Body($this->configuration, 'body');
+        $body = new Body($this->configuration, 0, 0, 'body');
         if ($this->hasAncestor($body) && !$this->isAllowedInBody()) {
             $logger->debug('Removing ' . $this . '. Does not have the correct attributes to be allowed inside the "body" element.');
 

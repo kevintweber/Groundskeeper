@@ -12,7 +12,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration(array(
             'type-blacklist' => ''
         ));
-        $php = new Php($configuration, 'echo "asdf";');
+        $php = new Php($configuration, 0, 0, 'echo "asdf";');
         $this->assertEquals('echo "asdf";', $php->getValue());
         $this->assertEquals(
             '<?php echo "asdf"; ?>',

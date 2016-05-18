@@ -62,14 +62,14 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         ));
         $this->assertTrue($configuration->isAllowedElement('div'));
         $this->assertFalse($configuration->isAllowedElement('em'));
-        $asdf = new Element($configuration, 'asdf');
+        $asdf = new Element($configuration, 0, 0, 'asdf');
         $this->assertFalse($configuration->isAllowedElement($asdf));
     }
 
     public function testIsAllowedType()
     {
         $configuration = new Configuration();
-        $asdf = new Element($configuration, 'asdf');
+        $asdf = new Element($configuration, 0, 0, 'asdf');
         $this->assertTrue($configuration->isAllowedType($asdf));
         $this->assertFalse($configuration->isAllowedType('comment'));
     }

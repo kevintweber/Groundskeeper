@@ -11,6 +11,8 @@ class AbstractTokenTest extends \PHPUnit_Framework_TestCase
         $abstractTokenMock = $this->createAbstractTokenMock();
         $this->assertNull($abstractTokenMock->getParent());
         $this->assertEquals(0, $abstractTokenMock->getDepth());
+        $this->assertEquals(0, $abstractTokenMock->getLine());
+        $this->assertEquals(0, $abstractTokenMock->getPosition());
     }
 
     protected function createAbstractTokenMock()
@@ -19,7 +21,7 @@ class AbstractTokenTest extends \PHPUnit_Framework_TestCase
 
         return $this->getMockForAbstractClass(
             'Groundskeeper\\Tokens\\AbstractToken',
-            array($configuration, null)
+            array($configuration, 0, 0, null)
         );
     }
 }

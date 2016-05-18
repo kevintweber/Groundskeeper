@@ -12,7 +12,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration(array(
             'type-blacklist' => ''
         ));
-        $text = new Text($configuration, 'asdf');
+        $text = new Text($configuration, 0, 0, 'asdf');
         $this->assertEquals('asdf', $text->getValue());
         $this->assertEquals(
             'asdf',

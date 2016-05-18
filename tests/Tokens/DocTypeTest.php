@@ -13,7 +13,7 @@ class DocTypeTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration(array(
             'type-blacklist' => ''
         ));
-        $docType = new DocType($configuration, 'asdf');
+        $docType = new DocType($configuration, 0, 0, 'asdf');
         $this->assertEquals('asdf', $docType->getValue());
         $this->assertEquals(
             '<!DOCTYPE asdf>',
@@ -27,7 +27,7 @@ class DocTypeTest extends \PHPUnit_Framework_TestCase
             'clean-strategy' => 'none',
             'type-blacklist' => ''
         ));
-        $docType = new DocType($configuration, 'asdf');
+        $docType = new DocType($configuration, 0, 0, 'asdf');
         $logger = new TestableLogger();
         $docType->clean($logger);
         $this->assertEquals(

@@ -12,7 +12,7 @@ class CDataTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration(array(
             'type-blacklist' => ''
         ));
-        $cdata = new CData($configuration, 'asdf');
+        $cdata = new CData($configuration, 0, 0, 'asdf');
         $this->assertEquals('asdf', $cdata->getValue());
         $this->assertEquals(
             '<![CDATA[asdf]]>',

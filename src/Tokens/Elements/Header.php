@@ -13,9 +13,9 @@ class Header extends OpenElement implements FlowContent
 {
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        $footer = new Footer($this->configuration, 'footer');
-        $header = new self($this->configuration, 'header');
-        $main = new Main($this->configuration, 'main');
+        $footer = new Footer($this->configuration, 0, 0, 'footer');
+        $header = new self($this->configuration, 0, 0, 'header');
+        $main = new Main($this->configuration, 0, 0, 'main');
         if ($this->hasAncestor($footer) ||
             $this->hasAncestor($header) ||
             $this->hasAncestor($main)) {

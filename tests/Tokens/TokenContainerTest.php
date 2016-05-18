@@ -22,8 +22,8 @@ class TokenContainerTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = new Configuration();
         $tokenContainer = new TokenContainer($configuration);
-        $token = new Comment($configuration, 'asdf');
-        $anotherToken = new Comment($configuration, 'qwerty');
+        $token = new Comment($configuration, 0, 0, 'asdf');
+        $anotherToken = new Comment($configuration, 0, 0, 'qwerty');
         $this->assertEmpty($tokenContainer->getChildren());
         $this->assertFalse($tokenContainer->hasChild($token));
         $tokenContainer->appendChild($token);
@@ -51,7 +51,7 @@ class TokenContainerTest extends \PHPUnit_Framework_TestCase
             'clean-strategy' => 'none'
         ));
         $tokenContainer = new TokenContainer($configuration);
-        $token = new Comment($configuration, 'asdf');
+        $token = new Comment($configuration, 0, 0, 'asdf');
         $tokenContainer->appendChild($token);
         $tokenContainer->clean(new NullLogger());
         $this->assertEquals(

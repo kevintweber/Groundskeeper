@@ -7,7 +7,6 @@ use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
-use Psr\Log\LoggerInterface;
 
 /**
  * "input" element

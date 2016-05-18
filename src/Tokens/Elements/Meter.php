@@ -33,7 +33,7 @@ class Meter extends OpenElement implements FlowContent, PhrasingContent
 
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        $meter = new self($this->configuration, 'meter');
+        $meter = new self($this->configuration, 0, 0, 'meter');
         if ($this->hasAncestor($meter)) {
             $logger->debug('Removing ' . $this . '. "Meter" element cannot contain other "meter" elements.');
 

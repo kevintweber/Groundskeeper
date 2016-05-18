@@ -12,7 +12,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     public function testConstructorAndDefaults()
     {
         $configuration = new Configuration();
-        $element = new Element($configuration, 'asdf');
+        $element = new Element($configuration, 0, 0, 'asdf');
         $this->assertEmpty($element->getAttributes());
         $this->assertEmpty($element->getChildren());
         $this->assertEquals('asdf', $element->getName());
@@ -24,13 +24,13 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     public function testExceptionInConstructor()
     {
         $configuration = new Configuration();
-        $element = new Element($configuration, 5);
+        $element = new Element($configuration, 0, 0, 5);
     }
 
     public function testAttributes()
     {
         $configuration = new Configuration();
-        $element = new Element($configuration, 'asdf');
+        $element = new Element($configuration, 0, 0, 'asdf');
         $this->assertFalse($element->hasAttribute('class'));
         $this->assertEmpty($element->getAttributes());
         $element->addAttribute('class', 'c-asdf');
@@ -55,7 +55,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     public function testExceptionInGetAttribute()
     {
         $configuration = new Configuration();
-        $element = new Element($configuration, 'asdf');
+        $element = new Element($configuration, 0, 0, 'asdf');
         $element->getAttribute('qwerty');
     }
 
@@ -65,17 +65,17 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     public function testExceptionInAddAttribute()
     {
         $configuration = new Configuration();
-        $element = new Element($configuration, 'asdf');
+        $element = new Element($configuration, 0, 0, 'asdf');
         $element->addAttribute('    ', 'asdf');
     }
 
     public function testChildren()
     {
         $configuration = new Configuration();
-        $element = new Element($configuration, 'asdf');
+        $element = new Element($configuration, 0, 0, 'asdf');
         $this->assertEmpty($element->getChildren());
-        $newElement = new Element($configuration, 'asdfasdf');
-        $anotherElement = new Element($configuration, 'qwerty');
+        $newElement = new Element($configuration, 0, 0, 'asdfasdf');
+        $anotherElement = new Element($configuration, 0, 0, 'qwerty');
         $this->assertFalse($element->hasChild($newElement));
         $element->appendChild($newElement);
         $this->assertEquals(
@@ -102,6 +102,8 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         ));
         $element = new Element(
             $configuration,
+            0,
+            0,
             'asdf',
             array(
                 'class' => 'asdf',
@@ -121,6 +123,8 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration();
         $element = new Element(
             $configuration,
+            0,
+            0,
             'asdf',
             $attributes
         );

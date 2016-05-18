@@ -39,30 +39,40 @@ class Tokenizer
         case 'cdata':
             return new CData(
                 $this->configuration,
+                $basicToken->getLine(),
+                $basicToken->getPosition(),
                 $basicToken->getValue()
             );
 
         case 'comment':
             return new Comment(
                 $this->configuration,
+                $basicToken->getLine(),
+                $basicToken->getPosition(),
                 $basicToken->getValue()
             );
 
         case 'doctype':
             return new DocType(
                 $this->configuration,
+                $basicToken->getLine(),
+                $basicToken->getPosition(),
                 $basicToken->getValue()
             );
 
         case 'php':
             return new Php(
                 $this->configuration,
+                $basicToken->getLine(),
+                $basicToken->getPosition(),
                 $basicToken->getValue()
             );
 
         case 'text':
             return new Text(
                 $this->configuration,
+                $basicToken->getLine(),
+                $basicToken->getPosition(),
                 $basicToken->getValue()
             );
         }
@@ -87,6 +97,8 @@ class Tokenizer
 
         $cleanableElement = new $elementClassName(
             $this->configuration,
+            $basicElement->getLine(),
+            $basicElement->getPosition(),
             $basicElement->getName(),
             $basicElement->getAttributes()
         );

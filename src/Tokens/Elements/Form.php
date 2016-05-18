@@ -35,9 +35,9 @@ class Form extends OpenElement
 
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        $form = new self($this->configuration, 'form');
+        $form = new self($this->configuration, 0, 0, 'form');
         if ($this->hasAncestor($form)) {
-            $logger->debug('Removing ' . $this . '. Cannot be have a "form" element ancestor.');
+            $logger->debug('Removing ' . $this . '. Cannot have a "form" element ancestor.');
 
             return true;
         }

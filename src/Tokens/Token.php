@@ -33,6 +33,20 @@ interface Token
     public function getType();
 
     /**
+     * Will return the line number of this token in the source HTML.
+     *
+     * @return int
+     */
+    public function getLine();
+
+    /**
+     * Will return the character position of this token in the source HTML.
+     *
+     * @return int
+     */
+    public function getPosition();
+
+    /**
      * Will output the token to HTML.
      *
      * @param string $prefix

@@ -19,9 +19,9 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, $name, array $attributes = array())
+    public function __construct(Configuration $configuration, $line, $position, $name, array $attributes = array())
     {
-        parent::__construct($configuration);
+        parent::__construct($configuration, $line, $position);
 
         $this->attributes = array();
         foreach ($attributes as $key => $value) {
@@ -502,6 +502,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
 
     public function __toString()
     {
-        return '"' . $this->name . '" element';
+        return '"' . $this->name . '" element (line: ' . $this->getLine() .
+            '; position: ' . $this->getPosition() . ')';
     }
 }

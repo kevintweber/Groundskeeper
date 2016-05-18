@@ -31,7 +31,7 @@ class Label extends OpenElement implements FlowContent, InteractiveContent, Phra
 
     protected function removeInvalidSelf(LoggerInterface $logger)
     {
-        $label = new self($this->configuration, 'label');
+        $label = new self($this->configuration, 0, 0, 'label');
         if ($this->hasAncestor($label)) {
             $logger->debug('Removing ' . $this . '. Cannot be have "label" element ancestor.');
 

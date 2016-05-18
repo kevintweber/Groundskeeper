@@ -26,7 +26,7 @@ class Head extends OpenElement
 
         // Missing title.
         $logger->debug('Adding "title" element. One "title" element required.');
-        $title = new Title($this->configuration, 'title');
+        $title = new Title($this->configuration, 0, 0, 'title');
         $this->prependChild($title);
     }
 

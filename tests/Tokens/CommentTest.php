@@ -12,7 +12,7 @@ class CommentTest extends \PHPUnit_Framework_TestCase
         $configuration = new Configuration(array(
             'type-blacklist' => ''
         ));
-        $comment = new Comment($configuration, 'asdf');
+        $comment = new Comment($configuration, 0, 0, 'asdf');
         $this->assertEquals('asdf', $comment->getValue());
         $this->assertEquals(
             '<!-- asdf -->',

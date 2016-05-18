@@ -16,17 +16,25 @@ abstract class AbstractToken implements Token
     /** @var int */
     private $depth;
 
+    /** @var int */
+    private $line;
+
     /** @var null|Token */
     private $parent;
+
+    /** @var int */
+    private $position;
 
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration, $line, $position)
     {
         $this->configuration = $configuration;
         $this->depth = 0;
+        $this->line = $line;
         $this->parent = null;
+        $this->position = $position;
     }
 
     /**
@@ -35,6 +43,14 @@ abstract class AbstractToken implements Token
     public function getDepth()
     {
         return $this->depth;
+    }
+
+    /**
+     * Getter for 'line'.
+     */
+    public function getLine()
+    {
+        return $this->line;
     }
 
     /**
@@ -74,6 +90,14 @@ abstract class AbstractToken implements Token
         return $this->parent->hasAncestor($element);
     }
 
+    /**
+     * Getter for 'position'.
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
     public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger)
     {
         if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
@@ -96,6 +120,7 @@ abstract class AbstractToken implements Token
 
     public function __toString()
     {
-        return ucfirst($this->getType());
+        return ucfirst($this->getType()) . ' (line: ' . $this->line .
+            '; position: ' . $this->position . ')';
     }
 }
