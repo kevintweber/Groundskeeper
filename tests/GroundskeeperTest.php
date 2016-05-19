@@ -1129,6 +1129,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asd</title></head><body>Yo!</body></html>',
                 1
             ),
+            'textarea - correct usage' => array(
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols=5>asdf</textarea></label><input type="submit" value="Search..."></form>',
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf</textarea></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf</textarea></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf</textarea></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf</textarea></label><input type="submit" value="Search..."/></form>',
+                0
+            ),
+            'textarea - invalid content' => array(
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols=5>asdf1<div>asdf2</div></textarea></label><input type="submit" value="Search..."></form>',
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf1<div>asdf2</div></textarea></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf1<div>asdf2</div></textarea></label><input type="submit" value="Search..."/></form>',
+                0,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf1</textarea></label><input type="submit" value="Search..."/></form>',
+                1,
+                '<form action="http://www.google.com/search" method="get"><label>Google: <textarea cols="5">asdf1</textarea></label><input type="submit" value="Search..."/></form>',
+                1
+            ),
             'tr - wrong parent and children' => array(
                 '<div><tr>Hmm...</tr></div><table><tr>asdf1<div>asdf2</div><td>yes</td></tr></table>',
                 '<div><tr>Hmm...</tr></div><table><tr>asdf1<div>asdf2</div><td>yes</td></tr></table>',

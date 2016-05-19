@@ -144,10 +144,6 @@ class Attribute
 
             break;
 
-        case 'enu': // enumeration
-            /// @todo
-            break;
-
         case 'int': // integer
             $cleanResult = $this->cleanAttributeInteger(
                 $configuration,
@@ -230,9 +226,9 @@ class Attribute
     private function cleanAttributeString(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
         if ($this->value === true) {
-            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" requires a string value.  The value is invalid, therefore the attribute has been removed.');
+            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" requires a string value.  The value is missing, therefore the attribute value is set to the attribute name.');
 
-            return false;
+            $this->value = $this->name;
         }
 
         return true;
