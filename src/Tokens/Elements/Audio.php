@@ -48,13 +48,6 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
                 continue;
             }
 
-            if (!$child instanceof Element) {
-                $logger->debug('Removing ' . $child . '. Only elements allowed as children of "audio" element.');
-                $this->removeChild($child);
-
-                continue;
-            }
-
             if (!$hasSrc && $child instanceof Source) {
                 continue;
             }

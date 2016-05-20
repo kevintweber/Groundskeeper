@@ -447,6 +447,19 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<aside><ins datetime="2016-05-16"><p>I like fruit.</p></ins><del datetime="2016-05-16"><p>I like nuts.</p></del></aside>',
                 0
             ),
+            'audio - correct usage' => array(
+                '<audio src="brave.MP4">
+    Intro<track src=introduction.mp4 srclang=en label="Intro">
+</audio>',
+                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                0,
+                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                0,
+                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                0,
+                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                0
+            ),
             'base - correct usage' => array(
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
@@ -511,6 +524,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div>asdf2</div>',
                 1,
                 '<div>asdf2</div>',
+                1
+            ),
+            'button - correct usage' => array(
+                '<button type=button onclick="alert(\'This 15-20 minute piece was composed by George Gershwin.\')">Show hint</button>',
+                '<button type="button" onclick="alert(\'This 15-20 minute piece was composed by George Gershwin.\')">Show hint</button>',
+                0,
+                '<button type="button" onclick="alert(\'This 15-20 minute piece was composed by George Gershwin.\')">Show hint</button>',
+                0,
+                '<button type="button" onclick="alert(\'This 15-20 minute piece was composed by George Gershwin.\')">Show hint</button>',
+                0,
+                '<button type="button" onclick="alert(\'This 15-20 minute piece was composed by George Gershwin.\')">Show hint</button>',
+                0
+            ),
+            'button - incorrect children' => array(
+                '<button type="button"><a href="http://www.example.com">asdf</a></button>',
+                '<button type="button"><a href="http://www.example.com">asdf</a></button>',
+                0,
+                '<button type="button"><a href="http://www.example.com">asdf</a></button>',
+                0,
+                '<button type="button"></button>',
+                1,
+                '<button type="button"></button>',
                 1
             ),
             'dl -correct usage' => array(
@@ -1030,6 +1065,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div>asdf1<q cite="asdf2">asdf4</q>asdf5</div>',
                 1
             ),
+            'rp and rt - incorrect parent' => array(
+                '<div><rp> (</rp><rt>かん</rt><rp>) </rp></div>',
+                '<div><rp> (</rp><rt>かん</rt><rp>) </rp></div>',
+                0,
+                '<div><rp> (</rp><rt>かん</rt><rp>) </rp></div>',
+                0,
+                '<div></div>',
+                3,
+                '<div></div>',
+                3
+            ),
+            'ruby - correct usage' => array(
+                '<ruby>漢<rp> (</rp><rt>かん</rt><rp>) </rp>字<rp> (</rp><rt>じ</rt><rp>) </rp></ruby>',
+                '<ruby>漢<rp> (</rp><rt>かん</rt><rp>) </rp>字<rp> (</rp><rt>じ</rt><rp>) </rp></ruby>',
+                0,
+                '<ruby>漢<rp> (</rp><rt>かん</rt><rp>) </rp>字<rp> (</rp><rt>じ</rt><rp>) </rp></ruby>',
+                0,
+                '<ruby>漢<rp> (</rp><rt>かん</rt><rp>) </rp>字<rp> (</rp><rt>じ</rt><rp>) </rp></ruby>',
+                0,
+                '<ruby>漢<rp> (</rp><rt>かん</rt><rp>) </rp>字<rp> (</rp><rt>じ</rt><rp>) </rp></ruby>',
+                0
+            ),
             'style - correct usage' => array(
                 '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
@@ -1183,6 +1240,20 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 2,
                 '<ul><li>asdf1</li><li>asdf3</li></ul>',
                 2
+            ),
+            'video - correct usage' => array(
+                '<video src="brave.webm">
+    <track kind=subtitles src=brave.en.vtt srclang=en label="English">
+    <track kind=captions src=brave.en.hoh.vtt srclang=en label="English for the Hard of Hearing">
+</video>',
+                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                0,
+                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                0,
+                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                0,
+                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                0
             ),
         );
     }

@@ -43,7 +43,8 @@ class Button extends OpenElement implements FlowContent, InteractiveContent, Phr
     protected function removeInvalidChildren(LoggerInterface $logger)
     {
         foreach ($this->children as $child) {
-            if ($child instanceof InteractiveContent) {
+            if ($child instanceof InteractiveContent &&
+                $child->isInteractiveContent()) {
                 $logger->debug('Removing ' . $child . '. No interactive content inside a "button" element.');
                 $this->removeChild($child);
             }
