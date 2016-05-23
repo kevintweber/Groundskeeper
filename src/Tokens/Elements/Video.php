@@ -7,6 +7,7 @@ use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
+use Groundskeeper\Tokens\ElementTypes\MediaElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
@@ -19,7 +20,7 @@ use Psr\Log\LoggerInterface;
  *
  * https://html.spec.whatwg.org/multipage/semantics.html#the-video-element
  */
-class Video extends OpenElement implements FlowContent, PhrasingContent, EmbeddedContent, InteractiveContent, TransparentElement
+class Video extends OpenElement implements FlowContent, PhrasingContent, EmbeddedContent, InteractiveContent, TransparentElement, MediaElement
 {
     protected function getAllowedAttributes()
     {

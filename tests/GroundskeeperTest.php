@@ -449,16 +449,38 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
             ),
             'audio - correct usage' => array(
                 '<audio src="brave.MP4">
-    Intro<track src=introduction.mp4 srclang=en label="Intro">
+    <a href="http://www.example.com">Intro</a><track src=introduction.mp4 srclang=en label="Intro">
 </audio>',
-                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                '<audio src="brave.MP4"><a href="http://www.example.com">Intro</a><track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
                 0,
-                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                '<audio src="brave.MP4"><a href="http://www.example.com">Intro</a><track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
                 0,
-                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                '<audio src="brave.MP4"><a href="http://www.example.com">Intro</a><track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
                 0,
-                '<audio src="brave.MP4"> Intro<track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
+                '<audio src="brave.MP4"><a href="http://www.example.com">Intro</a><track src="introduction.mp4" srclang="en" label="Intro"/></audio>',
                 0
+            ),
+            'audio - correct usage with source' => array(
+                '<audio><source type="yo">brave.mp4</audio>',
+                '<audio><source type="yo"/>brave.mp4</audio>',
+                0,
+                '<audio><source type="yo"/>brave.mp4</audio>',
+                0,
+                '<audio><source type="yo"/>brave.mp4</audio>',
+                0,
+                '<audio><source type="yo"/>brave.mp4</audio>',
+                0
+            ),
+            'audio - incorrect children' => array(
+                '<audio><div>brave.mp4</div></audio>',
+                '<audio><div>brave.mp4</div></audio>',
+                0,
+                '<audio><div>brave.mp4</div></audio>',
+                0,
+                '<audio></audio>',
+                1,
+                '<audio></audio>',
+                1
             ),
             'base - correct usage' => array(
                 '<html><head><title>Asdf1</title><base href="www.example.com"/></head><body>Yo!</body></html>',
@@ -548,7 +570,40 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<button type="button"></button>',
                 1
             ),
-            'dl -correct usage' => array(
+            'canvas - correct usage' => array(
+                '<canvas id="myCanvas" width="200" height="100"></canvas>',
+                '<canvas id="myCanvas" width="200" height="100"></canvas>',
+                0,
+                '<canvas id="myCanvas" width="200" height="100"></canvas>',
+                0,
+                '<canvas id="myCanvas" width="200" height="100"></canvas>',
+                0,
+                '<canvas id="myCanvas" width="200" height="100"></canvas>',
+                0
+            ),
+            'caption and source - incorrect parent' => array(
+                '<div><caption>Whoa!</caption><source /></div>',
+                '<div><caption>Whoa!</caption><source/></div>',
+                0,
+                '<div><caption>Whoa!</caption><source/></div>',
+                0,
+                '<div></div>',
+                2,
+                '<div></div>',
+                2
+            ),
+            'col - incorrect parent' => array(
+                '<div><col span=2/></div>',
+                '<div><col span="2"/></div>',
+                0,
+                '<div><col span="2"/></div>',
+                0,
+                '<div></div>',
+                1,
+                '<div></div>',
+                1
+            ),
+            'dl - correct usage' => array(
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
                 0,
@@ -591,6 +646,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1,
                 '<dl><dt>Authors</dt><dd>Kevin</dd></dl>',
                 1
+            ),
+            'embed - correct usage' => array(
+                '<div><embed src="catgame.swf"></div>',
+                '<div><embed src="catgame.swf"/></div>',
+                0,
+                '<div><embed src="catgame.swf"/></div>',
+                0,
+                '<div><embed src="catgame.swf"/></div>',
+                0,
+                '<div><embed src="catgame.swf"/></div>',
+                0
             ),
             'footer - bad child' => array(
                 '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
@@ -1011,14 +1077,14 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 2
             ),
             'ol - li[value] children' => array(
-                '<ol><li value=1>asdf1</li><li value=3></li></ol>',
-                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                '<ol><li value=1>asdf1</li><li value=3><data value="8">Eight</data></li></ol>',
+                '<ol><li value="1">asdf1</li><li value="3"><data value="8">Eight</data></li></ol>',
                 0,
-                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                '<ol><li value="1">asdf1</li><li value="3"><data value="8">Eight</data></li></ol>',
                 0,
-                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                '<ol><li value="1">asdf1</li><li value="3"><data value="8">Eight</data></li></ol>',
                 0,
-                '<ol><li value="1">asdf1</li><li value="3"></li></ol>',
+                '<ol><li value="1">asdf1</li><li value="3"><data value="8">Eight</data></li></ol>',
                 0
             ),
             'ol - contains incorrect tokens and elements' => array(
@@ -1099,14 +1165,40 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 0
             ),
             'table - correct usage' => array(
-                '<table><thead><tr><th>Animal</th><th colspan=2>Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan=2>Black</td></tr></tbody><tfoot><tr><td colspan=2>---</td><td>---</td></tr></tfoot></table>',
-                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                '<table><caption>Stuff</caption><thead><tr><th>Animal<dialog open>Hmmm...</dialog></th><th colspan=2>Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan=2>Black</td></tr></tbody><tfoot><tr><td colspan=2>---</td><td>---</td></tr></tfoot></table>',
+                '<table><caption>Stuff</caption><thead><tr><th>Animal<dialog open>Hmmm...</dialog></th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
                 0,
-                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                '<table><caption>Stuff</caption><thead><tr><th>Animal<dialog open>Hmmm...</dialog></th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
                 0,
-                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                '<table><caption>Stuff</caption><thead><tr><th>Animal<dialog open>Hmmm...</dialog></th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
                 0,
-                '<table><thead><tr><th>Animal</th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                '<table><caption>Stuff</caption><thead><tr><th>Animal<dialog open>Hmmm...</dialog></th><th colspan="2">Color</th></tr></thead><!-- body --><tbody><tr><td>Ant</td><td colspan="2">Black</td></tr></tbody><tfoot><tr><td colspan="2">---</td><td>---</td></tr></tfoot></table>',
+                0
+            ),
+            'table - correct usage with colgroup' => array(
+                '<table>
+  <colgroup span=3>
+    <col span="2" style="background-color:red">
+    <col style="background-color:yellow">
+  </colgroup>
+  <tr>
+    <th>ISBN</th>
+    <th>Title</th>
+    <th>Price</th>
+  </tr>
+  <tr>
+    <td>3476896</td>
+    <td>My first HTML</td>
+    <td>$53</td>
+  </tr>
+</table>',
+                '<table><colgroup span="3"><col span="2" style="background-color:red"/><col style="background-color:yellow"/></colgroup><tr><th>ISBN</th><th>Title</th><th>Price</th></tr><tr><td>3476896</td><td>My first HTML</td><td>$53</td></tr></table>',
+                0,
+                '<table><colgroup span="3"><col span="2" style="background-color:red"/><col style="background-color:yellow"/></colgroup><tr><th>ISBN</th><th>Title</th><th>Price</th></tr><tr><td>3476896</td><td>My first HTML</td><td>$53</td></tr></table>',
+                0,
+                '<table><colgroup span="3"><col span="2" style="background-color:red"/><col style="background-color:yellow"/></colgroup><tr><th>ISBN</th><th>Title</th><th>Price</th></tr><tr><td>3476896</td><td>My first HTML</td><td>$53</td></tr></table>',
+                0,
+                '<table><colgroup span="3"><col span="2" style="background-color:red"/><col style="background-color:yellow"/></colgroup><tr><th>ISBN</th><th>Title</th><th>Price</th></tr><tr><td>3476896</td><td>My first HTML</td><td>$53</td></tr></table>',
                 0
             ),
             'table - inappropriate children' => array(
@@ -1243,18 +1335,41 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
             ),
             'video - correct usage' => array(
                 '<video src="brave.webm">
+    <a href="http://www.example.com">Intro</a>
     <track kind=subtitles src=brave.en.vtt srclang=en label="English">
     <track kind=captions src=brave.en.hoh.vtt srclang=en label="English for the Hard of Hearing">
 </video>',
-                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                '<video src="brave.webm"><a href="http://www.example.com">Intro</a><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
                 0,
-                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                '<video src="brave.webm"><a href="http://www.example.com">Intro</a><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
                 0,
-                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                '<video src="brave.webm"><a href="http://www.example.com">Intro</a><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
                 0,
-                '<video src="brave.webm"><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
+                '<video src="brave.webm"><a href="http://www.example.com">Intro</a><track kind="subtitles" src="brave.en.vtt" srclang="en" label="English"/><track kind="captions" src="brave.en.hoh.vtt" srclang="en" label="English for the Hard of Hearing"/></video>',
                 0
             ),
+            'video - correct usage with source' => array(
+                '<video><source type="yo">brave.mp4</video>',
+                '<video><source type="yo"/>brave.mp4</video>',
+                0,
+                '<video><source type="yo"/>brave.mp4</video>',
+                0,
+                '<video><source type="yo"/>brave.mp4</video>',
+                0,
+                '<video><source type="yo"/>brave.mp4</video>',
+                0
+            ),
+            'video - incorrect children' => array(
+                '<video><div>brave.mp4</div></video>',
+                '<video><div>brave.mp4</div></video>',
+                0,
+                '<video><div>brave.mp4</div></video>',
+                0,
+                '<video></video>',
+                1,
+                '<video></video>',
+                1
+            )
         );
     }
 

@@ -3,9 +3,9 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Tokens\Attribute;
-use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
+use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 
 /**
@@ -13,7 +13,7 @@ use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
  *
  * https://html.spec.whatwg.org/multipage/semantics.html#the-canvas-element
  */
-class Canvas extends ClosedElement implements FlowContent, PhrasingContent, EmbeddedContent
+class Canvas extends OpenElement implements FlowContent, PhrasingContent, EmbeddedContent
 {
     protected function getAllowedAttributes()
     {
