@@ -603,6 +603,21 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div></div>',
                 1
             ),
+            'details - correct usage' => array(
+                '<details open>
+  <summary>Copyright 1999-2014.</summary>
+  <p> - by Refsnes Data. All Rights Reserved.</p>
+  <p>All content and graphics on this web site are the property of the company Refsnes Data.</p>
+</details>',
+                '<details open><summary>Copyright 1999-2014.</summary><p> - by Refsnes Data. All Rights Reserved.</p><p>All content and graphics on this web site are the property of the company Refsnes Data.</p></details>',
+                0,
+                '<details open><summary>Copyright 1999-2014.</summary><p> - by Refsnes Data. All Rights Reserved.</p><p>All content and graphics on this web site are the property of the company Refsnes Data.</p></details>',
+                0,
+                '<details open><summary>Copyright 1999-2014.</summary><p> - by Refsnes Data. All Rights Reserved.</p><p>All content and graphics on this web site are the property of the company Refsnes Data.</p></details>',
+                0,
+                '<details open><summary>Copyright 1999-2014.</summary><p> - by Refsnes Data. All Rights Reserved.</p><p>All content and graphics on this web site are the property of the company Refsnes Data.</p></details>',
+                0
+            ),
             'dl - correct usage' => array(
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
@@ -658,6 +673,34 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div><embed src="catgame.swf"/></div>',
                 0
             ),
+            'figure - correct usage' => array(
+                '<figure>
+  <img src="/macaque.jpg" alt="Macaque in the trees">
+  <figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption>
+</figure>',
+                '<figure><img src="/macaque.jpg" alt="Macaque in the trees"/><figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption></figure>',
+                0,
+                '<figure><img src="/macaque.jpg" alt="Macaque in the trees"/><figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption></figure>',
+                0,
+                '<figure><img src="/macaque.jpg" alt="Macaque in the trees"/><figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption></figure>',
+                0,
+                '<figure><img src="/macaque.jpg" alt="Macaque in the trees"/><figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption></figure>',
+                0
+            ),
+            'figcaption - incorrect parent' => array(
+                '<div>
+  <img src="/macaque.jpg" alt="Macaque in the trees">
+  <figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption>
+</div>',
+                '<div><img src="/macaque.jpg" alt="Macaque in the trees"/><figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption></div>',
+                0,
+                '<div><img src="/macaque.jpg" alt="Macaque in the trees"/><figcaption>A cheeky macaque, Lower Kintaganban River, Borneo. Original by <a href="http://www.flickr.com/photos/rclark/">Richard Clark</a></figcaption></div>',
+                0,
+                '<div><img src="/macaque.jpg" alt="Macaque in the trees"/></div>',
+                1,
+                '<div><img src="/macaque.jpg" alt="Macaque in the trees"/></div>',
+                1
+            ),
             'footer - bad child' => array(
                 '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
                 '<div><footer>asdf1<footer>asdf2</footer>asdf3</footer></div>',
@@ -670,14 +713,14 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1
             ),
             'form - correct usage' => array(
-                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"></label><input type="submit" value="Search..."></form>',
-                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"></label><input type="submit" value="Search..."></fieldset></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
                 0,
-                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
                 0,
-                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
                 0,
-                '<form action="http://www.google.com/search" method="get"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
                 0
             ),
             'form - descendent form' => array(
@@ -799,6 +842,39 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<header><div>asdf2</div><hr/>asdf3</header>',
                 1,
                 '<header><div>asdf2</div><hr/>asdf3</header>',
+                1
+            ),
+            'hgroup - correct usage' => array(
+                '<hgroup><!-- comment --><h1>Title</h1></hgroup>',
+                '<hgroup><!-- comment --><h1>Title</h1></hgroup>',
+                0,
+                '<hgroup><!-- comment --><h1>Title</h1></hgroup>',
+                0,
+                '<hgroup><!-- comment --><h1>Title</h1></hgroup>',
+                0,
+                '<hgroup><!-- comment --><h1>Title</h1></hgroup>',
+                0
+            ),
+            'hgroup - incorrect children' => array(
+                '<hgroup><div>Title</div><h1>Title2</h1></hgroup>',
+                '<hgroup><div>Title</div><h1>Title2</h1></hgroup>',
+                0,
+                '<hgroup><div>Title</div><h1>Title2</h1></hgroup>',
+                0,
+                '<hgroup><h1>Title2</h1></hgroup>',
+                1,
+                '<hgroup><h1>Title2</h1></hgroup>',
+                1
+            ),
+            'hgroup - no valid children' => array(
+                '<hgroup><div>Title</div></hgroup>',
+                '<hgroup><div>Title</div></hgroup>',
+                0,
+                '<hgroup><div>Title</div></hgroup>',
+                0,
+                '',
+                1,
+                '',
                 1
             ),
             'html - correct usage' => array(
@@ -1043,6 +1119,35 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<p>Please select a shape:<img src="shapes.png" usemap="#shapes" alt="A red hollow box"/><map name="shapes"><area shape="rect" coords="50,50,100,100"/><!-- the hole in the red box --><area shape="rect" coords="25,25,125,125" href="red.html" alt="Red box."/></map></p>',
                 0
             ),
+            'menu - correct usage' => array(
+                '<menu type="context" id="mymenu">
+  <menuitem label="Refresh" onclick="window.location.reload();" icon="ico_reload.png">
+  </menuitem>
+  <menu label="Share on...">
+    <menuitem label="Twitter" icon="ico_twitter.png">Twitter</menuitem>
+    <menuitem label="Facebook" icon="ico_facebook.png">Facebook</menuitem>
+  </menu>
+</menu>',
+                '<menu type="context" id="mymenu"><menuitem label="Refresh" onclick="window.location.reload();" icon="ico_reload.png"></menuitem><menu label="Share on..."><menuitem label="Twitter" icon="ico_twitter.png">Twitter</menuitem><menuitem label="Facebook" icon="ico_facebook.png">Facebook</menuitem></menu></menu>',
+                0,
+                '<menu type="context" id="mymenu"><menuitem label="Refresh" onclick="window.location.reload();" icon="ico_reload.png"></menuitem><menu label="Share on..." type="context"><menuitem label="Twitter" icon="ico_twitter.png">Twitter</menuitem><menuitem label="Facebook" icon="ico_facebook.png">Facebook</menuitem></menu></menu>',
+                1,
+                '<menu type="context" id="mymenu"><menuitem label="Refresh" onclick="window.location.reload();" icon="ico_reload.png"></menuitem><menu label="Share on..." type="context"><menuitem label="Twitter" icon="ico_twitter.png">Twitter</menuitem><menuitem label="Facebook" icon="ico_facebook.png">Facebook</menuitem></menu></menu>',
+                1,
+                '<menu type="context" id="mymenu"><menuitem label="Refresh" onclick="window.location.reload();" icon="ico_reload.png"></menuitem><menu label="Share on..." type="context"><menuitem label="Twitter" icon="ico_twitter.png">Twitter</menuitem><menuitem label="Facebook" icon="ico_facebook.png">Facebook</menuitem></menu></menu>',
+                1
+            ),
+            'menu - invalid children' => array(
+                '<menu type="context"><!-- comment --><a href="http://www.example.com">Whoa!</a></menu>',
+                '<menu type="context"><!-- comment --><a href="http://www.example.com">Whoa!</a></menu>',
+                0,
+                '<menu type="context"><!-- comment --><a href="http://www.example.com">Whoa!</a></menu>',
+                0,
+                '<menu type="context"><!-- comment --></menu>',
+                1,
+                '<menu type="context"><!-- comment --></menu>',
+                1,
+            ),
             'meta - correct usage' => array(
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test" /></head><body>Yo!</body></html>',
                 '<html><head><title>Asdf1</title><meta name="keywords" content="test"/></head><body>Yo!</body></html>',
@@ -1076,6 +1181,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<html><head><title>Asdf1</title><meta charset="utf-8"/></head><body>Yo!</body></html>',
                 2
             ),
+            'meter - correct usage' => array(
+                '<meter value="0.6">60%</meter>',
+                '<meter value="0.6">60%</meter>',
+                0,
+                '<meter value="0.6">60%</meter>',
+                0,
+                '<meter value="0.6">60%</meter>',
+                0,
+                '<meter value="0.6">60%</meter>',
+                0
+            ),
+            'meter - cannot contain meter element' => array(
+                '<meter value="0.6">60%<meter value="0.5">50%</meter></meter>',
+                '<meter value="0.6">60%<meter value="0.5">50%</meter></meter>',
+                0,
+                '<meter value="0.6">60%<meter value="0.5">50%</meter></meter>',
+                0,
+                '<meter value="0.6">60%</meter>',
+                1,
+                '<meter value="0.6">60%</meter>',
+                1
+            ),
             'ol - li[value] children' => array(
                 '<ol><li value=1>asdf1</li><li value=3><data value="8">Eight</data></li></ol>',
                 '<ol><li value="1">asdf1</li><li value="3"><data value="8">Eight</data></li></ol>',
@@ -1097,6 +1224,26 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 2,
                 '<ol class="qwerty"><!-- <h1>bad</h1> --><li>asdf1</li><script><![CDATA[asdf]]></script></ol>',
                 2
+            ),
+            'optgroup - correct usage' => array(
+                '<select>
+  <optgroup label="Swedish Cars">
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+  </optgroup>
+  <optgroup label="German Cars">
+    <option value="mercedes">Mercedes</option>
+    <option value="audi">Audi</option>
+  </optgroup>
+</select>',
+                '<select><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></select>',
+                0,
+                '<select><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></select>',
+                0,
+                '<select><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></select>',
+                0,
+                '<select><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></select>',
+                0
             ),
             'option and select - correct usage' => array(
                 '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
@@ -1152,6 +1299,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 0,
                 '<ruby>漢<rp> (</rp><rt>かん</rt><rp>) </rp>字<rp> (</rp><rt>じ</rt><rp>) </rp></ruby>',
                 0
+            ),
+            'select - invalid children' => array(
+                '<select><option>asdf1</option><div>asdf2</div></select>',
+                '<select><option>asdf1</option><div>asdf2</div></select>',
+                0,
+                '<select><option>asdf1</option><div>asdf2</div></select>',
+                0,
+                '<select><option>asdf1</option></select>',
+                1,
+                '<select><option>asdf1</option></select>',
+                1
             ),
             'style - correct usage' => array(
                 '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
@@ -1256,6 +1414,28 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<div></div><div></div>',
                 2
             ),
+            'time - correct usage' => array(
+                'At the tone, the time will be <time class="time">10:00</time>.',
+                'At the tone, the time will be <time class="time">10:00</time>.',
+                0,
+                'At the tone, the time will be <time class="time">10:00</time>.',
+                0,
+                'At the tone, the time will be <time class="time">10:00</time>.',
+                0,
+                'At the tone, the time will be <time class="time">10:00</time>.',
+                0
+            ),
+            'time - incorrect children' => array(
+                '<time><!-- comment --><a href="time.html">10:00</a></time>.',
+                '<time><!-- comment --><a href="time.html">10:00</a></time>.',
+                0,
+                '<time><!-- comment --><a href="time.html">10:00</a></time>.',
+                0,
+                '<time><!-- comment --></time>.',
+                1,
+                '<time><!-- comment --></time>.',
+                1
+            ),
             'title - contains comment' => array(
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
                 '<html><head><title>Asd<!-- just a comment -->f1</title></head><body>Yo!</body></html>',
@@ -1310,6 +1490,17 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 3,
                 '<div></div><table><tr><td>yes</td></tr></table>',
                 3
+            ),
+            'track - incorrect parents' => array(
+                '<div><track src="asdf.mp4"/></div>',
+                '<div><track src="asdf.mp4"/></div>',
+                0,
+                '<div><track src="asdf.mp4"/></div>',
+                0,
+                '<div></div>',
+                1,
+                '<div></div>',
+                1
             ),
             'ul - contains incorrect tokens and elements' => array(
                 '<li id="asdf">asdf</li><ul><!-- <h1>bad</h1> --><li value="2">asdf1</li>asdf2<script><![CDATA[asdf]]></script><div>asdf3</div></ul>',

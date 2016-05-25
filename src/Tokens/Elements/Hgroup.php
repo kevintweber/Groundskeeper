@@ -5,7 +5,7 @@ namespace Groundskeeper\Tokens\Elements;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\HeadingContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
-use Groundskeeper\Tokens\NonParticipanting;
+use Groundskeeper\Tokens\NonParticipating;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +21,7 @@ class Hgroup extends OpenElement implements FlowContent, HeadingContent
         // "template" elements required.
         $headingContentElementCount = 0;
         foreach ($this->children as $child) {
-            if ($child instanceof NonParticipanting) {
+            if ($child instanceof NonParticipating) {
                 continue;
             }
 

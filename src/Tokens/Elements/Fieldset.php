@@ -6,6 +6,7 @@ use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\SectioningRoot;
+use Psr\Log\LoggerInterface;
 
 /**
  * "fieldset" element
