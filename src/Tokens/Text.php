@@ -14,6 +14,8 @@ class Text extends AbstractValuedToken
      */
     public function toHtml($prefix, $suffix)
     {
-        return $prefix . $this->getValue() . $suffix;
+        $text = preg_replace("/\s+/", ' ', $this->getValue());
+
+        return $prefix . $text . $suffix;
     }
 }

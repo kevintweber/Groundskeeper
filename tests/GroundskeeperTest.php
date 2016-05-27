@@ -618,6 +618,29 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 '<details open><summary>Copyright 1999-2014.</summary><p> - by Refsnes Data. All Rights Reserved.</p><p>All content and graphics on this web site are the property of the company Refsnes Data.</p></details>',
                 0
             ),
+            'dfn - correct usage' => array(
+                '<p>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn>
+is a device that allows off-world teams to open the iris.</p>',
+                '<p>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn> is a device that allows off-world teams to open the iris.</p>',
+                0,
+                '<p>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn> is a device that allows off-world teams to open the iris.</p>',
+                0,
+                '<p>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn> is a device that allows off-world teams to open the iris.</p>',
+                0,
+                '<p>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn> is a device that allows off-world teams to open the iris.</p>',
+                0
+            ),
+            'dfn - incorrect children' => array(
+                '<dfn>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn><div><dfn>Whoa</dfn></div>is a garage door opener.</dfn>',
+                '<dfn>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn><div><dfn>Whoa</dfn></div>is a garage door opener.</dfn>',
+                0,
+                '<dfn>The <dfn><abbr title="Garage Door Opener">GDO</abbr></dfn><div><dfn>Whoa</dfn></div>is a garage door opener.</dfn>',
+                0,
+                '<dfn>The <div></div>is a garage door opener.</dfn>',
+                2,
+                '<dfn>The <div></div>is a garage door opener.</dfn>',
+                2
+            ),
             'dl - correct usage' => array(
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
                 '<dl><!-- comment --><dt>Authors</dt><dd>Kevin</dd><script type="text/javascript">console.log("asdf");</script></dl>',
@@ -1202,6 +1225,25 @@ class GroundskeeperTest extends \PHPUnit_Framework_TestCase
                 1,
                 '<meter value="0.6">60%</meter>',
                 1
+            ),
+            'object - correct usage' => array(
+                '<object type="application/vnd.o3d.auto">
+     <param name="o3d_features" value="FloatingPointTextures">
+     <img src="o3d-teapot.png"
+          title="3D Utah Teapot illustration rendered using O3D."
+          alt="Utah Teapot">
+     <p>To see the teapot actually rendered by O3D on your
+     computer, please download and install the <a
+     href="http://code.google.com/apis/o3d/docs/gettingstarted.html#install">O3D plugin</a>.</p>
+    </object>',
+                '<object type="application/vnd.o3d.auto"><param name="o3d_features" value="FloatingPointTextures"/><img src="o3d-teapot.png" title="3D Utah Teapot illustration rendered using O3D." alt="Utah Teapot"/><p>To see the teapot actually rendered by O3D on your computer, please download and install the <a href="http://code.google.com/apis/o3d/docs/gettingstarted.html#install">O3D plugin</a>.</p></object>',
+                0,
+                '<object type="application/vnd.o3d.auto"><param name="o3d_features" value="FloatingPointTextures"/><img src="o3d-teapot.png" title="3D Utah Teapot illustration rendered using O3D." alt="Utah Teapot"/><p>To see the teapot actually rendered by O3D on your computer, please download and install the <a href="http://code.google.com/apis/o3d/docs/gettingstarted.html#install">O3D plugin</a>.</p></object>',
+                0,
+                '<object type="application/vnd.o3d.auto"><param name="o3d_features" value="FloatingPointTextures"/><img src="o3d-teapot.png" title="3D Utah Teapot illustration rendered using O3D." alt="Utah Teapot"/><p>To see the teapot actually rendered by O3D on your computer, please download and install the <a href="http://code.google.com/apis/o3d/docs/gettingstarted.html#install">O3D plugin</a>.</p></object>',
+                0,
+                '<object type="application/vnd.o3d.auto"><param name="o3d_features" value="FloatingPointTextures"/><img src="o3d-teapot.png" title="3D Utah Teapot illustration rendered using O3D." alt="Utah Teapot"/><p>To see the teapot actually rendered by O3D on your computer, please download and install the <a href="http://code.google.com/apis/o3d/docs/gettingstarted.html#install">O3D plugin</a>.</p></object>',
+                0
             ),
             'ol - li[value] children' => array(
                 '<ol><li value=1>asdf1</li><li value=3><data value="8">Eight</data></li></ol>',

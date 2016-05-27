@@ -30,7 +30,7 @@ class Dfn extends OpenElement implements FlowContent, PhrasingContent, InlineEle
     {
         $dfn = new self($this->configuration, 0, 0, 'dfn');
         if ($this->hasAncestor($dfn)) {
-            $logger->debug('Removing ' . $child . '. Element "dfn" cannot contain "dfn" elements.');
+            $logger->debug('Removing ' . $this . '. Element "dfn" cannot contain "dfn" elements.');
 
             return true;
         }
