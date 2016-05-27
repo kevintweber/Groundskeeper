@@ -27,7 +27,7 @@ use Groundskeeper\Groundskeeper;
 $groundskeeper = new Groundskeeper(array(
     'output' => 'pretty'
 ));
-$groundskeeper->setLogger($myLogger); // Will log changes to your HTML.
+$groundskeeper->setLogger($myLogger); // Optional: will log changes to your HTML.
 
 $cleanHtml = $groundskeeper->clean($dirtyHtml);
 ```

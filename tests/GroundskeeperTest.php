@@ -736,14 +736,14 @@ is a device that allows off-world teams to open the iris.</p>',
                 1
             ),
             'form - correct usage' => array(
-                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"></label><input type="submit" value="Search..."></fieldset></form>',
-                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"></label><input type="submit" value="Search..."></fieldset><output name=o for="a b"></output></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset><output name="o" for="a b"></output></form>',
                 0,
-                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset><output name="o" for="a b"></output></form>',
                 0,
-                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset><output name="o" for="a b"></output></form>',
                 0,
-                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset></form>',
+                '<form action="http://www.google.com/search" method="get"><fieldset name="search"><label>Google: <input type="search" name="q"/></label><input type="submit" value="Search..."/></fieldset><output name="o" for="a b"></output></form>',
                 0
             ),
             'form - descendent form' => array(
@@ -1287,15 +1287,37 @@ is a device that allows off-world teams to open the iris.</p>',
                 '<select><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></select>',
                 0
             ),
+            'optgroup - invalid parents' => array(
+                '<div><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></div>',
+                '<div><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></div>',
+                0,
+                '<div><optgroup label="Swedish Cars"><option value="volvo">Volvo</option><option value="saab">Saab</option></optgroup><optgroup label="German Cars"><option value="mercedes">Mercedes</option><option value="audi">Audi</option></optgroup></div>',
+                0,
+                '<div></div>',
+                2,
+                '<div></div>',
+                2
+            ),
+            'optgroup - invalid children' => array(
+                '<select><optgroup label="asdf"><img src="../stuff.png"/></optgroup></select>',
+                '<select><optgroup label="asdf"><img src="../stuff.png"/></optgroup></select>',
+                0,
+                '<select><optgroup label="asdf"><img src="../stuff.png"/></optgroup></select>',
+                0,
+                '<select><optgroup label="asdf"></optgroup></select>',
+                1,
+                '<select><optgroup label="asdf"></optgroup></select>',
+                1
+            ),
             'option and select - correct usage' => array(
-                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
-                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option label="Miner"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option label="Max" value="4"><!-- Max --></option></select></p>',
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option label="Miner"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option label="Max" value="4"><!-- Max --></option></select></p>',
                 0,
-                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option label="Miner"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option label="Max" value="4"><!-- Max --></option></select></p>',
                 0,
-                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option label="Miner"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option label="Max" value="4"><!-- Max --></option></select></p>',
                 0,
-                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option value="1"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option value="4"> Max </option></select></p>',
+                '<p><label for="unittype">Select unit type:</label><select id="unittype" name="unittype"><option label="Miner"> Miner </option><option value="2"> Puffer </option><option value="3" selected> Snipey </option><option label="Max" value="4"><!-- Max --></option></select></p>',
                 0
             ),
             'option - malformed parent' => array(
@@ -1308,6 +1330,65 @@ is a device that allows off-world teams to open the iris.</p>',
                 1,
                 '<p></p>',
                 1
+            ),
+            'option - invalid children' => array(
+                '<select><option value="1">Miner</option><option label="asdf" value="2"><!-- comment -->Asdf</option><option label="asdf2"><a href="../src.html">SRC</a></option><option>asdf<a href="../src.html">SRC</a></option></select>',
+                '<select><option value="1">Miner</option><option label="asdf" value="2"><!-- comment -->Asdf</option><option label="asdf2"><a href="../src.html">SRC</a></option><option>asdf<a href="../src.html">SRC</a></option></select>',
+                0,
+                '<select><option value="1">Miner</option><option label="asdf" value="2"><!-- comment -->Asdf</option><option label="asdf2"><a href="../src.html">SRC</a></option><option>asdf<a href="../src.html">SRC</a></option></select>',
+                0,
+                '<select><option value="1">Miner</option><option label="asdf" value="2"><!-- comment --></option><option label="asdf2"></option><option>asdf</option></select>',
+                3,
+                '<select><option value="1">Miner</option><option label="asdf" value="2"><!-- comment --></option><option label="asdf2"></option><option>asdf</option></select>',
+                3
+            ),
+            'param - invalid parent' => array(
+                '<div>Hmmm...<param name="o3d_features" value="FloatingPointTextures"></div>',
+                '<div>Hmmm...<param name="o3d_features" value="FloatingPointTextures"/></div>',
+                0,
+                '<div>Hmmm...<param name="o3d_features" value="FloatingPointTextures"/></div>',
+                0,
+                '<div>Hmmm...</div>',
+                1,
+                '<div>Hmmm...</div>',
+                1
+            ),
+            'picture - correct usage' => array(
+                '<picture>
+    <source srcset="smaller.jpg" media="(max-width: 768px)">
+    <source srcset="default.jpg">
+    <img srcset="default.jpg" alt="My default image">
+</picture>',
+                '<picture><source srcset="smaller.jpg" media="(max-width: 768px)"/><source srcset="default.jpg"/><img srcset="default.jpg" alt="My default image"/></picture>',
+                0,
+                '<picture><source srcset="smaller.jpg" media="(max-width: 768px)"/><source srcset="default.jpg"/><img srcset="default.jpg" alt="My default image"/></picture>',
+                0,
+                '<picture><source srcset="smaller.jpg" media="(max-width: 768px)"/><source srcset="default.jpg"/><img srcset="default.jpg" alt="My default image"/></picture>',
+                0,
+                '<picture><source srcset="smaller.jpg" media="(max-width: 768px)"/><source srcset="default.jpg"/><img srcset="default.jpg" alt="My default image"/></picture>',
+                0
+            ),
+            'picture - too many images' => array(
+                '<picture><img srcset="default1.jpg" alt="My default image"/><img srcset="default2.jpg" alt="My default image"/><img srcset="default3.jpg" alt="My default image"/><embed /></picture>',
+                '<picture><img srcset="default1.jpg" alt="My default image"/><img srcset="default2.jpg" alt="My default image"/><img srcset="default3.jpg" alt="My default image"/><embed/></picture>',
+                0,
+                '<picture><img srcset="default1.jpg" alt="My default image"/><img srcset="default2.jpg" alt="My default image"/><img srcset="default3.jpg" alt="My default image"/><embed/></picture>',
+                0,
+                '<picture><img srcset="default1.jpg" alt="My default image"/></picture>',
+                3,
+                '<picture><img srcset="default1.jpg" alt="My default image"/></picture>',
+                3
+            ),
+            'progress - correct usage' => array(
+                '<p>Progress: <progress id="p" max=100><span>0</span>%</progress></p>',
+                '<p>Progress: <progress id="p" max="100"><span>0</span>%</progress></p>',
+                0,
+                '<p>Progress: <progress id="p" max="100"><span>0</span>%</progress></p>',
+                0,
+                '<p>Progress: <progress id="p" max="100"><span>0</span>%</progress></p>',
+                0,
+                '<p>Progress: <progress id="p" max="100"><span>0</span>%</progress></p>',
+                0
             ),
             'q' => array(
                 '<div>asdf1<q cite="asdf2" well="asdf3">asdf4</q>asdf5</div>',
@@ -1352,6 +1433,17 @@ is a device that allows off-world teams to open the iris.</p>',
                 1,
                 '<select><option>asdf1</option></select>',
                 1
+            ),
+            'slot' => array(
+                '<slot name="asdf">asdf</slot>',
+                '<slot name="asdf">asdf</slot>',
+                0,
+                '<slot name="asdf">asdf</slot>',
+                0,
+                '<slot name="asdf">asdf</slot>',
+                0,
+                '<slot name="asdf">asdf</slot>',
+                0
             ),
             'style - correct usage' => array(
                 '<html><head><title>Asdf1</title><style media="all">/* Body */ body { color: green; }</style></head><body>Yo!</body></html>',
