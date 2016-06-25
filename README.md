@@ -5,7 +5,6 @@
 [![Build Status][ico-travis]][link-travis]
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
 
 Groundskeeper will clean your weedy HTML.
 
@@ -38,7 +37,7 @@ $cleanHtml = $groundskeeper->clean($dirtyHtml);
     * `none` - No cleaning will be done.
     * `lenient` - Like `standard` except no markup will be removed.
     * `standard` - Standard compliant HTML will be output.  Unfixable malformed HTML will be removed.
-    * `aggressive` - Like "standard" plus non-standard elements will be removed.
+    * `aggressive` - Like "standard" plus non-standard elements will be removed. (TODO)
 * `element-blacklist`: Describes which elements will be removed from the output.
   * Options: Comma seperated list of elements; Default: `` (empty list)
 * `indent-spaces`: The number of spaces for indentation when using pretty output.
@@ -46,9 +45,14 @@ $cleanHtml = $groundskeeper->clean($dirtyHtml);
 * `output`: Describes how the HTML will be output.
   * Options: `compact`, `pretty`; Default: `compact`
     * `compact` - Will remove all whitespace between elements, and will set `indent-spaces` to 0.
-    * `pretty` - One element per line with indentation.  Inline elements are left inline.  Handy for debugging.
+    * `pretty` - One element per line with indentation.  Handy for debugging.
 * `type-blacklist`: Describes which token types will be removed from the output.
   * Options: Comma seperated list of any of the following: `cdata`, `comment`, `doctype`, `element`, `php`, `text`; Default: `cdata,comment`
+
+## Todo
+1. Implement ```aggressive``` cleaning strategy.
+2. ```pretty``` output should inline certain elements.
+3. Add option to remove / sanitize all JS attributes.
 
 ## Change log
 
