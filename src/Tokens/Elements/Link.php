@@ -2,9 +2,7 @@
 
 namespace Groundskeeper\Tokens\Elements;
 
-use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Attribute;
-use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\ClosedElement;
 use Groundskeeper\Tokens\ElementTypes\MetadataContent;
 use Psr\Log\LoggerInterface;
@@ -41,8 +39,8 @@ class Link extends ClosedElement implements MetadataContent
         // Must have either "rel" or "itemprop" attribute, but not both.
         $attrCount = 0;
         foreach ($this->attributes as $attribute) {
-            if ($attribute->getName() == 'rel' ||
-                $attribute->getName() == 'itemprop') {
+            if ($attribute->getName() === 'rel' ||
+                $attribute->getName() === 'itemprop') {
                 ++$attrCount;
             }
 
@@ -86,9 +84,9 @@ class Link extends ClosedElement implements MetadataContent
         }
 
         if ($this->hasAttribute('rel') &&
-            ($this->attributes['rel']->getValue() == 'pingback' ||
-             $this->attributes['rel']->getValue() == 'prefetch' ||
-             $this->attributes['rel']->getValue() == 'stylesheet')) {
+            ($this->attributes['rel']->getValue() === 'pingback' ||
+             $this->attributes['rel']->getValue() === 'prefetch' ||
+             $this->attributes['rel']->getValue() === 'stylesheet')) {
             return true;
         }
 

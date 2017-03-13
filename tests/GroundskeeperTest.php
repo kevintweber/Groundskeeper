@@ -1011,8 +1011,8 @@ is a device that allows off-world teams to open the iris.</p>',
                 0
             ),
             'img - malformed height and width' => array(
-                '<img height="2.4" width="5e2" />',
-                '<img height="2.4" width="5e2"/>',
+                '<img height="2.4" width="5p2" />',
+                '<img height="2.4" width="5p2"/>',
                 0,
                 '<img height="2" width="5"/>',
                 2,

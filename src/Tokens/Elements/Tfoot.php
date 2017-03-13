@@ -33,7 +33,7 @@ class Tfoot extends OpenElement
     {
         // "table" must be parent.
         $parent = $this->getParent();
-        if ($parent !== null && $parent->getName() != 'table') {
+        if ($parent !== null && $parent->getName() !== 'table') {
             $logger->debug($this . ' must be a child of the "table" element.');
 
             return true;

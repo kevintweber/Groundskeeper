@@ -122,7 +122,7 @@ class Attribute
         list($caseSensitivity, $attributeType) = explode('_', $this->type);
 
         // Standard is case-insensitive attribute values should be lower case.
-        if ($caseSensitivity == 'ci' && $this->value !== true) {
+        if ($caseSensitivity === 'ci' && $this->value !== true) {
             $newValue = strtolower($this->value);
             if ($newValue !== $this->value) {
                 $logger->debug('Within ' . $element . ', the value for the attribute "' . $this->name . '" is case-insensitive.  The value has been converted to lower case.');
@@ -187,7 +187,8 @@ class Attribute
     private function cleanAttributeBoolean(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
         if ($this->value !== true) {
-            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" is a boolean attribute.  The value has been removed.');
+            $logger->debug('Within ' . $element . ', the attribute "' . $this->name .
+                '" is a boolean attribute.  The value has been removed.');
             $this->value = true;
         }
 

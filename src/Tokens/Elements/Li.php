@@ -43,7 +43,7 @@ class Li extends OpenElement
 
         if ($parent instanceof Menu && $parent->hasAttribute('type')) {
             $typeAttributeValue = $parent->getAttribute('type');
-            if ($typeAttributeValue == 'toolbar') {
+            if ($typeAttributeValue === 'toolbar') {
                 return false;
             }
         }

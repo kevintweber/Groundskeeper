@@ -3,9 +3,9 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Tokens\Attribute;
-use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
+use Groundskeeper\Tokens\ElementTypes\ScriptSupporting;
 use Groundskeeper\Tokens\NonParticipating;
 use Psr\Log\LoggerInterface;
 

@@ -17,7 +17,9 @@ class DocType extends AbstractValuedToken implements Cleanable
      */
     public function clean(LoggerInterface $logger)
     {
-        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE || $this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_LENIENT) {
+        $cleanStrategyConfiguration = $this->configuration->get('clean-strategy');
+        if ($cleanStrategyConfiguration === Configuration::CLEAN_STRATEGY_NONE ||
+            $cleanStrategyConfiguration === Configuration::CLEAN_STRATEGY_LENIENT) {
             return true;
         }
 

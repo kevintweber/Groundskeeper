@@ -3,7 +3,6 @@
 namespace Groundskeeper\Tokens\Elements;
 
 use Groundskeeper\Tokens\Attribute;
-use Groundskeeper\Tokens\Element;
 use Groundskeeper\Tokens\ElementTypes\EmbeddedContent;
 use Groundskeeper\Tokens\ElementTypes\FlowContent;
 use Groundskeeper\Tokens\ElementTypes\InteractiveContent;
@@ -11,6 +10,7 @@ use Groundskeeper\Tokens\ElementTypes\MediaElement;
 use Groundskeeper\Tokens\ElementTypes\OpenElement;
 use Groundskeeper\Tokens\ElementTypes\PhrasingContent;
 use Groundskeeper\Tokens\ElementTypes\TransparentElement;
+use Groundskeeper\Tokens\NonParticipating;
 use Groundskeeper\Tokens\Text;
 use Psr\Log\LoggerInterface;
 
@@ -44,7 +44,7 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
     {
         $hasSrc = $this->hasAttribute('src');
         foreach ($this->children as $child) {
-            if ($child instanceof NonParticipanting ||
+            if ($child instanceof NonParticipating ||
                 $child instanceof Text) {
                 continue;
             }
