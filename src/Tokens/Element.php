@@ -10,7 +10,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /** @var array */
     protected $attributes;
 
-    /** @var array[Token] */
+    /** @var Token[] */
     protected $children;
 
     /** @var string */
@@ -19,7 +19,11 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, $line, $position, $name, array $attributes = array())
+    public function __construct(Configuration $configuration,
+                                int $line,
+                                int $position,
+                                string $name,
+                                array $attributes = array())
     {
         parent::__construct($configuration, $line, $position);
 
@@ -40,7 +44,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Getter for 'attributes'.
      */
-    public function getAttributes()
+    public function getAttributes() : array
     {
         $attributeArray = array();
         foreach ($this->attributes as $attribute) {
@@ -50,7 +54,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         return $attributeArray;
     }
 
-    public function getAttribute($key)
+    public function getAttribute(string $key)
     {
         if (!$this->hasAttribute($key)) {
             throw new \InvalidArgumentException('Invalid attribute key: ' . $key);
@@ -68,15 +72,15 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      *
      * @return bool True if the attribute is present.
      */
-    public function hasAttribute($key)
+    public function hasAttribute(string $key) : bool
     {
         return array_key_exists($key, $this->attributes);
     }
 
-    public function addAttribute($key, $value)
+    public function addAttribute(string $key, $value)
     {
         $key = trim(strtolower($key));
-        if ($key == '') {
+        if ($key === '') {
             throw new \InvalidArgumentException('Invalid empty attribute key.');
         }
 
@@ -101,22 +105,18 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         return $this;
     }
 
-    public function removeAttribute($key)
+    public function removeAttribute(string $key)
     {
         $key = trim(strtolower($key));
         if (isset($this->attributes[$key])) {
             unset($this->attributes[$key]);
-
-            return true;
         }
-
-        return false;
     }
 
     /**
      * Required by ContainsChildren interface.
      */
-    public function getChildren()
+    public function getChildren() : array
     {
         return $this->children;
     }
@@ -124,7 +124,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Required by ContainsChildren interface.
      */
-    public function hasChild(Token $token)
+    public function hasChild(Token $token) : bool
     {
         return array_search($token, $this->children, true) !== false;
     }
@@ -136,8 +136,6 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     {
         $token->setParent($this);
         $this->children[] = $token;
-
-        return $this;
     }
 
     /**
@@ -147,8 +145,6 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     {
         $token->setParent($this);
         array_unshift($this->children, $token);
-
-        return $this;
     }
 
     /**
@@ -159,17 +155,13 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         $key = array_search($token, $this->children, true);
         if ($key !== false) {
             unset($this->children[$key]);
-
-            return true;
         }
-
-        return false;
     }
 
     /**
      * Getter for 'name'.
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -177,9 +169,9 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Required by the Cleanable interface.
      */
-    public function clean(LoggerInterface $logger)
+    public function clean(LoggerInterface $logger) : bool
     {
-        if ($this->configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+        if ($this->configuration->get('clean-strategy') === Configuration::CLEAN_STRATEGY_NONE) {
             return true;
         }
 
@@ -244,7 +236,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     {
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         return false;
     }
@@ -401,7 +393,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         );
     }
 
-    private function getAttributeParameters($key)
+    private function getAttributeParameters(string $key) : array
     {
         $allowedAttributes = $this->getAllowedAttributes();
         foreach ($allowedAttributes as $attrRegex => $valueType) {
@@ -422,8 +414,8 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      */
     public function remove(LoggerInterface $logger)
     {
-        $hasRemovableElements = $this->configuration->get('element-blacklist') != '';
-        $hasRemovableTypes = $this->configuration->get('type-blacklist') != '';
+        $hasRemovableElements = $this->configuration->get('element-blacklist') !== '';
+        $hasRemovableTypes = $this->configuration->get('type-blacklist') !== '';
         foreach ($this->children as $child) {
             // Check types.
             if ($hasRemovableTypes &&
@@ -454,7 +446,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
     /**
      * Required by the Token interface.
      */
-    public function toHtml($prefix, $suffix)
+    public function toHtml(string $prefix, string $suffix) : string
     {
         $output = $this->buildStartTag($prefix, $suffix);
         if (empty($this->children)) {
@@ -466,7 +458,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         return $output . $prefix . '</' . $this->name . '>' . $suffix;
     }
 
-    protected function buildStartTag($prefix, $suffix, $forceOpen = false)
+    protected function buildStartTag(string $prefix, string $suffix, bool $forceOpen = false) : string
     {
         $output = $prefix . '<' . $this->name;
         foreach ($this->attributes as $attribute) {
@@ -480,7 +472,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         return $output . '>' . $suffix;
     }
 
-    protected function buildChildrenHtml($prefix, $suffix)
+    protected function buildChildrenHtml(string $prefix, string $suffix) : string
     {
         $output = '';
         foreach ($this->children as $child) {
@@ -495,7 +487,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
         return $output;
     }
 
-    public function getType()
+    public function getType() : string
     {
         return Token::ELEMENT;
     }

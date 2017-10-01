@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  */
 class Dd extends OpenElement
 {
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // Must be child of "dl" element.
         $parent = $this->getParent();

@@ -29,7 +29,7 @@ class Track extends ClosedElement
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // Must be child of "object" element.
         $parent = $this->getParent();

@@ -30,7 +30,7 @@ class Source extends ClosedElement
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // Child of "picture" element.
         // Child of media element.

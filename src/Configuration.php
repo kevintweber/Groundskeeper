@@ -32,12 +32,12 @@ class Configuration
         $this->setDependentOptions();
     }
 
-    public function has($key)
+    public function has(string $key) : bool
     {
         return array_key_exists($key, $this->options);
     }
 
-    public function get($key)
+    public function get(string $key)
     {
         if (!$this->has($key)) {
             throw new \InvalidArgumentException('Invalid configuration key: ' . $key);
@@ -54,7 +54,7 @@ class Configuration
 
         $disallowedElementArray = explode(',', $this->options['element-blacklist']);
 
-        return array_search($element, $disallowedElementArray) === false;
+        return !in_array($element, $disallowedElementArray);
     }
 
     public function isAllowedType($type)
@@ -65,7 +65,7 @@ class Configuration
 
         $disallowedTypeArray = explode(',', $this->options['type-blacklist']);
 
-        return array_search($type, $disallowedTypeArray) === false;
+        return !in_array($type, $disallowedTypeArray);
     }
 
     protected function configureOptions(OptionsResolver $resolver)
@@ -165,7 +165,7 @@ class Configuration
 
     protected function setDependentOptions()
     {
-        if ($this->options['output'] == self::OUTPUT_COMPACT) {
+        if ($this->options['output'] === self::OUTPUT_COMPACT) {
             $this->options['indent-spaces'] = 0;
         }
     }

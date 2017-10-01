@@ -40,7 +40,7 @@ class Body extends OpenElement implements SectioningRoot
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // "body" element must be a child of "html" element.
         if ($this->getParent() !== null &&

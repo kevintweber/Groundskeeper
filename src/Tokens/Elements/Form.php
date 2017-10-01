@@ -32,7 +32,7 @@ class Form extends OpenElement
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         $form = new self($this->configuration, 0, 0, 'form');
         if ($this->hasAncestor($form)) {

@@ -4,21 +4,9 @@ namespace Groundskeeper\Tokens;
 
 interface ContainsChildren
 {
-    /**
-     * Getter for 'children'.
-     *
-     * @return array
-     */
-    public function getChildren();
+    public function getChildren() : array;
 
-    /**
-     * Hasser for 'children'.
-     *
-     * @param Token $token The token to search for.
-     *
-     * @return bool True if $token is present.
-     */
-    public function hasChild(Token $token);
+    public function hasChild(Token $token) : bool;
 
     public function appendChild(Token $token);
 

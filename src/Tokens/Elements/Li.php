@@ -30,7 +30,7 @@ class Li extends OpenElement
         return parent::getAllowedAttributes();
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // Only allowed:
         // Inside ol elements.

@@ -58,7 +58,7 @@ class Input extends ClosedElement implements FlowContent, InteractiveContent, Ph
         );
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         if (!$this->hasAttribute('type')) {
             return true;

@@ -42,7 +42,7 @@ class Optgroup extends OpenElement
         }
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         $parent = $this->getParent();
         if ($parent !== null && !$parent instanceof Select) {

@@ -67,12 +67,12 @@ class Audio extends OpenElement implements FlowContent, PhrasingContent, Embedde
         }
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return $this->hasAttribute('controls');
     }
 
-    public function isTransparentElement()
+    public function isTransparentElement() : bool
     {
         /// @todo Implement this.  Complicated checks involved.
         return true;

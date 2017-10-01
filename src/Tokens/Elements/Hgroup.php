@@ -40,7 +40,7 @@ class Hgroup extends OpenElement implements FlowContent, HeadingContent
         }
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         foreach ($this->children as $child) {
             if ($child instanceof HeadingContent) {

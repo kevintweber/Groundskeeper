@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
  */
 class Header extends OpenElement implements FlowContent
 {
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         $footer = new Footer($this->configuration, 0, 0, 'footer');
         $header = new self($this->configuration, 0, 0, 'header');

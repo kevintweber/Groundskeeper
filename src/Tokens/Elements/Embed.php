@@ -31,7 +31,7 @@ class Embed extends ClosedElement implements FlowContent, PhrasingContent, Embed
         );
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return true;
     }

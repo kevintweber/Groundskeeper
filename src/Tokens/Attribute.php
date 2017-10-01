@@ -7,15 +7,15 @@ use Psr\Log\LoggerInterface;
 
 class Attribute
 {
-    const BOOL      = 'ci_boo'; // boolean
-    const CI_ENUM   = 'ci_enu'; // case-insensitive enumeration
+    const BOOL = 'ci_boo'; // boolean
+    const CI_ENUM = 'ci_enu'; // case-insensitive enumeration
     const CI_SSENUM = 'ci_sse'; // case-insensitive space-separated enumeration
-    const INT       = 'ci_int'; // integer
-    const JS        = 'cs_jsc'; // javascript
+    const INT = 'ci_int'; // integer
+    const JS = 'cs_jsc'; // javascript
     const CI_STRING = 'ci_str'; // case-insensitive string
     const CS_STRING = 'cs_str'; // case-sensitive string
-    const URI       = 'cs_uri'; // uri
-    const UNKNOWN   = 'cs_unk'; // unknown
+    const URI = 'cs_uri'; // uri
+    const UNKNOWN = 'cs_unk'; // unknown
 
     /** @var string */
     private $name;
@@ -32,7 +32,7 @@ class Attribute
     /**
      * Constructor
      */
-    public function __construct($name, $value)
+    public function __construct(string $name, $value = null)
     {
         $this->name = $name;
         $this->type = null;
@@ -43,7 +43,7 @@ class Attribute
     /**
      * Getter for 'name'.
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -75,8 +75,6 @@ class Attribute
         }
 
         $this->type = $type;
-
-        return $this;
     }
 
     /**
@@ -90,7 +88,7 @@ class Attribute
     /**
      * Getter for 'isStandard'.
      */
-    public function getIsStandard()
+    public function getIsStandard() : bool
     {
         return $this->isStandard;
     }
@@ -98,21 +96,21 @@ class Attribute
     /**
      * Chainable setter for 'isStandard'.
      */
-    public function setIsStandard($isStandard)
+    public function setIsStandard(bool $isStandard)
     {
-        $this->isStandard = (bool) $isStandard;
-
-        return $this;
+        $this->isStandard = $isStandard;
     }
 
     public function clean(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
-        if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+        if ($configuration->get('clean-strategy') === Configuration::CLEAN_STRATEGY_NONE) {
             return true;
         }
 
         // Remove non-standard attributes.
-        if ($configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT && $this->isStandard === false) {
+        if ($configuration->get(
+                'clean-strategy'
+            ) !== Configuration::CLEAN_STRATEGY_LENIENT && $this->isStandard === false) {
             $logger->debug('Removing non-standard attribute "' . $this->name . '" from ' . $element);
 
             return false;
@@ -125,7 +123,9 @@ class Attribute
         if ($caseSensitivity === 'ci' && $this->value !== true) {
             $newValue = strtolower($this->value);
             if ($newValue !== $this->value) {
-                $logger->debug('Within ' . $element . ', the value for the attribute "' . $this->name . '" is case-insensitive.  The value has been converted to lower case.');
+                $logger->debug(
+                    'Within ' . $element . ', the value for the attribute "' . $this->name . '" is case-insensitive.  The value has been converted to lower case.'
+                );
                 $this->value = $newValue;
             }
         }
@@ -138,7 +138,7 @@ class Attribute
                 $element,
                 $logger
             );
-            if ($configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            if ($configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
                 return $cleanResult;
             }
 
@@ -150,7 +150,7 @@ class Attribute
                 $element,
                 $logger
             );
-            if ($configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            if ($configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
                 return $cleanResult;
             }
 
@@ -162,7 +162,7 @@ class Attribute
                 $element,
                 $logger
             );
-            if ($configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            if ($configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
                 return $cleanResult;
             }
 
@@ -174,7 +174,7 @@ class Attribute
                 $element,
                 $logger
             );
-            if ($configuration->get('clean-strategy') != Configuration::CLEAN_STRATEGY_LENIENT) {
+            if ($configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
                 return $cleanResult;
             }
 
@@ -187,8 +187,10 @@ class Attribute
     private function cleanAttributeBoolean(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
         if ($this->value !== true) {
-            $logger->debug('Within ' . $element . ', the attribute "' . $this->name .
-                '" is a boolean attribute.  The value has been removed.');
+            $logger->debug(
+                'Within ' . $element . ', the attribute "' . $this->name .
+                '" is a boolean attribute.  The value has been removed.'
+            );
             $this->value = true;
         }
 
@@ -197,26 +199,30 @@ class Attribute
 
     private function cleanAttributeInteger(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
-        if ($this->value === true ||
-            $this->value == '') {
+        if ($this->value === true || $this->value == '') {
             if ($configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
-                $logger->debug('Within ' . $element . ', the value for the attribute "' . $this->name . '" is required to be an positive, non-zero integer.  The value is invalid, therefore the attribute has been removed.');
+                $logger->debug(
+                    'Within ' . $element . ', the value for the attribute "' . $this->name . '" is required to be an positive, non-zero integer.  The value is invalid, therefore the attribute has been removed.'
+                );
             }
 
             return false;
         }
 
         if (!is_int($this->value)) {
-            $origonalValue = (string) $this->value;
+            $originalValue = (string) $this->value;
             $this->value = (int) $this->value;
-            if ($origonalValue != ((string) $this->value)) {
-                $logger->debug('Within ' . $element . ', the value for the attribute "' . $this->name . '" is required to be an positive, non-zero integer.  The value has been converted to an integer.');
+            if ($originalValue !== ((string) $this->value)) {
+                $logger->debug(
+                    'Within ' . $element . ', the value for the attribute "' . $this->name . '" is required to be an positive, non-zero integer.  The value has been converted to an integer.'
+                );
             }
         }
 
-        if ($this->value <= 0 &&
-        $configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
-            $logger->debug('Within ' . $element . ', the value for the attribute "' . $this->value . '" is required to be an positive, non-zero integer.  The value is invalid, therefore the attribute has been removed.');
+        if ($this->value <= 0 && $configuration->get('clean-strategy') !== Configuration::CLEAN_STRATEGY_LENIENT) {
+            $logger->debug(
+                'Within ' . $element . ', the value for the attribute "' . $this->value . '" is required to be an positive, non-zero integer.  The value is invalid, therefore the attribute has been removed.'
+            );
 
             return false;
         }
@@ -227,7 +233,9 @@ class Attribute
     private function cleanAttributeString(Configuration $configuration, Element $element, LoggerInterface $logger)
     {
         if ($this->value === true) {
-            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" requires a string value.  The value is missing, therefore the attribute value is set to the attribute name.');
+            $logger->debug(
+                'Within ' . $element . ', the attribute "' . $this->name . '" requires a string value.  The value is missing, therefore the attribute value is set to the attribute name.'
+            );
 
             $this->value = $this->name;
         }
@@ -239,7 +247,9 @@ class Attribute
     {
         // Check for empty attribute.
         if ($this->value === true) {
-            $logger->debug('Within ' . $element . ', the attribute "' . $this->name . '" requires a URI.  The value is invalid, therefore the attribute has been removed.');
+            $logger->debug(
+                'Within ' . $element . ', the attribute "' . $this->name . '" requires a URI.  The value is invalid, therefore the attribute has been removed.'
+            );
 
             return false;
         }

@@ -27,7 +27,7 @@ class Base extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // "base" element must be child of "head" element.
         if ($this->getParent() !== null && !($this->getParent() instanceof Head)) {

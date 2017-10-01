@@ -108,7 +108,7 @@ class Html extends OpenElement
         }
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // HTML element must not have parent elements.
         if ($this->getParent() !== null) {

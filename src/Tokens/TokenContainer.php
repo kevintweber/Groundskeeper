@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 
 final class TokenContainer implements Cleanable, ContainsChildren, Removable
 {
-    /** @var array[Token] */
+    /** @var Token[] */
     private $children;
 
     /** @var Configuration */
@@ -25,7 +25,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     /**
      * Required by ContainsChildren interface.
      */
-    public function getChildren()
+    public function getChildren() : array
     {
         return $this->children;
     }
@@ -33,9 +33,9 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     /**
      * Required by ContainsChildren interface.
      */
-    public function hasChild(Token $token)
+    public function hasChild(Token $token) : bool
     {
-        return array_search($token, $this->children, true) !== false;
+        return in_array($token, $this->children, true);
     }
 
     /**
@@ -44,8 +44,6 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     public function appendChild(Token $token)
     {
         $this->children[] = $token;
-
-        return $this;
     }
 
     /**
@@ -54,8 +52,6 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     public function prependChild(Token $token)
     {
         array_unshift($this->children, $token);
-
-        return $this;
     }
 
     /**
@@ -76,7 +72,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
     /**
      * Required by Cleanable interface.
      */
-    public function clean(LoggerInterface $logger)
+    public function clean(LoggerInterface $logger) : bool
     {
         return AbstractToken::cleanChildTokens(
             $this->configuration,

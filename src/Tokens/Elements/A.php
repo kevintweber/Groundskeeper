@@ -64,7 +64,7 @@ class A extends OpenElement implements FlowContent, InteractiveContent, Phrasing
         }
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // The target, download, ping, rel, hreflang, type, and
         // referrerpolicy attributes must be omitted if the href
@@ -92,12 +92,12 @@ class A extends OpenElement implements FlowContent, InteractiveContent, Phrasing
         return false;
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return $this->hasAttribute('href');
     }
 
-    public function isTransparentElement()
+    public function isTransparentElement() : bool
     {
         return true;
     }

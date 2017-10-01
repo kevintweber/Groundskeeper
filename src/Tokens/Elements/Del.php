@@ -29,7 +29,7 @@ class Del extends OpenElement implements FlowContent, PhrasingContent, InlineEle
         );
     }
 
-    public function isTransparentElement()
+    public function isTransparentElement() : bool
     {
         return true;
     }

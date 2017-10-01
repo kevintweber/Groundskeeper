@@ -26,7 +26,7 @@ abstract class ClosedElement extends Element
     /**
      * Required by the Token interface.
      */
-    public function toHtml($prefix, $suffix)
+    public function toHtml(string $prefix, string $suffix) : string
     {
         return $this->buildStartTag($prefix, $suffix);
     }

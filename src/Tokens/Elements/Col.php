@@ -26,7 +26,7 @@ class Col extends ClosedElement
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // "colgroup" must be parent.
         $parent = $this->getParent();

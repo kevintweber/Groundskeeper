@@ -29,7 +29,7 @@ class Slot extends OpenElement implements FlowContent, PhrasingContent, Transpar
         );
     }
 
-    public function isTransparentElement()
+    public function isTransparentElement() : bool
     {
         return true;
     }

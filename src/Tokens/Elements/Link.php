@@ -27,7 +27,7 @@ class Link extends ClosedElement implements MetadataContent
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // Must have "href" attribute.
         if (!$this->hasAttribute('href')) {
@@ -77,7 +77,7 @@ class Link extends ClosedElement implements MetadataContent
      *
      * @return bool True if allowed.
      */
-    public function isAllowedInBody()
+    public function isAllowedInBody() : bool
     {
         if ($this->hasAttribute('itemprop')) {
             return true;

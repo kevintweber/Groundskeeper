@@ -35,7 +35,7 @@ class Iframe extends OpenElement implements FlowContent, PhrasingContent, Embedd
         );
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return true;
     }

@@ -28,7 +28,7 @@ class Td extends OpenElement implements SectioningRoot
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // "tr" must be parent.
         $parent = $this->getParent();

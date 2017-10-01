@@ -16,7 +16,7 @@ interface Token
      *
      * @return int
      */
-    public function getDepth();
+    public function getDepth() : int;
 
     /**
      * Will return the parent token.
@@ -30,21 +30,21 @@ interface Token
      *
      * @return string
      */
-    public function getType();
+    public function getType() : string;
 
     /**
      * Will return the line number of this token in the source HTML.
      *
      * @return int
      */
-    public function getLine();
+    public function getLine() : int;
 
     /**
      * Will return the character position of this token in the source HTML.
      *
      * @return int
      */
-    public function getPosition();
+    public function getPosition() : int;
 
     /**
      * Will output the token to HTML.
@@ -54,5 +54,5 @@ interface Token
      *
      * @return string
      */
-    public function toHtml($prefix, $suffix);
+    public function toHtml(string $prefix, string $suffix) : string;
 }

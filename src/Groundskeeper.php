@@ -36,7 +36,7 @@ class Groundskeeper implements LoggerAwareInterface
         $this->configuration = new Configuration($options);
     }
 
-    public function clean($html)
+    public function clean(string $html) : string
     {
         // Tokenize.
         $tokenizer = new Tokenizer($this->configuration);
@@ -67,7 +67,7 @@ class Groundskeeper implements LoggerAwareInterface
         return $cleanedOutput;
     }
 
-    public function getConfiguration()
+    public function getConfiguration() : Configuration
     {
         return $this->configuration;
     }

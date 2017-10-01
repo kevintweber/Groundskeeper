@@ -27,7 +27,7 @@ class Map extends OpenElement implements FlowContent, PhrasingContent, Transpare
         );
     }
 
-    public function isTransparentElement()
+    public function isTransparentElement() : bool
     {
         return true;
     }

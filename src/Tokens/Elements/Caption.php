@@ -16,7 +16,7 @@ class Caption extends OpenElement implements FlowContent
     /**
      * @todo Caption must be *first* child of table.
      */
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         $parent = $this->getParent();
         if ($parent !== null &&

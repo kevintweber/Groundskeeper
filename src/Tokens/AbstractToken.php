@@ -28,7 +28,7 @@ abstract class AbstractToken implements Token
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, $line, $position)
+    public function __construct(Configuration $configuration, int $line, int $position)
     {
         $this->configuration = $configuration;
         $this->depth = 0;
@@ -40,7 +40,7 @@ abstract class AbstractToken implements Token
     /**
      * Required by the Token interface.
      */
-    public function getDepth()
+    public function getDepth() : int
     {
         return $this->depth;
     }
@@ -48,7 +48,7 @@ abstract class AbstractToken implements Token
     /**
      * Getter for 'line'.
      */
-    public function getLine()
+    public function getLine() : int
     {
         return $this->line;
     }
@@ -72,18 +72,16 @@ abstract class AbstractToken implements Token
         }
 
         $this->parent = $parent;
-
-        return $this;
     }
 
-    public function hasAncestor(Element $element)
+    public function hasAncestor(Element $element) : bool
     {
         if ($this->parent === null) {
             return false;
         }
 
-        if ($this->parent->getType() == Token::ELEMENT &&
-            $this->parent->getName() == $element->getName()) {
+        if ($this->parent->getType() === Token::ELEMENT &&
+            $this->parent->getName() === $element->getName()) {
             return true;
         }
 
@@ -93,14 +91,14 @@ abstract class AbstractToken implements Token
     /**
      * Getter for 'position'.
      */
-    public function getPosition()
+    public function getPosition() : int
     {
         return $this->position;
     }
 
     public static function cleanChildTokens(Configuration $configuration, array &$children, LoggerInterface $logger)
     {
-        if ($configuration->get('clean-strategy') == Configuration::CLEAN_STRATEGY_NONE) {
+        if ($configuration->get('clean-strategy') === Configuration::CLEAN_STRATEGY_NONE) {
             return true;
         }
 
@@ -116,7 +114,7 @@ abstract class AbstractToken implements Token
         return true;
     }
 
-    abstract public function getType();
+    abstract public function getType() : string;
 
     public function __toString()
     {

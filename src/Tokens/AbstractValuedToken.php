@@ -12,7 +12,7 @@ abstract class AbstractValuedToken extends AbstractToken
     /**
      * Constructor
      */
-    public function __construct(Configuration $configuration, $line, $position, $value = null)
+    public function __construct(Configuration $configuration, int $line, int $position, string $value = null)
     {
         parent::__construct($configuration, $line, $position);
 
@@ -30,10 +30,8 @@ abstract class AbstractValuedToken extends AbstractToken
     /**
      * Chainable setter for 'value'.
      */
-    public function setValue($value)
+    public function setValue(string $value = null)
     {
         $this->value = $value;
-
-        return $this;
     }
 }

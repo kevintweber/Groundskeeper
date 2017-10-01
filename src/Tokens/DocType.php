@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 
 class DocType extends AbstractValuedToken implements Cleanable
 {
-    public function getType()
+    public function getType() : string
     {
         return Token::DOCTYPE;
     }
@@ -15,7 +15,7 @@ class DocType extends AbstractValuedToken implements Cleanable
     /**
      * Required by the Cleanable interface.
      */
-    public function clean(LoggerInterface $logger)
+    public function clean(LoggerInterface $logger) : bool
     {
         $cleanStrategyConfiguration = $this->configuration->get('clean-strategy');
         if ($cleanStrategyConfiguration === Configuration::CLEAN_STRATEGY_NONE ||
@@ -35,7 +35,7 @@ class DocType extends AbstractValuedToken implements Cleanable
     /**
      * Required by the Token interface.
      */
-    public function toHtml($prefix, $suffix)
+    public function toHtml(string $prefix, string $suffix) : string
     {
         return $prefix . '<!DOCTYPE ' . $this->getValue() . '>' . $suffix;
     }

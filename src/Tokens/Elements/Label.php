@@ -29,7 +29,7 @@ class Label extends OpenElement implements FlowContent, InteractiveContent, Phra
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         $label = new self($this->configuration, 0, 0, 'label');
         if ($this->hasAncestor($label)) {
@@ -41,7 +41,7 @@ class Label extends OpenElement implements FlowContent, InteractiveContent, Phra
         return false;
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return true;
     }

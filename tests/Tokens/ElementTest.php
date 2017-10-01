@@ -18,15 +18,6 @@ class ElementTest extends TestCase
         $this->assertEquals('asdf', $element->getName());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionInConstructor()
-    {
-        $configuration = new Configuration();
-        $element = new Element($configuration, 0, 0, 5);
-    }
-
     public function testAttributes()
     {
         $configuration = new Configuration();
@@ -39,8 +30,8 @@ class ElementTest extends TestCase
         $this->assertEquals(1, count($element->getAttributes()));
         $element->addAttribute('id', 'i-asdf');
         $this->assertEquals(2, count($element->getAttributes()));
-        $this->assertTrue($element->removeAttribute('class'));
-        $this->assertFalse($element->removeAttribute('class'));
+        $this->assertNull($element->removeAttribute('class'));
+        $this->assertNull($element->removeAttribute('class'));
         $this->assertFalse($element->hasAttribute('class'));
         $this->assertEquals(1, count($element->getAttributes()));
         $this->assertEquals(
@@ -88,9 +79,9 @@ class ElementTest extends TestCase
             array($anotherElement, $newElement),
             $element->getChildren()
         );
-        $this->assertTrue($element->removeChild($newElement));
+        $this->assertNull($element->removeChild($newElement));
         $this->assertFalse($element->hasChild($newElement));
-        $this->assertFalse($element->removeChild($newElement));
+        $this->assertNull($element->removeChild($newElement));
         $this->assertFalse($element->hasChild($newElement));
     }
 

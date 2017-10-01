@@ -4,7 +4,7 @@ namespace Groundskeeper\Tokens;
 
 class Text extends AbstractValuedToken
 {
-    public function getType()
+    public function getType() : string
     {
         return Token::TEXT;
     }
@@ -12,7 +12,7 @@ class Text extends AbstractValuedToken
     /**
      * Required by the Token interface.
      */
-    public function toHtml($prefix, $suffix)
+    public function toHtml(string $prefix, string $suffix) : string
     {
         $text = preg_replace("/\s+/", ' ', $this->getValue());
 

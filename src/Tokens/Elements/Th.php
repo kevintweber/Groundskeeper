@@ -29,7 +29,7 @@ class Th extends OpenElement
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // "tr" must be parent.
         $parent = $this->getParent();

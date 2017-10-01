@@ -9,7 +9,7 @@ abstract class OpenElement extends Element
     /**
      * Required by the Token interface.
      */
-    public function toHtml($prefix, $suffix)
+    public function toHtml(string $prefix, string $suffix) : string
     {
         $output = $this->buildStartTag($prefix, $suffix, true);
         $output .= $this->buildChildrenHtml($prefix, $suffix);

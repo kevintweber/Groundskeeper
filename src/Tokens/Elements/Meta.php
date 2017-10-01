@@ -34,7 +34,7 @@ class Meta extends ClosedElement implements MetadataContent
         }
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // If "charset" attribute is present, the must be child of "head" element.
         if ($this->hasAttribute('charset') && $this->getParent() !== null) {

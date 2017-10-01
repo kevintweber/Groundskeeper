@@ -19,5 +19,5 @@ interface InteractiveContent
     /**
      * @return bool True if interactive content.
      */
-    public function isInteractiveContent();
+    public function isInteractiveContent() : bool;
 }

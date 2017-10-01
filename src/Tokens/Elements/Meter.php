@@ -32,7 +32,7 @@ class Meter extends OpenElement implements FlowContent, PhrasingContent
         );
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         $meter = new self($this->configuration, 0, 0, 'meter');
         if ($this->hasAncestor($meter)) {

@@ -10,5 +10,5 @@ namespace Groundskeeper\Tokens\ElementTypes;
  */
 interface TransparentElement
 {
-    public function isTransparentElement();
+    public function isTransparentElement() : bool;
 }

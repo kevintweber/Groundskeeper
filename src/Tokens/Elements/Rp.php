@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  */
 class Rp extends OpenElement
 {
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // Must be child of "ruby" element.
         $parent = $this->getParent();

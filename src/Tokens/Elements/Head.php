@@ -69,7 +69,7 @@ class Head extends OpenElement
         }
     }
 
-    protected function removeInvalidSelf(LoggerInterface $logger)
+    protected function removeInvalidSelf(LoggerInterface $logger) : bool
     {
         // "head" element must be a child of "html" element.
         $parent = $this->getParent();

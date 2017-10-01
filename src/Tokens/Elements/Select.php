@@ -52,7 +52,7 @@ class Select extends OpenElement implements FlowContent, InteractiveContent, Phr
         }
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return true;
     }

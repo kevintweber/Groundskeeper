@@ -57,7 +57,7 @@ class Textarea extends OpenElement implements FlowContent, InteractiveContent, P
         }
     }
 
-    public function isInteractiveContent()
+    public function isInteractiveContent() : bool
     {
         return true;
     }
