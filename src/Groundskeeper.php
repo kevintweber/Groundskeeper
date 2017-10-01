@@ -38,17 +38,10 @@ class Groundskeeper implements LoggerAwareInterface
 
     public function clean(string $html) : string
     {
-        // Tokenize.
         $tokenizer = new Tokenizer($this->configuration);
         $tokenContainer = $tokenizer->tokenize($html);
-
-        // Remove unwanted tokens.
         $tokenContainer->remove($this->logger);
-
-        // Build output generator.
-        $outputClassName = 'Groundskeeper\\Output\\' .
-            ucfirst($this->configuration->get('output'));
-        $outputGenerator = new $outputClassName();
+        $outputGenerator = $this->getOutputGenerator();
 
         // Clean
         $i = 0;
@@ -75,5 +68,12 @@ class Groundskeeper implements LoggerAwareInterface
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    private function getOutputGenerator()
+    {
+        $outputClassName = 'Groundskeeper\\Output\\' . ucfirst($this->configuration->get('output'));
+
+        return new $outputClassName();
     }
 }

@@ -126,7 +126,7 @@ class Element extends AbstractToken implements Cleanable, ContainsChildren, Remo
      */
     public function hasChild(Token $token) : bool
     {
-        return array_search($token, $this->children, true) !== false;
+        return in_array($token, $this->children, true);
     }
 
     /**

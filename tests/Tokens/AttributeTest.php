@@ -14,7 +14,7 @@ class AttributeTest extends TestCase
     {
         $attribute = new Attribute('class', 'test');
         $this->assertEquals('class', $attribute->getName());
-        $this->assertNull($attribute->getType());
+        $this->assertEquals(Attribute::UNKNOWN, $attribute->getType());
         $this->assertEquals('test', $attribute->getValue());
         $this->assertFalse($attribute->getIsStandard());
         $this->assertEquals('class="test"', (string) $attribute);

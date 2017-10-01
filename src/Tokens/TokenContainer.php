@@ -62,11 +62,7 @@ final class TokenContainer implements Cleanable, ContainsChildren, Removable
         $key = array_search($token, $this->children, true);
         if ($key !== false) {
             unset($this->children[$key]);
-
-            return true;
         }
-
-        return false;
     }
 
     /**

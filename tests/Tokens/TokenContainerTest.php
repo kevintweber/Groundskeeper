@@ -37,12 +37,16 @@ class TokenContainerTest extends TestCase
             array($anotherToken, $token),
             $tokenContainer->getChildren()
         );
-        $this->assertTrue($tokenContainer->removeChild($token));
+        $this->assertNull($tokenContainer->removeChild($token));
         $this->assertEquals(
             array($anotherToken),
             $tokenContainer->getChildren()
         );
-        $this->assertFalse($tokenContainer->removeChild($token));
+        $this->assertNull($tokenContainer->removeChild($token));
+        $this->assertEquals(
+            array($anotherToken),
+            $tokenContainer->getChildren()
+        );
     }
 
     public function testCleanWithNoCleanStrategy()

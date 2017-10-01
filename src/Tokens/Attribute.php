@@ -35,7 +35,7 @@ class Attribute
     public function __construct(string $name, $value = null)
     {
         $this->name = $name;
-        $this->type = null;
+        $this->type = self::UNKNOWN;
         $this->value = $value;
         $this->isStandard = false;
     }
@@ -51,7 +51,7 @@ class Attribute
     /**
      * Getter for 'type'.
      */
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
@@ -59,7 +59,7 @@ class Attribute
     /**
      * Chainable setter for 'type'.
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         $typeEnum = mb_substr($type, 0, 6);
         if ($typeEnum !== self::BOOL &&

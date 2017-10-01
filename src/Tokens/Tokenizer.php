@@ -82,19 +82,7 @@ class Tokenizer
 
     private function createElement(BasicElement $basicElement)
     {
-        // Primary class name.
-        $elementClassName = 'Groundskeeper\\Tokens\\Elements\\' .
-            ucfirst(strtolower($basicElement->getName()));
-        if (!class_exists($elementClassName)) {
-            // Secondary class name.
-            // For elements whose names conflict with PHP keywords: var
-            $elementClassName = 'Groundskeeper\\Tokens\\Elements\\' .
-                ucfirst(strtolower($basicElement->getName())) . 'Element';
-            if (!class_exists($elementClassName)) {
-                $elementClassName = 'Groundskeeper\\Tokens\\Element';
-            }
-        }
-
+        $elementClassName = $this->getElementClassName($basicElement);
         $cleanableElement = new $elementClassName(
             $this->configuration,
             $basicElement->getLine(),
@@ -110,5 +98,22 @@ class Tokenizer
         }
 
         return $cleanableElement;
+    }
+
+    private function getElementClassName(BasicElement $basicElement) : string
+    {
+        $elementClassName = 'Groundskeeper\\Tokens\\Elements\\' .
+            ucfirst(strtolower($basicElement->getName()));
+        if (!class_exists($elementClassName)) {
+            // Secondary class name.
+            // For elements whose names conflict with PHP keywords: var
+            $elementClassName = 'Groundskeeper\\Tokens\\Elements\\' .
+                ucfirst(strtolower($basicElement->getName())) . 'Element';
+            if (!class_exists($elementClassName)) {
+                $elementClassName = 'Groundskeeper\\Tokens\\Element';
+            }
+        }
+
+        return $elementClassName;
     }
 }
