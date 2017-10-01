@@ -62,7 +62,7 @@ class Groundskeeper implements LoggerAwareInterface
             $tokenContainer->clean($this->logger);
             $cleanedOutput = $outputGenerator($tokenContainer);
             ++$i;
-        } while ($i < 5 && $preCleaningOutput != $cleanedOutput);
+        } while ($i < 5 && $preCleaningOutput !== $cleanedOutput);
 
         return $cleanedOutput;
     }

@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Php;
+use PHPUnit\Framework\TestCase;
 
-class PhpTest extends \PHPUnit_Framework_TestCase
+class PhpTest extends TestCase
 {
     public function testPhp()
     {

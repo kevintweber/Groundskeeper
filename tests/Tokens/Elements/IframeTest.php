@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Iframe;
+use PHPUnit\Framework\TestCase;
 
-class IframeTest extends \PHPUnit_Framework_TestCase
+class IframeTest extends TestCase
 {
     public function testIsInteractiveContent()
     {

@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Text;
+use PHPUnit\Framework\TestCase;
 
-class TextTest extends \PHPUnit_Framework_TestCase
+class TextTest extends TestCase
 {
     public function testText()
     {

@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\A;
+use PHPUnit\Framework\TestCase;
 
-class ATest extends \PHPUnit_Framework_TestCase
+class ATest extends TestCase
 {
     public function testIsTransparent()
     {

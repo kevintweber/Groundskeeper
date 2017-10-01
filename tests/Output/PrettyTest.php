@@ -5,8 +5,9 @@ namespace Groundskeeper\Tests\Output;
 use Groundskeeper\Configuration;
 use Groundskeeper\Output\Pretty;
 use Groundskeeper\Tokens\Tokenizer;
+use PHPUnit\Framework\TestCase;
 
-class PrettyTest extends \PHPUnit_Framework_TestCase
+class PrettyTest extends TestCase
 {
     /**
      * @dataProvider prettyDataProvider

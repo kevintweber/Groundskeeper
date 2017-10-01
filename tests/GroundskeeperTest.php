@@ -3,9 +3,10 @@
 namespace Groundskeeper\Tests;
 
 use Groundskeeper\Groundskeeper;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class GroundskeeperTest extends \PHPUnit_Framework_TestCase
+class GroundskeeperTest extends TestCase
 {
     public function testConstructorAndDefaults()
     {

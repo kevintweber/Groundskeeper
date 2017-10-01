@@ -5,9 +5,9 @@ namespace Groundskeeper\Tests\Tokens;
 use Groundskeeper\Configuration;
 use Groundskeeper\Tests\TestableLogger;
 use Groundskeeper\Tokens\Element;
-use Psr\Log\NullLogger;
+use PHPUnit\Framework\TestCase;
 
-class ElementTest extends \PHPUnit_Framework_TestCase
+class ElementTest extends TestCase
 {
     public function testConstructorAndDefaults()
     {

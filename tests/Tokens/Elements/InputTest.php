@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Input;
+use PHPUnit\Framework\TestCase;
 
-class InputTest extends \PHPUnit_Framework_TestCase
+class InputTest extends TestCase
 {
     public function testIsInteractiveContent()
     {

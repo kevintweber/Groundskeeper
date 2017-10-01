@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Embed;
+use PHPUnit\Framework\TestCase;
 
-class EmbedTest extends \PHPUnit_Framework_TestCase
+class EmbedTest extends TestCase
 {
     public function testIsInteractiveContent()
     {

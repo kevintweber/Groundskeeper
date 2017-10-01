@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Audio;
+use PHPUnit\Framework\TestCase;
 
-class AudioTest extends \PHPUnit_Framework_TestCase
+class AudioTest extends TestCase
 {
     public function testIsTransparent()
     {

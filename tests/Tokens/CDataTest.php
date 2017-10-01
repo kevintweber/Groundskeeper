@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\CData;
+use PHPUnit\Framework\TestCase;
 
-class CDataTest extends \PHPUnit_Framework_TestCase
+class CDataTest extends TestCase
 {
     public function testCData()
     {

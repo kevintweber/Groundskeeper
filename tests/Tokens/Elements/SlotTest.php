@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Slot;
+use PHPUnit\Framework\TestCase;
 
-class SlotTest extends \PHPUnit_Framework_TestCase
+class SlotTest extends TestCase
 {
     public function testSlot()
     {

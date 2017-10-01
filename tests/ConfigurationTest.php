@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Element;
+use PHPUnit\Framework\TestCase;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     public function testConstructorAndDefaults()
     {

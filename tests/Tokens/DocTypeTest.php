@@ -5,8 +5,9 @@ namespace Groundskeeper\Tests\Tokens;
 use Groundskeeper\Configuration;
 use Groundskeeper\Tests\TestableLogger;
 use Groundskeeper\Tokens\DocType;
+use PHPUnit\Framework\TestCase;
 
-class DocTypeTest extends \PHPUnit_Framework_TestCase
+class DocTypeTest extends TestCase
 {
     public function testDocType()
     {

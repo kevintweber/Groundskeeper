@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Del;
+use PHPUnit\Framework\TestCase;
 
-class DelTest extends \PHPUnit_Framework_TestCase
+class DelTest extends TestCase
 {
     public function testIsTransparent()
     {

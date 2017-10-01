@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Label;
+use PHPUnit\Framework\TestCase;
 
-class LabelTest extends \PHPUnit_Framework_TestCase
+class LabelTest extends TestCase
 {
     public function testIsTransparent()
     {

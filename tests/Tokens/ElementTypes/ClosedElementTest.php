@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\ElementTypes;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Hr;
+use PHPUnit\Framework\TestCase;
 
-class ClosedElementTest extends \PHPUnit_Framework_TestCase
+class ClosedElementTest extends TestCase
 {
     public function testClosedElement()
     {

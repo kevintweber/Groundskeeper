@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Comment;
+use PHPUnit\Framework\TestCase;
 
-class CommentTest extends \PHPUnit_Framework_TestCase
+class CommentTest extends TestCase
 {
     public function testComment()
     {

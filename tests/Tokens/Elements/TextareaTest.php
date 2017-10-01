@@ -4,8 +4,9 @@ namespace Groundskeeper\Tests\Tokens\Elements;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Elements\Textarea;
+use PHPUnit\Framework\TestCase;
 
-class TextareaTest extends \PHPUnit_Framework_TestCase
+class TextareaTest extends TestCase
 {
     public function testIsTransparent()
     {

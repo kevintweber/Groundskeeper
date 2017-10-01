@@ -4,12 +4,12 @@ namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
 use Groundskeeper\Tokens\Comment;
-use Groundskeeper\Tokens\DocType;
 use Groundskeeper\Tokens\Elements\Element;
 use Groundskeeper\Tokens\TokenContainer;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class TokenContainerTest extends \PHPUnit_Framework_TestCase
+class TokenContainerTest extends TestCase
 {
     public function testConstructorAndDefaults()
     {

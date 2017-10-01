@@ -3,8 +3,9 @@
 namespace Groundskeeper\Tests\Tokens;
 
 use Groundskeeper\Configuration;
+use PHPUnit\Framework\TestCase;
 
-class AbstractTokenTest extends \PHPUnit_Framework_TestCase
+class AbstractTokenTest extends TestCase
 {
     public function testConstructorAndDefaults()
     {

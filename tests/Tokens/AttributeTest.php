@@ -6,8 +6,9 @@ use Groundskeeper\Configuration;
 use Groundskeeper\Tests\TestableLogger;
 use Groundskeeper\Tokens\Attribute;
 use Groundskeeper\Tokens\Elements\A;
+use PHPUnit\Framework\TestCase;
 
-class AttributeTest extends \PHPUnit_Framework_TestCase
+class AttributeTest extends TestCase
 {
     public function testConstructorAndDefaults()
     {
